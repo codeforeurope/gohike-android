@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 public class NewSplashActivity extends Activity {
@@ -21,6 +22,7 @@ public class NewSplashActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setupReceiver();
 
 	}

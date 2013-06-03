@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TakeAHike.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/ab_solid_dark_holo</item>
+<!--         <item name="android:backgroundStacked">@android:drawable/ab_stacked_solid_dark_holo</item>
+ -->     <!--    <item name="android:backgroundSplit">@android:drawable/ab_bottom_solid_inverse_holo</item> -->
+    </style>
+    
+    <!-- the theme applied to the application or activity -->
+    <style name="TakeAHikeTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/TakeAHike.ActionBar</item>
+       
+    </style>
+
+</resources>

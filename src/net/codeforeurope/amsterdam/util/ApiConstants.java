@@ -10,6 +10,7 @@ public class ApiConstants {
 	public static final String ACTION_DATA_LOADED = "data_loaded";
 	public static final String GAME_DATA = "game_data";
 	public static final String CURRENT_PROFILE = "current_profile";
+	public static final String CURRENT_ROUTE = "current_route";
 
 
 }

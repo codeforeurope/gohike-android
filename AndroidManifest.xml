@@ -34,12 +34,22 @@
         <activity
             android:name="net.codeforeurope.amsterdam.ProfileGridActivity"
             android:label="@string/profiles"
-            android:theme="@android:style/Theme.Holo.Light.DarkActionBar" >
+            android:theme="@style/TakeAHikeTheme" >
         </activity>
         <activity
             android:name="net.codeforeurope.amsterdam.RouteGridActivity"
             android:label="@string/routes"
-            android:theme="@android:style/Theme.Holo.Light.DarkActionBar" >
+            android:theme="@style/TakeAHikeTheme" >
+        </activity>
+        <activity
+            android:name="net.codeforeurope.amsterdam.RouteDetailActivity"
+            android:label="@string/routes"
+            android:theme="@style/TakeAHikeTheme" >
+        </activity>
+        <activity
+            android:name="net.codeforeurope.amsterdam.NavigateRouteActivity"
+            android:label="@string/routes"
+            android:theme="@style/TakeAHikeTheme" >
         </activity>
 
         <service android:name=".service.ContentApiService" />

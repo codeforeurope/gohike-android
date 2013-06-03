@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+   <item
+        android:id="@+id/menu_start_hike"
+        android:icon="@drawable/icon_hike"
+        android:showAsAction="always|withText"
+        android:title="@string/start_hike"
+        android:titleCondensed="@string/start_hike"/>
+   
+   
+</menu>

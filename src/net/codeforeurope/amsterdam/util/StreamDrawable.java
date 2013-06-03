@@ -1,7 +1,9 @@
 package net.codeforeurope.amsterdam.util;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
@@ -41,6 +43,8 @@ public class StreamDrawable extends Drawable {
 
 	@Override
 	public void draw(Canvas canvas) {
+		mPaint.setColor(Color.BLACK);
+		mPaint.setStrokeWidth(1);
 		canvas.drawRoundRect(mRect, mCornerRadius, mCornerRadius, mPaint);
 	}
 

@@ -1,5 +1,6 @@
 package net.codeforeurope.amsterdam;
 
+import net.codeforeurope.amsterdam.adapter.GridAdapter;
 import net.codeforeurope.amsterdam.model.GameData;
 import net.codeforeurope.amsterdam.model.Profile;
 import net.codeforeurope.amsterdam.util.ApiConstants;
