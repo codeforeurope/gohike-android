@@ -51,6 +51,7 @@ public class ProfileGridActivity extends Activity implements OnItemClickListener
 		intent.putExtra(ApiConstants.GAME_DATA, gameData);
 		intent.putExtra(ApiConstants.CURRENT_PROFILE, profile);
 		startActivity(intent);
+		overridePendingTransition(R.anim.enter_from_right,R.anim.leave_to_left); 
 	}
 	
 }
