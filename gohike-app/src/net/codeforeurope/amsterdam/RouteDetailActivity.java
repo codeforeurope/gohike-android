@@ -6,37 +6,24 @@ import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-public class NavigateRouteActivity extends Activity implements
-		SensorEventListener {
+public class RouteDetailActivity extends Activity {
 	GameData gameData;
 
 	Profile currentProfile;
 
 	Route currentRoute;
 
-	SensorManager sensorManager;
-
-	Sensor orientation;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-
-		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-		orientation = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-		// orientation = sensorManager.getOrientation(R, values);
-
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.grid);
 
@@ -64,12 +51,27 @@ public class NavigateRouteActivity extends Activity implements
 			// app icon in action bar clicked; go home
 			onBackPressed();
 			return true;
-		case R.id.menu_show_map:
-
+		case R.id.menu_start_hike:
+			Intent intent = new Intent(this, NavigateRouteActivity.class);
+			intent.putExtra(ApiConstants.GAME_DATA, gameData);
+			intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
+			intent.putExtra(ApiConstants.CURRENT_ROUTE, currentRoute);
+			intent.putExtra(ApiConstants.CURRENT_TARGET, currentRoute.waypoints.get(0));
+			startActivity(intent);
+			overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void goUp() {
+		Intent intent = new Intent(this, RouteGridActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.putExtra(ApiConstants.GAME_DATA, gameData);
+		intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
+		startActivity(intent);
+		overridePendingTransition(R.anim.enter_from_left, R.anim.leave_to_right);
 	}
 
 	@Override
@@ -79,25 +81,4 @@ public class NavigateRouteActivity extends Activity implements
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		sensorManager.registerListener(this, orientation,
-				SensorManager.SENSOR_DELAY_NORMAL);
-	}
-
-	@Override
-	public void onSensorChanged(SensorEvent event) {
-		// TODO Auto-generated method stub
-		float azimuth_angle = event.values[0];
-		float pitch_angle = event.values[1];
-		float roll_angle = event.values[2];
-		
-	}
-
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// TODO Auto-generated method stub
-
-	}
 }
