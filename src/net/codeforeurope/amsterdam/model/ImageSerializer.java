@@ -26,10 +26,10 @@ import com.google.gson.JsonSerializer;
 public class ImageSerializer implements JsonSerializer<Image>,
 		JsonDeserializer<Image> {
 
-	private File contentFile;
+	private File contentDirectory;
 
 	public ImageSerializer(File contentFile) {
-		this.contentFile = contentFile;
+		this.contentDirectory = contentFile;
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class ImageSerializer implements JsonSerializer<Image>,
 			throws JsonParseException {
 		long start, end;
 
-		File imagesDirectory = new File(contentFile.getParentFile(), "images");
+		File imagesDirectory = new File(contentDirectory, "images");
 		Image image = new Image();
 		start = System.currentTimeMillis();
 		String imageData = element.getAsString();

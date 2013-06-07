@@ -9,6 +9,7 @@ import net.codeforeurope.amsterdam.util.ApiConstants;
 import net.codeforeurope.amsterdam.util.HttpClient;
 import net.codeforeurope.amsterdam.util.NetUtils;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.json.JSONException;
@@ -42,7 +43,8 @@ public abstract class AbstractApiService extends IntentService {
 				broadCastIntent.putExtra(ApiConstants.SUCCESS, true);
 				final InputStream responseStream = AndroidHttpClient
 						.getUngzippedContent(response.getEntity());
-				processResponse(responseStream, intent, broadCastIntent);
+				
+				processResponse(responseStream, response.getAllHeaders(), intent, broadCastIntent);
 			}
 		} catch (IOException e) {
 			broadCastIntent
@@ -62,7 +64,7 @@ public abstract class AbstractApiService extends IntentService {
 	protected abstract HttpRequestBase generateRequest(Intent intent)
 			throws UnsupportedEncodingException, JSONException;
 
-	protected abstract void processResponse(InputStream responseStream,
+	protected abstract void processResponse(InputStream responseStream, Header[] headers,
 			Intent intent, Intent broadCastIntent) throws JSONException,
 			ParseException, UnsupportedEncodingException;
 

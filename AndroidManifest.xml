@@ -53,6 +53,7 @@
         </activity>
 
         <service android:name=".service.ContentApiService" />
+        <service android:name=".service.PingApiService" />
         <service android:name=".service.ContentService" />
     </application>
 
