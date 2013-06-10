@@ -7,7 +7,6 @@ import net.codeforeurope.amsterdam.service.ContentService;
 import net.codeforeurope.amsterdam.service.PingApiService;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

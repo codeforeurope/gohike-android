@@ -15,5 +15,6 @@
      <string name="update_dialog_message">There is a new version of content available. The size of the download is %.1f MB. Shall we go ahead and update? </string>
      <string name="update_dialog_yes">Go for it!</string>
      <string name="update_dialog_no">Nah, later</string>
+     <string name="route_image">Route Image</string>
 
 </resources>

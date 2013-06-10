@@ -3,7 +3,6 @@ package net.codeforeurope.amsterdam.model;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -12,7 +11,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import net.codeforeurope.amsterdam.util.StringUtils;
-
 import android.util.Base64;
 import android.util.Log;
 

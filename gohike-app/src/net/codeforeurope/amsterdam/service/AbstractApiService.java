@@ -7,7 +7,6 @@ import java.text.ParseException;
 
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import net.codeforeurope.amsterdam.util.HttpClient;
-import net.codeforeurope.amsterdam.util.NetUtils;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
