@@ -7,6 +7,7 @@ import net.codeforeurope.amsterdam.model.Profile;
 import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.model.Waypoint;
 import net.codeforeurope.amsterdam.util.ApiConstants;
+import android.R.integer;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -216,20 +217,33 @@ public class NavigateRouteActivity extends Activity implements
 		targetBearing = results[2];
 		// Toast.makeText(getBaseContext(),, Toast.LENGTH_SHORT).show();
 		
+		Log.d("navigating_to", currentTarget.nameEn);
 		if(results[0] < CHECKIN_DISTANCE)
 		{
 			Log.d("Checkin", "You can check in!");
 			if(checkInWindowOnScreen  != true)
 			{
-				//Open the dialog
+				checkInWindowOnScreen = true;
+				CheckinDialogFragment c = new CheckinDialogFragment();
+				c.show(getFragmentManager(), "checkin");
 			}
-				
 		}
 	}
 	
 	public void doNavigateToNextCheckin()
-	{
-		//todo
+	{		
+		int i = currentRoute.waypoints.indexOf(currentTarget) + 1;
+		if(i<currentRoute.waypoints.size())
+		{
+			Waypoint nextTarget = currentRoute.waypoints.get(i+1);
+			currentTarget = nextTarget;
+		}
+		else
+		{
+			//Route is finished
+			finish();
+			overridePendingTransition(R.anim.enter_from_left, R.anim.leave_to_right);
+		}
 	}
 
 	@Override

@@ -16,5 +16,7 @@
      <string name="update_dialog_yes">Go for it!</string>
      <string name="update_dialog_no">Nah, later</string>
      <string name="route_image">Route Image</string>
+     <string name="reward_image">Reward Image</string>
+     <string name="share_reward">Share Reward</string>
 
 </resources>

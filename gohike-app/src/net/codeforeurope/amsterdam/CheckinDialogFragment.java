@@ -29,13 +29,25 @@ public class CheckinDialogFragment extends DialogFragment {
 	            		   //set the navigation to the next
 	            			((NavigateRouteActivity) getActivity())
 							.doNavigateToNextCheckin();
+
 	            		   break;
 	            	   case 1: //just dismiss dialog
 	            		   dismiss();
+	            		   
 	            		   break;
 	            	   }
 	           }
 	    });
 	    return builder.create();
 	}
+	
+	@Override
+	public void onDismiss (DialogInterface dialog)
+	{
+		((NavigateRouteActivity) getActivity())
+		   .checkInWindowOnScreen = false;
+	}
+	
 }
+
+

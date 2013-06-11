@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="@drawable/layout_background">
+
+<LinearLayout android:id="@+id/reward_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="10dp"
+        >
+        
+        <TextView
+            android:id="@+id/reward_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reward Title"
+            android:textAppearance="?android:attr/textAppearanceLarge" 
+         />
+ <ImageView
+            android:id="@+id/reward_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/reward_image" />
+        
+   <TextView
+            android:id="@+id/route_detail_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reward description"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+   
+</LinearLayout>
+</ScrollView>
