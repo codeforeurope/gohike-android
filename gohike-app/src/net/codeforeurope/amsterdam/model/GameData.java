@@ -11,6 +11,8 @@ public class GameData implements Parcelable {
 	public String version;
 
 	public List<Profile> profiles = new ArrayList<Profile>();
+	
+	public List<Checkin> checkins = new ArrayList<Checkin>();
 
 	public GameData(Parcel in) {
 		this.version = in.readString();

@@ -31,6 +31,8 @@ public class NavigateRouteActivity extends Activity implements
 	private static final int ANIMATION_DURATION = 300;
 
 	private static final int COMPASS_UPDATE_THRESHOLD = 500;
+	
+	private static final int CHECKIN_DISTANCE = 4000; //Change to 20 for production
 
 	GameData gameData;
 
@@ -55,6 +57,8 @@ public class NavigateRouteActivity extends Activity implements
 	private Sensor magnetometer;
 
 	LocationManager locationManager;
+	
+	boolean checkInWindowOnScreen = false; 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +215,21 @@ public class NavigateRouteActivity extends Activity implements
 		debug.setText(data);
 		targetBearing = results[2];
 		// Toast.makeText(getBaseContext(),, Toast.LENGTH_SHORT).show();
+		
+		if(results[0] < CHECKIN_DISTANCE)
+		{
+			Log.d("Checkin", "You can check in!");
+			if(checkInWindowOnScreen  != true)
+			{
+				//Open the dialog
+			}
+				
+		}
+	}
+	
+	public void doNavigateToNextCheckin()
+	{
+		//todo
 	}
 
 	@Override
