@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Waypoint implements Parcelable {
+public class Waypoint extends BaseModel implements Parcelable {
 
 	@SerializedName("location_id")
 	public int id;
@@ -13,25 +13,10 @@ public class Waypoint implements Parcelable {
 	@SerializedName("route_id")
 	public int routeId;
 
-	@SerializedName("name_en")
-	public String nameEn;
-
-	@SerializedName("name_nl")
-	public String nameNl;
-
-	@SerializedName("description_en")
-	public String descriptionEn;
-
-	@SerializedName("description_nl")
-	public String descriptionNl;
-
-	@SerializedName("image_data")
-	public Image image;
-
 	public double latitude;
-	
+
 	public double longitude;
-	
+
 	public int rank;
 
 	public Waypoint(Parcel in) {
@@ -45,7 +30,7 @@ public class Waypoint implements Parcelable {
 		this.latitude = in.readDouble();
 		this.longitude = in.readDouble();
 		this.rank = in.readInt();
-	
+
 	}
 
 	@Override
@@ -67,8 +52,8 @@ public class Waypoint implements Parcelable {
 		dest.writeDouble(this.longitude);
 		dest.writeInt(this.rank);
 
-
 	}
+
 	public static final Parcelable.Creator<Waypoint> CREATOR = new Parcelable.Creator<Waypoint>() {
 		public Waypoint createFromParcel(Parcel in) {
 			return new Waypoint(in);

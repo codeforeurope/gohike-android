@@ -31,19 +31,30 @@ public class RouteGridActivity extends Activity implements OnItemClickListener {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.grid);
+
+		setupDataReferences();
+		setupActionBar();
+		setupViewReferences();
+
+	}
+
+	private void setupViewReferences() {
+		adapter = new GridAdapter(this, currentProfile.routes);
+		gridView = (GridView) findViewById(R.id.grid);
+		gridView.setAdapter(adapter);
+		gridView.setOnItemClickListener(this);
+	}
+
+	private void setupActionBar() {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(currentProfile.getLocalizedName());
+	}
 
+	private void setupDataReferences() {
 		gameData = getIntent().getParcelableExtra(ApiConstants.GAME_DATA);
 		currentProfile = getIntent().getParcelableExtra(
 				ApiConstants.CURRENT_PROFILE);
-		adapter = new GridAdapter(this, currentProfile.routes);
-
-		gridView = (GridView) findViewById(R.id.grid);
-		// setupReceiver();
-		gridView.setAdapter(adapter);
-		gridView.setOnItemClickListener(this);
-
 	}
 
 	@Override
@@ -66,13 +77,13 @@ public class RouteGridActivity extends Activity implements OnItemClickListener {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			// app icon in action bar clicked; go home
-//			Intent intent = new Intent(this, ProfileGridActivity.class);
-//			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//			intent.putExtra(ApiConstants.GAME_DATA, gameData);
-//
-//			startActivity(intent);
-//			overridePendingTransition(R.anim.enter_from_left,
-//					R.anim.leave_to_right);
+			// Intent intent = new Intent(this, ProfileGridActivity.class);
+			// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			// intent.putExtra(ApiConstants.GAME_DATA, gameData);
+			//
+			// startActivity(intent);
+			// overridePendingTransition(R.anim.enter_from_left,
+			// R.anim.leave_to_right);
 			onBackPressed();
 			return true;
 		default:

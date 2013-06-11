@@ -5,5 +5,9 @@
     <color name="white">#FFFFFF</color>
     <color name="red">#FF0000</color>
     <color name="light_blue">#73c4dd</color>
-
+    
+    <color name="gray_frame">#ababab</color>
+    <color name="gray_gradient_start">#cecece</color>
+    <color name="gray_gradient_center">#bcbcbc</color>
+    <color name="gray_gradient_end">#ababab</color>
 </resources>

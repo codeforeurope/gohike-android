@@ -1,5 +1,7 @@
 package net.codeforeurope.amsterdam.util;
 
+import java.util.Locale;
+
 public class ApiConstants {
 
 	public static final String SUCCESS = "success";
@@ -18,6 +20,7 @@ public class ApiConstants {
 	public static final String PING_RESULT = "ping_result";
 	public static final String CONTENT_VERSION = "content_version";
 	public static final String ACTION_CONTENT_LOAD_ERROR = "data_load_error";
+	public static final Locale NETHERLANDS_LOCALE = new Locale("nl");
 
 
 }

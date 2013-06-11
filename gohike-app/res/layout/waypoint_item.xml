@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp" android:background="@drawable/waypoint_item" >
+
+    <ImageView
+        android:id="@+id/waypoint_item_icon_left"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:src="@drawable/waypoint_target" />
+
+    <TextView
+        android:id="@+id/waypoint_item_title"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toLeftOf="@+id/waypoint_item_icon_right"
+        android:layout_toRightOf="@+id/waypoint_item_icon_left"
+        android:gravity="center_vertical|left"
+        android:maxLines="1"
+        android:text="blah blah blah blah blah blah blah "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@drawable/waypoint_item_text" />
+
+    <ImageView
+        android:id="@+id/waypoint_item_icon_right"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:src="@drawable/waypoint_arrow_right" />
+
+</RelativeLayout>

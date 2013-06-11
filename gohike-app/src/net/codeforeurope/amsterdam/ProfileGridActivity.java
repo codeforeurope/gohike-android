@@ -13,26 +13,24 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-public class ProfileGridActivity extends Activity implements OnItemClickListener {
-	
-	
+public class ProfileGridActivity extends Activity implements
+		OnItemClickListener {
+
 	GameData gameData;
-	
+
 	GridView gridView;
 	GridAdapter adapter;
 
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.grid);
-		
-		
+
 		gameData = getIntent().getParcelableExtra(ApiConstants.GAME_DATA);
-		adapter = new GridAdapter(this,gameData.profiles);
-		
+		adapter = new GridAdapter(this, gameData.profiles);
+
 		gridView = (GridView) findViewById(R.id.grid);
 		// setupReceiver();
 		gridView.setAdapter(adapter);
@@ -40,19 +38,21 @@ public class ProfileGridActivity extends Activity implements OnItemClickListener
 
 	}
 
-
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		// TODO Auto-generated method stub
 		GridAdapter adapter = (GridAdapter) parent.getAdapter();
 		Profile profile = (Profile) adapter.getItem(position);
-		
-		Intent intent = new Intent(getBaseContext(), RouteGridActivity.class);
+
+		// Intent intent = new Intent(getBaseContext(),
+		// RouteGridActivity.class);
+		Intent intent = new Intent(getBaseContext(), RouteDetailActivity.class);
 		intent.putExtra(ApiConstants.GAME_DATA, gameData);
 		intent.putExtra(ApiConstants.CURRENT_PROFILE, profile);
+		intent.putExtra(ApiConstants.CURRENT_ROUTE, profile.routes.get(0));
 		startActivity(intent);
-		overridePendingTransition(R.anim.enter_from_right,R.anim.leave_to_left); 
+		overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
 	}
-	
+
 }

@@ -17,6 +17,9 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,9 +46,11 @@ public class PingApiService extends AbstractApiService {
 	@Override
 	protected HttpRequestBase generateRequest(Intent intent)
 			throws UnsupportedEncodingException, JSONException {
-		String currentVersion = intent.getStringExtra(ApiConstants.CONTENT_VERSION);
+		String currentVersion = intent
+				.getStringExtra(ApiConstants.CONTENT_VERSION);
 		final HttpPost request = new HttpPost(getEndpointUrl());
 		request.addHeader("Content-Type", "application/json");
+		applyTimeoutSettings();
 		JSONObject j = new JSONObject();
 		j.put(ApiConstants.CURRENT_VERSION, currentVersion);
 		HttpEntity entity = new StringEntity(j.toString());
@@ -53,10 +58,23 @@ public class PingApiService extends AbstractApiService {
 		return request;
 	}
 
+	private void applyTimeoutSettings() {
+		HttpParams httpParameters = new BasicHttpParams();
+		// Set the timeout in milliseconds until a connection is established.
+		// The default value is zero, that means the timeout is not used.
+		int timeoutConnection = 3000;
+		HttpConnectionParams.setConnectionTimeout(httpParameters,
+				timeoutConnection);
+		// Set the default socket timeout (SO_TIMEOUT)
+		// in milliseconds which is the timeout for waiting for data.
+		int timeoutSocket = 5000;
+		HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+	}
+
 	@Override
-	protected void processResponse(InputStream responseStream, Header[] headers,Intent intent,
-			Intent broadCastIntent) throws JSONException, ParseException,
-			UnsupportedEncodingException {
+	protected void processResponse(InputStream responseStream,
+			Header[] headers, Intent intent, Intent broadCastIntent)
+			throws JSONException, ParseException, UnsupportedEncodingException {
 		Gson gson = buildGson();
 		Reader reader = new InputStreamReader(responseStream, "UTF-8");
 		long start = System.currentTimeMillis();
@@ -65,7 +83,7 @@ public class PingApiService extends AbstractApiService {
 		Log.i(NAME, "Time to parse: " + (end - start) + "ms");
 		broadCastIntent.setAction(ApiConstants.ACTION_PING_COMPLETE);
 		broadCastIntent.putExtra(ApiConstants.PING_RESULT, result);
-		
+
 	}
 
 	@Override
