@@ -1,3 +1,4 @@
 .DS_Store
 bin
 gen
+gohike-app/src/net/codeforeurope/amsterdam/util/AppSecret.java
