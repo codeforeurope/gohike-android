@@ -3,9 +3,11 @@ package net.codeforeurope.amsterdam.service;
 import java.util.ArrayList;
 
 import net.codeforeurope.amsterdam.model.Checkin;
+import net.codeforeurope.amsterdam.model.Waypoint;
 import net.codeforeurope.amsterdam.storage.CheckinsContract;
 import net.codeforeurope.amsterdam.storage.CheckinsDbHelper;
 import net.codeforeurope.amsterdam.util.ApiConstants;
+import net.codeforeurope.amsterdam.util.CheckinUtil;
 import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.ContentValues;
@@ -36,8 +38,9 @@ public class CheckinService extends IntentService {
 			updateCheckinsUploaded(checkinsUploaded);
 
 		} else {
-
-			Checkin checkin = intent.getParcelableExtra(ApiConstants.CHECKIN);
+			Waypoint currentTarget = intent
+					.getParcelableExtra(ApiConstants.CURRENT_TARGET);
+			Checkin checkin = CheckinUtil.fromWaypoint(currentTarget);
 			broadcastIntent.setAction(ApiConstants.ACTION_CHECKIN_SAVED);
 			broadcastIntent.putExtra(ApiConstants.CHECKIN, checkin);
 
@@ -53,18 +56,40 @@ public class CheckinService extends IntentService {
 	}
 
 	private void updateCheckinsUploaded(ArrayList<Checkin> checkinsUploaded) {
-		ContentValues updates = new ContentValues();
-		updates.put(CheckinsContract.CheckinsEntry.COLUMN_NAME_UPLOADED, true);
+		if (checkinsUploaded.size() > 0) {
+			ContentValues updates = makeUpdateValues();
+
+			String selection = makeSelectionString(checkinsUploaded);
+
+			String[] selectionArgs = makeSelectionArguments(checkinsUploaded);
+			db.update(CheckinsContract.CheckinsEntry.TABLE_NAME, updates,
+					selection, selectionArgs);
+		}
+
+	}
+
+	private String[] makeSelectionArguments(ArrayList<Checkin> checkinsUploaded) {
 		ArrayList<String> idsToUpdate = new ArrayList<String>();
-		String selection = CheckinsContract.CheckinsEntry._ID + " IN (?)";
 		for (Checkin checkin : checkinsUploaded) {
 			idsToUpdate.add(checkin.id + "");
 		}
+
 		String[] selectionArgs = idsToUpdate.toArray(new String[idsToUpdate
 				.size()]);
-		db.update(CheckinsContract.CheckinsEntry.TABLE_NAME, updates,
-				selection, selectionArgs);
+		return selectionArgs;
+	}
 
+	private String makeSelectionString(ArrayList<Checkin> checkinsUploaded) {
+		String selection = CheckinsContract.CheckinsEntry._ID + " IN ("
+				+ makePlaceholders(checkinsUploaded.size()) + ")";
+		return selection;
+	}
+
+	private ContentValues makeUpdateValues() {
+		ContentValues updates = new ContentValues();
+		updates.put(CheckinsContract.CheckinsEntry.COLUMN_NAME_UPLOADED,
+				true);
+		return updates;
 	}
 
 	@SuppressLint("SimpleDateFormat")
@@ -80,10 +105,9 @@ public class CheckinService extends IntentService {
 			Cursor c = db.query(CheckinsContract.CheckinsEntry.TABLE_NAME,
 					CheckinsContract.CheckinsEntry.COLUMNS,
 					CheckinsContract.CheckinsEntry.COLUMN_NAME_UPLOADED
-							+ " = 1", null, null, null, null);
-			int totalRows = c.getCount();
+							+ " = 0", null, null, null, null);
 
-			for (int i = 0; i < totalRows; i++) {
+			while (c.moveToNext()) {
 				ContentValues map = new ContentValues();
 				DatabaseUtils.cursorRowToContentValues(c, map);
 				Checkin cc = CheckinsContract.CheckinsEntry
@@ -95,4 +119,14 @@ public class CheckinService extends IntentService {
 		return toUpload;
 	}
 
+	private String makePlaceholders(int len) {
+
+		StringBuilder sb = new StringBuilder(len * 2 - 1);
+		sb.append("?");
+		for (int i = 1; i < len; i++) {
+			sb.append(",?");
+		}
+		return sb.toString();
+
+	}
 }

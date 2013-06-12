@@ -1,4 +1,6 @@
-package net.codeforeurope.amsterdam.model;
+package net.codeforeurope.amsterdam.model.gson;
+
+import net.codeforeurope.amsterdam.model.Checkin;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;

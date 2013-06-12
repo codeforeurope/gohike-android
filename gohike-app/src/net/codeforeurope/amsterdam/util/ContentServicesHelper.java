@@ -13,7 +13,7 @@ import java.io.UnsupportedEncodingException;
 
 import net.codeforeurope.amsterdam.model.GameData;
 import net.codeforeurope.amsterdam.model.Image;
-import net.codeforeurope.amsterdam.model.ImageSerializer;
+import net.codeforeurope.amsterdam.model.gson.ImageTypeAdapter;
 import android.content.Context;
 import android.util.Log;
 
@@ -71,7 +71,7 @@ public class ContentServicesHelper {
 
 	private static Gson buildGson(File contentDirectory) {
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(Image.class, new ImageSerializer(
+		gsonBuilder.registerTypeAdapter(Image.class, new ImageTypeAdapter(
 				contentDirectory));
 		Gson gson = gsonBuilder.create();
 		return gson;

@@ -1,4 +1,4 @@
-package net.codeforeurope.amsterdam.model;
+package net.codeforeurope.amsterdam.model.gson;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import net.codeforeurope.amsterdam.model.Image;
 import net.codeforeurope.amsterdam.util.StringUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -18,15 +19,12 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 
-public class ImageSerializer implements JsonSerializer<Image>,
-		JsonDeserializer<Image> {
+public class ImageTypeAdapter implements JsonDeserializer<Image> {
 
 	private File contentDirectory;
 
-	public ImageSerializer(File contentFile) {
+	public ImageTypeAdapter(File contentFile) {
 		this.contentDirectory = contentFile;
 	}
 
@@ -58,7 +56,7 @@ public class ImageSerializer implements JsonSerializer<Image>,
 				writeOutImageFile(imageFile, imageData);
 			}
 			image.localPath = imageFile.getPath();
-			Log.i("Serializer",image.localPath);
+			Log.i("Serializer", image.localPath);
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException("Huh, MD5 should be supported?", e);
 		} catch (UnsupportedEncodingException e) {
@@ -73,17 +71,11 @@ public class ImageSerializer implements JsonSerializer<Image>,
 
 	private void writeOutImageFile(File imageFile, String imageData)
 			throws IOException {
-		OutputStream output = new BufferedOutputStream(new FileOutputStream(imageFile));
+		OutputStream output = new BufferedOutputStream(new FileOutputStream(
+				imageFile));
 		byte[] decodedImage = Base64.decode(imageData, Base64.DEFAULT);
 		output.write(decodedImage);
 		output.close();
-	}
-
-	@Override
-	public JsonElement serialize(Image image, Type type,
-			JsonSerializationContext serializationContext) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

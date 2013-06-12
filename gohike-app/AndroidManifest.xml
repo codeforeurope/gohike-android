@@ -55,6 +55,8 @@
         <service android:name=".service.ContentApiService" />
         <service android:name=".service.PingApiService" />
         <service android:name=".service.ContentService" />
+        <service android:name=".service.CheckinService" />
+        <service android:name=".service.CheckinsApiService" />
     </application>
 
 </manifest>

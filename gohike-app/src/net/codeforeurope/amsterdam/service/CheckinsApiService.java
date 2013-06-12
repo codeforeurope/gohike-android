@@ -4,9 +4,12 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import net.codeforeurope.amsterdam.model.Checkin;
+import net.codeforeurope.amsterdam.model.gson.CheckinExclusionStrategy;
+import net.codeforeurope.amsterdam.model.gson.DateTypeAdapter;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import net.codeforeurope.amsterdam.util.AppSecret;
 
@@ -21,6 +24,7 @@ import android.content.Intent;
 import android.provider.Settings.Secure;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class CheckinsApiService extends AbstractApiService {
 
@@ -47,12 +51,20 @@ public class CheckinsApiService extends AbstractApiService {
 	}
 
 	private String convertCheckinsToJson(List<Checkin> checkins) {
-		Gson gson = new Gson();
+		Gson gson = makeGson();
 		String deviceId = Secure.getString(this.getContentResolver(),
 				Secure.ANDROID_ID);
 		String json = "{\"identifier\": \"" + deviceId + "\", \"checkins\": "
 				+ gson.toJson(checkins) + "}";
 		return json;
+	}
+
+	private Gson makeGson() {
+		Gson gson = new GsonBuilder()
+				.setExclusionStrategies(new CheckinExclusionStrategy())
+				.registerTypeAdapter(Date.class, new DateTypeAdapter())
+				.create();
+		return gson;
 	}
 
 	@Override

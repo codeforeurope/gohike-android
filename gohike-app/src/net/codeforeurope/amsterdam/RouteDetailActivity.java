@@ -4,6 +4,7 @@ import net.codeforeurope.amsterdam.model.GameData;
 import net.codeforeurope.amsterdam.model.Profile;
 import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.model.Waypoint;
+import net.codeforeurope.amsterdam.service.CheckinService;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -19,12 +20,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class RouteDetailActivity extends Activity {
+public class RouteDetailActivity extends Activity implements OnClickListener {
 	GameData gameData;
 
 	Profile currentProfile;
@@ -40,6 +42,8 @@ public class RouteDetailActivity extends Activity {
 	LinearLayout waypointList;
 
 	private LayoutInflater inflater;
+
+	Button fakeIt;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +109,9 @@ public class RouteDetailActivity extends Activity {
 		waypointList = (LinearLayout) findViewById(R.id.route_detail_waypoints);
 		inflater = (LayoutInflater) getBaseContext().getSystemService(
 				Context.LAYOUT_INFLATER_SERVICE);
+
+		fakeIt = (Button) findViewById(R.id.route_detail_fake_checkin);
+		fakeIt.setOnClickListener(this);
 	}
 
 	@Override
@@ -164,5 +171,21 @@ public class RouteDetailActivity extends Activity {
 				ApiConstants.CURRENT_PROFILE);
 		currentRoute = getIntent().getParcelableExtra(
 				ApiConstants.CURRENT_ROUTE);
+	}
+
+	@Override
+	public void onClick(View v) {
+		Waypoint waypoint = getNextTarget();
+		Intent checkinIntent = new Intent(getBaseContext(),
+				CheckinService.class);
+		checkinIntent.putExtra(ApiConstants.CURRENT_TARGET, waypoint);
+		startService(checkinIntent);
+
+	}
+
+	private Waypoint getNextTarget() {
+		// TODO Auto-generated method stub
+
+		return currentRoute.waypoints.get(0);
 	}
 }

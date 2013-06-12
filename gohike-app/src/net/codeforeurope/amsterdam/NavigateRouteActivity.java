@@ -7,7 +7,6 @@ import net.codeforeurope.amsterdam.model.Profile;
 import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.model.Waypoint;
 import net.codeforeurope.amsterdam.util.ApiConstants;
-import android.R.integer;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -32,8 +31,9 @@ public class NavigateRouteActivity extends Activity implements
 	private static final int ANIMATION_DURATION = 300;
 
 	private static final int COMPASS_UPDATE_THRESHOLD = 500;
-	
-	private static final int CHECKIN_DISTANCE = 4000; //Change to 20 for production
+
+	private static final int CHECKIN_DISTANCE = 5000; // Change to 20 for
+														// production
 
 	GameData gameData;
 
@@ -58,8 +58,8 @@ public class NavigateRouteActivity extends Activity implements
 	private Sensor magnetometer;
 
 	LocationManager locationManager;
-	
-	boolean checkInWindowOnScreen = false; 
+
+	boolean checkInWindowOnScreen = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -156,9 +156,9 @@ public class NavigateRouteActivity extends Activity implements
 	float[] mGeomagnetic;
 	long timestamp = 0;
 	float azimuth = 0;
-	
+
 	public void onSensorChanged(SensorEvent event) {
-		
+
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
 			mGravity = event.values;
 		if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
@@ -216,33 +216,28 @@ public class NavigateRouteActivity extends Activity implements
 		debug.setText(data);
 		targetBearing = results[2];
 		// Toast.makeText(getBaseContext(),, Toast.LENGTH_SHORT).show();
-		
+
 		Log.d("navigating_to", currentTarget.nameEn);
-		if(results[0] < CHECKIN_DISTANCE)
-		{
+		if (results[0] < CHECKIN_DISTANCE) {
 			Log.d("Checkin", "You can check in!");
-			if(checkInWindowOnScreen  != true)
-			{
+			if (checkInWindowOnScreen != true) {
 				checkInWindowOnScreen = true;
 				CheckinDialogFragment c = new CheckinDialogFragment();
 				c.show(getFragmentManager(), "checkin");
 			}
 		}
 	}
-	
-	public void doNavigateToNextCheckin()
-	{		
+
+	public void doNavigateToNextCheckin() {
 		int i = currentRoute.waypoints.indexOf(currentTarget) + 1;
-		if(i<currentRoute.waypoints.size())
-		{
-			Waypoint nextTarget = currentRoute.waypoints.get(i+1);
+		if (i < currentRoute.waypoints.size()) {
+			Waypoint nextTarget = currentRoute.waypoints.get(i + 1);
 			currentTarget = nextTarget;
-		}
-		else
-		{
-			//Route is finished
+		} else {
+			// Route is finished
 			finish();
-			overridePendingTransition(R.anim.enter_from_left, R.anim.leave_to_right);
+			overridePendingTransition(R.anim.enter_from_left,
+					R.anim.leave_to_right);
 		}
 	}
 
