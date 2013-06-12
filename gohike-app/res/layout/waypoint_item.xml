@@ -33,6 +33,6 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
-        android:src="@drawable/waypoint_arrow_right" />
+        android:src="@drawable/waypoint_arrow_right" android:visibility="invisible"/>
 
 </RelativeLayout>

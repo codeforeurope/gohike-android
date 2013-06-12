@@ -1,5 +1,8 @@
 package net.codeforeurope.amsterdam;
 
+import java.util.ArrayList;
+
+import net.codeforeurope.amsterdam.model.Checkin;
 import net.codeforeurope.amsterdam.model.GameData;
 import net.codeforeurope.amsterdam.model.Profile;
 import net.codeforeurope.amsterdam.model.Route;
@@ -8,8 +11,10 @@ import net.codeforeurope.amsterdam.service.CheckinService;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -45,6 +50,8 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 
 	Button fakeIt;
 
+	BroadcastReceiver receiver;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -53,7 +60,61 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 		setupDataReferences();
 		setupActionBar();
 		setupViewReferences();
+		setupBroadcastReceivers();
 		loadAndDisplayData();
+		loadCheckins();
+
+	}
+
+	private void setupBroadcastReceivers() {
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(ApiConstants.ACTION_CHECKINS_LOADED);
+		receiver = new BroadcastReceiver() {
+
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				ArrayList<Checkin> checkins = intent
+						.getParcelableArrayListExtra(ApiConstants.LOCAL_CHECKINS);
+				gameData.checkins = checkins;
+				updateWaypointDisplay();
+
+			}
+		};
+		registerReceiver(receiver, filter);
+	}
+
+	private void loadCheckins() {
+		Intent intent = new Intent(getBaseContext(), CheckinService.class);
+		intent.setAction(ApiConstants.ACTION_LOAD_CHECKINS);
+		startService(intent);
+
+	}
+
+	private void updateWaypointDisplay() {
+		int length = currentRoute.waypoints.size();
+		for (int i = 0; i < length; i++) {
+			Waypoint waypoint = currentRoute.waypoints.get(i);
+			if (gameData.isWaypointCheckedIn(waypoint)) {
+				RelativeLayout waypointItem = (RelativeLayout) waypointList
+						.getChildAt(i);
+				ImageView leftIcon = (ImageView) waypointItem
+						.findViewById(R.id.waypoint_item_icon_left);
+
+				ImageView rightIcon = (ImageView) waypointItem
+						.findViewById(R.id.waypoint_item_icon_right);
+				rightIcon.setVisibility(View.VISIBLE);
+				leftIcon.getDrawable().setLevel(1);
+				waypointItem.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						Waypoint wp = (Waypoint) v.getTag();
+					}
+				});
+
+			}
+		}
 
 	}
 
@@ -67,18 +128,9 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 			Waypoint waypoint = currentRoute.waypoints.get(i);
 			RelativeLayout waypointItem = (RelativeLayout) inflater.inflate(
 					R.layout.waypoint_item, null);
-
-			ImageView leftIcon = (ImageView) waypointItem
-					.findViewById(R.id.waypoint_item_icon_left);
-
-			ImageView rightIcon = (ImageView) waypointItem
-					.findViewById(R.id.waypoint_item_icon_right);
-			// if checked in, change level and visibility
-
 			TextView itemTitle = (TextView) waypointItem
 					.findViewById(R.id.waypoint_item_title);
 			itemTitle.setText(waypoint.getLocalizedName());
-			// waypointItem.setLayoutParams(new RelativeLayout.LayoutParams()))
 			waypointItem.setTag(waypoint);
 			if (i == 0) {
 				waypointItem
@@ -88,14 +140,7 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 				waypointItem
 						.setBackgroundResource(R.drawable.waypoint_item_last);
 			}
-			waypointItem.setOnClickListener(new OnClickListener() {
 
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					Waypoint wp = (Waypoint) v.getTag();
-				}
-			});
 			waypointList.addView(waypointItem);
 
 		}

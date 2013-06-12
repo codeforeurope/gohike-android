@@ -31,28 +31,63 @@ public class CheckinService extends IntentService {
 		Intent broadcastIntent = new Intent();
 		db = new CheckinsDbHelper(getBaseContext()).getWritableDatabase();
 
-		if (ApiConstants.CHECKINS_UPLOADED.equals(intent.getAction())) {
-			broadcastIntent.setAction(ApiConstants.ACTION_CHECKINS_UPLOADED);
-			ArrayList<Checkin> checkinsUploaded = intent
-					.getParcelableArrayListExtra(ApiConstants.UPLOADED_CHECKINS);
-			updateCheckinsUploaded(checkinsUploaded);
+		if (ApiConstants.ACTION_LOAD_CHECKINS.equals(intent.getAction())) {
+			handleLoadCheckins(broadcastIntent);
+
+		} else if (ApiConstants.CHECKINS_UPLOADED.equals(intent.getAction())) {
+			handleCheckinsUploaded(intent, broadcastIntent);
 
 		} else {
-			Waypoint currentTarget = intent
-					.getParcelableExtra(ApiConstants.CURRENT_TARGET);
-			Checkin checkin = CheckinUtil.fromWaypoint(currentTarget);
-			broadcastIntent.setAction(ApiConstants.ACTION_CHECKIN_SAVED);
-			broadcastIntent.putExtra(ApiConstants.CHECKIN, checkin);
-
-			ArrayList<Checkin> checkinsToUpload = persistCheckin(checkin);
-			Intent uploadIntent = new Intent(getBaseContext(),
-					CheckinsApiService.class);
-			uploadIntent.putParcelableArrayListExtra(
-					ApiConstants.OUTSTANDING_CHECKINS, checkinsToUpload);
-			startService(uploadIntent);
+			handleSaveCheckins(intent, broadcastIntent);
 		}
 
 		sendBroadcast(broadcastIntent);
+	}
+
+	private void handleLoadCheckins(Intent broadcastIntent) {
+		broadcastIntent.setAction(ApiConstants.ACTION_CHECKINS_LOADED);
+		ArrayList<Checkin> localCheckins = loadLocalCheckins();
+		broadcastIntent.putParcelableArrayListExtra(
+				ApiConstants.LOCAL_CHECKINS, localCheckins);
+	}
+
+	private void handleSaveCheckins(Intent intent, Intent broadcastIntent) {
+		Waypoint currentTarget = intent
+				.getParcelableExtra(ApiConstants.CURRENT_TARGET);
+		Checkin checkin = CheckinUtil.fromWaypoint(currentTarget);
+		broadcastIntent.setAction(ApiConstants.ACTION_CHECKIN_SAVED);
+		broadcastIntent.putExtra(ApiConstants.CHECKIN, checkin);
+
+		ArrayList<Checkin> checkinsToUpload = persistCheckin(checkin);
+		Intent uploadIntent = new Intent(getBaseContext(),
+				CheckinsApiService.class);
+		uploadIntent.putParcelableArrayListExtra(
+				ApiConstants.OUTSTANDING_CHECKINS, checkinsToUpload);
+		startService(uploadIntent);
+	}
+
+	private void handleCheckinsUploaded(Intent intent, Intent broadcastIntent) {
+		broadcastIntent.setAction(ApiConstants.ACTION_CHECKINS_UPLOADED);
+		ArrayList<Checkin> checkinsUploaded = intent
+				.getParcelableArrayListExtra(ApiConstants.UPLOADED_CHECKINS);
+		updateCheckinsUploaded(checkinsUploaded);
+	}
+
+	private ArrayList<Checkin> loadLocalCheckins() {
+
+		ArrayList<Checkin> localCheckins = new ArrayList<Checkin>();
+
+		Cursor c = db.query(CheckinsContract.CheckinsEntry.TABLE_NAME,
+				CheckinsContract.CheckinsEntry.COLUMNS, null, null, null, null,
+				null);
+
+		while (c.moveToNext()) {
+			ContentValues map = new ContentValues();
+			DatabaseUtils.cursorRowToContentValues(c, map);
+			Checkin cc = CheckinsContract.CheckinsEntry.fromContentValues(map);
+			localCheckins.add(cc);
+		}
+		return localCheckins;
 	}
 
 	private void updateCheckinsUploaded(ArrayList<Checkin> checkinsUploaded) {
@@ -87,8 +122,7 @@ public class CheckinService extends IntentService {
 
 	private ContentValues makeUpdateValues() {
 		ContentValues updates = new ContentValues();
-		updates.put(CheckinsContract.CheckinsEntry.COLUMN_NAME_UPLOADED,
-				true);
+		updates.put(CheckinsContract.CheckinsEntry.COLUMN_NAME_UPLOADED, true);
 		return updates;
 	}
 

@@ -30,6 +30,9 @@ public class ApiConstants {
 	public static final String ACTION_CHECKIN_SAVED = "checkin_saved";
 	public static final String ACTION_CHECKINS_UPLOADED = "checkins_uploaded";
 	public static final DateFormat DATE_FORMAT = new SimpleDateFormat(
-	"yyyy-MM-dd HH:mm:ss Z");
+			"yyyy-MM-dd HH:mm:ss Z");
+	public static final String ACTION_LOAD_CHECKINS = "load_checkins";
+	public static final String ACTION_CHECKINS_LOADED = "checkins_loaded";
+	public static final String LOCAL_CHECKINS = "local_checkins";
 
 }

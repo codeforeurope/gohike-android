@@ -11,7 +11,7 @@ public class GameData implements Parcelable {
 	public String version;
 
 	public List<Profile> profiles = new ArrayList<Profile>();
-	
+
 	public List<Checkin> checkins = new ArrayList<Checkin>();
 
 	public GameData(Parcel in) {
@@ -40,5 +40,16 @@ public class GameData implements Parcelable {
 			return new GameData[size];
 		}
 	};
+
+	public boolean isWaypointCheckedIn(Waypoint waypoint) {
+		for (Checkin checkin : checkins) {
+			if (checkin.locationId == waypoint.id
+					&& checkin.routeId == waypoint.routeId) {
+				return true;
+			}
+		}
+		return false;
+
+	}
 
 }
