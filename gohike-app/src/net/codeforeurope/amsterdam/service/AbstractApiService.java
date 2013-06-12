@@ -49,16 +49,25 @@ public abstract class AbstractApiService extends IntentService {
 		} catch (IOException e) {
 			broadCastIntent
 					.putExtra(ApiConstants.ERROR_MESSAGE, e.getMessage());
+			processResponseError(intent, broadCastIntent, e);
 		} catch (JSONException e) {
+			processResponseError(intent, broadCastIntent, e);
 			broadCastIntent
 					.putExtra(ApiConstants.ERROR_MESSAGE, e.getMessage());
 		} catch (Exception e) {
-			broadCastIntent.putExtra(ApiConstants.SUCCESS, false);
+			processResponseError(intent, broadCastIntent, e);
 			broadCastIntent.putExtra(ApiConstants.ERROR, ApiConstants.ERROR);
 		} finally {
 			client.close();
+
 			sendBroadcast(broadCastIntent);
 		}
+	}
+
+	protected void processResponseError(Intent intent, Intent broadCastIntent,
+			Exception e) {
+		// TODO Auto-generated method stub
+
 	}
 
 	protected abstract HttpRequestBase generateRequest(Intent intent)

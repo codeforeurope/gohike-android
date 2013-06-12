@@ -19,7 +19,7 @@ public class NewSplashActivity extends Activity {
 	private GameData gameData;
 
 	private BroadcastReceiver receiver;
-	
+
 	private UpdateContentDialogFragment updateDialog;
 
 	@Override
@@ -44,19 +44,24 @@ public class NewSplashActivity extends Activity {
 			public void onReceive(Context context, Intent intent) {
 				String action = intent.getAction();
 				if (ApiConstants.ACTION_PING_COMPLETE.equals(action)) {
-					PingResult result = intent
-							.getParcelableExtra(ApiConstants.PING_RESULT);
-					if (!"ok".equalsIgnoreCase(result.status)) {
-						updateDialog.setContentSize(result.size);
-						updateDialog.show(getFragmentManager(), "dialog");
+					if (intent.getBooleanExtra(ApiConstants.SUCCESS, false)) {
+						PingResult result = intent
+								.getParcelableExtra(ApiConstants.PING_RESULT);
+						if (!"ok".equalsIgnoreCase(result.status)) {
+							updateDialog.setContentSize(result.size);
+							updateDialog.show(getFragmentManager(), "dialog");
+						} else {
+							gotoMainScreen();
+						}
 					} else {
 						gotoMainScreen();
 					}
 				} else {
 					gameData = intent
 							.getParcelableExtra(ApiConstants.GAME_DATA);
-					
-					if (ApiConstants.ACTION_REMOTE_CONTENT_LOADED.equals(action)) {
+
+					if (ApiConstants.ACTION_REMOTE_CONTENT_LOADED
+							.equals(action)) {
 						gotoMainScreen();
 					} else {
 						pingforChanges();
@@ -74,7 +79,7 @@ public class NewSplashActivity extends Activity {
 		startActivity(intent);
 		finish();
 	}
-	
+
 	protected void pingforChanges() {
 		Intent intent = new Intent(getBaseContext(), PingApiService.class);
 		intent.putExtra(ApiConstants.CONTENT_VERSION, gameData.version);
@@ -89,6 +94,7 @@ public class NewSplashActivity extends Activity {
 	public void skipUpdate() {
 		gotoMainScreen();
 	}
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -106,7 +112,5 @@ public class NewSplashActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onPause();
 	}
-	
-	
 
 }

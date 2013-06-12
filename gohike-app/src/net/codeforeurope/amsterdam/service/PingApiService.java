@@ -87,6 +87,13 @@ public class PingApiService extends AbstractApiService {
 	}
 
 	@Override
+	protected void processResponseError(Intent intent, Intent broadCastIntent,
+			Exception e) {
+		broadCastIntent.setAction(ApiConstants.ACTION_PING_COMPLETE);
+
+	}
+
+	@Override
 	protected String getEndpointUrl() {
 		return String.format(API_URL, END_POINT);
 	}
