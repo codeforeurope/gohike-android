@@ -200,6 +200,7 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void goUp() {
 		Intent intent = new Intent(this, RouteGridActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
