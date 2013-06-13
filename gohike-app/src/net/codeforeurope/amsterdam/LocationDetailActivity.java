@@ -17,32 +17,32 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class RewardActivity extends Activity {
+public class LocationDetailActivity extends Activity {
 
 	GameData gameData;
-	
+
 	Profile currentProfile;
-	
+
 	Route currentRoute;
-
-	ImageView rewardImage;
-
-	TextView rewardTitle;
-
-	TextView rewardDescription;
 	
-	private LayoutInflater inflater;
+	Waypoint currentWaypoint;
+	
+	ImageView locationImage;
+
+	TextView locationTitle;
+
+	TextView locationDescription;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
+		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setupDataReferences();
@@ -52,30 +52,12 @@ public class RewardActivity extends Activity {
 
 	}
 	
-	private void loadAndDisplayData() {
-		Bitmap photo = BitmapFactory.decodeFile(currentRoute.image.localPath);
-		rewardImage.setImageBitmap(photo);
-		rewardTitle.setText(currentRoute.getLocalizedName());
-		rewardDescription.setText(currentRoute.getLocalizedDescription());
-
-	}
-
-	private void setupViewReferences() {
-		setContentView(R.layout.route_detail);
-		rewardImage = (ImageView) findViewById(R.id.reward_image);
-		rewardTitle = (TextView) findViewById(R.id.reward_title);
-		rewardDescription = (TextView) findViewById(R.id.route_detail_description);
-		
-		inflater = (LayoutInflater) getBaseContext().getSystemService(
-				Context.LAYOUT_INFLATER_SERVICE);
-	}
-
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
 		overridePendingTransition(R.anim.enter_from_left, R.anim.leave_to_right);
 	}
-
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -83,17 +65,7 @@ public class RewardActivity extends Activity {
 			// app icon in action bar clicked; go home
 			onBackPressed();
 			return true;
-		case R.id.menu_start_hike:
-			Intent intent = new Intent(this, NavigateRouteActivity.class);
-			intent.putExtra(ApiConstants.GAME_DATA, gameData);
-			intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
-			intent.putExtra(ApiConstants.CURRENT_ROUTE, currentRoute);
-			intent.putExtra(ApiConstants.CURRENT_TARGET,
-					currentRoute.waypoints.get(0));
-			startActivity(intent);
-			overridePendingTransition(R.anim.enter_from_right,
-					R.anim.leave_to_left);
-			return true;
+			//TODO Handle the tap on the Map button (if implemented)
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -110,24 +82,41 @@ public class RewardActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu_share, menu);
+//		MenuInflater inflater = getMenuInflater();
+//		inflater.inflate(R.menu.route_detail, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-
-	private void setupActionBar() {
-		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle(currentRoute.getLocalizedName());
-	}
-
+	
 	private void setupDataReferences() {
 		gameData = getIntent().getParcelableExtra(ApiConstants.GAME_DATA);
 		currentProfile = getIntent().getParcelableExtra(
 				ApiConstants.CURRENT_PROFILE);
 		currentRoute = getIntent().getParcelableExtra(
 				ApiConstants.CURRENT_ROUTE);
+		currentWaypoint = getIntent().getParcelableExtra(ApiConstants.CURRENT_WAYPOINT);
 	}
-}
 	
+	private void setupActionBar() {
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(currentWaypoint.getLocalizedName());
+	}
+	
+	private void setupViewReferences() {
+		setContentView(R.layout.location_detail);
+		locationImage = (ImageView) findViewById(R.id.location_detail_image);
+		locationTitle = (TextView) findViewById(R.id.location_detail_title);
+		locationDescription = (TextView) findViewById(R.id.location_detail_description);
 
+	}
+	
+	private void loadAndDisplayData() {
+		Bitmap photo = BitmapFactory.decodeFile(currentWaypoint.image.localPath);
+		locationImage.setImageBitmap(photo);
+		locationTitle.setText(currentWaypoint.getLocalizedName());
+		locationDescription.setText(currentWaypoint.getLocalizedDescription());
+		
+	}
+
+	
+}

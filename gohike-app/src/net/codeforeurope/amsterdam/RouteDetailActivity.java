@@ -77,7 +77,6 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 						.getParcelableArrayListExtra(ApiConstants.LOCAL_CHECKINS);
 				gameData.checkins = checkins;
 				updateWaypointDisplay();
-
 			}
 		};
 		registerReceiver(receiver, filter);
@@ -110,12 +109,25 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
 						Waypoint wp = (Waypoint) v.getTag();
+						//here we show the Location Detail
+						openLocationDetail(wp);
 					}
 				});
 
 			}
 		}
 
+	}
+	
+	private void openLocationDetail(Waypoint wp)
+	{
+		Intent intent = new Intent(this, LocationDetailActivity.class);
+		intent.putExtra(ApiConstants.GAME_DATA, gameData);
+		intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
+		intent.putExtra(ApiConstants.CURRENT_ROUTE, currentRoute);
+		intent.putExtra(ApiConstants.CURRENT_WAYPOINT, wp);
+		startActivity(intent);
+		overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
 	}
 
 	private void loadAndDisplayData() {

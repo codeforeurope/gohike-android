@@ -10,6 +10,8 @@
     <string name="show_map">Map</string>
     <string name="compass_rose">Compass Rose</string>
     <string name="compass_target">Compass Target</string>
+    <string name="location_detail">Location</string>
+    <string name="reward">Reward</string>
     
      <string name="update_dialog_title">Update Content?</string>
      <string name="update_dialog_message">There is a new version of content available. The size of the download is %.1f MB. Shall we go ahead and update? </string>

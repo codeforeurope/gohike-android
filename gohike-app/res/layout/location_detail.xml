@@ -2,32 +2,35 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" android:background="@drawable/layout_background">
-
-<LinearLayout android:id="@+id/reward"
+    
+<LinearLayout android:id="@+id/location_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" android:padding="10dp"
         >
         
-        <TextView
-            android:id="@+id/reward_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reward Title"
-            android:textAppearance="?android:attr/textAppearanceLarge" 
-         />
- <ImageView
-            android:id="@+id/reward_image"
+
+  <ImageView
+            android:id="@+id/location_detail_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/reward_image" />
         
-   <TextView
-            android:id="@+id/route_detail_description"
+    <TextView
+            android:id="@+id/location_detail_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reward description"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge" 
+         />
+    
+   <TextView
+            android:id="@+id/location_detail_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceMedium" />
    
-</LinearLayout>
+</LinearLayout>    
+    
 </ScrollView>
