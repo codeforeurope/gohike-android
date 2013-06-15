@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+     <item
+        android:id="@+id/menu_view_reward"
+        android:icon="@drawable/icon_reward"
+        android:showAsAction="always|withText"
+        android:title="@string/view_reward"
+        android:titleCondensed="@string/view_reward"/>
+   
+</menu>

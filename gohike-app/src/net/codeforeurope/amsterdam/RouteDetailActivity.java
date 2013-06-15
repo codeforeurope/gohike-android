@@ -116,7 +116,6 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 
 			}
 		}
-
 	}
 	
 	private void openLocationDetail(Waypoint wp)
@@ -189,9 +188,17 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 			intent.putExtra(ApiConstants.GAME_DATA, gameData);
 			intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
 			intent.putExtra(ApiConstants.CURRENT_ROUTE, currentRoute);
-			intent.putExtra(ApiConstants.CURRENT_TARGET,
-					currentRoute.waypoints.get(0));
+			intent.putExtra(ApiConstants.CURRENT_TARGET, getNextTarget());
 			startActivity(intent);
+			overridePendingTransition(R.anim.enter_from_right,
+					R.anim.leave_to_left);
+			return true;
+		case R.id.menu_view_reward:
+			Intent intent1 = new Intent(this, RewardActivity.class);
+			intent1.putExtra(ApiConstants.GAME_DATA, gameData);
+			intent1.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
+			intent1.putExtra(ApiConstants.CURRENT_ROUTE, currentRoute);
+			startActivity(intent1);
 			overridePendingTransition(R.anim.enter_from_right,
 					R.anim.leave_to_left);
 			return true;
@@ -199,7 +206,7 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
+	
 	@SuppressWarnings("unused")
 	private void goUp() {
 		Intent intent = new Intent(this, RouteGridActivity.class);
@@ -213,7 +220,12 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.route_detail, menu);
+		if(isRouteFinished()){
+			inflater.inflate(R.menu.route_detail_finished, menu);
+		}
+		else{
+			inflater.inflate(R.menu.route_detail, menu);	
+		}
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -242,8 +254,28 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 	}
 
 	private Waypoint getNextTarget() {
-		// TODO Auto-generated method stub
+		//Returns the first not visited location
+		int waypoints = currentRoute.waypoints.size();
+		for(int i = 0; i < waypoints; i++)
+		{
+			Waypoint w = currentRoute.waypoints.get(i);
+			if (gameData.isWaypointCheckedIn(w) != true) {
+				return w;
+				
+			}
+		}
+		return null;
 
-		return currentRoute.waypoints.get(0);
+//		return currentRoute.waypoints.get(0);
+	}
+	
+	private boolean isRouteFinished()
+	{
+		if (getNextTarget() == null){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 }

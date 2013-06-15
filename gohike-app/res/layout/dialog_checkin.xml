@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+        
+    <TextView
+            android:id="@+id/checkin_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You are close to !"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+            
+    <ImageView
+            android:id="@+id/checkin_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/reward_image" />
+            
+    <TextView
+            android:id="@+id/checkin_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Look around! Have you found it?"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</LinearLayout>
+   

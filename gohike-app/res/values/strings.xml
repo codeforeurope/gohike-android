@@ -12,6 +12,7 @@
     <string name="compass_target">Compass Target</string>
     <string name="location_detail">Location</string>
     <string name="reward">Reward</string>
+    <string name="view_reward">View Reward</string>
     
      <string name="update_dialog_title">Update Content?</string>
      <string name="update_dialog_message">There is a new version of content available. The size of the download is %.1f MB. Shall we go ahead and update? </string>
@@ -20,5 +21,7 @@
      <string name="route_image">Route Image</string>
      <string name="reward_image">Reward Image</string>
      <string name="share_reward">Share Reward</string>
+     <string name="yes">Yes</string>
+     <string name="no">No</string>
 
 </resources>

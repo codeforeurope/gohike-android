@@ -6,10 +6,12 @@ import net.codeforeurope.amsterdam.model.GameData;
 import net.codeforeurope.amsterdam.model.Profile;
 import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.model.Waypoint;
+import net.codeforeurope.amsterdam.service.CheckinService;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -223,12 +225,23 @@ public class NavigateRouteActivity extends Activity implements
 			if (checkInWindowOnScreen != true) {
 				checkInWindowOnScreen = true;
 				CheckinDialogFragment c = new CheckinDialogFragment();
+				Bundle dialogArgs = new Bundle();
+				dialogArgs.putParcelable(ApiConstants.CURRENT_TARGET, currentTarget);
+				c.setArguments(dialogArgs);
 				c.show(getFragmentManager(), "checkin");
 			}
 		}
 	}
 
 	public void doNavigateToNextCheckin() {
+		
+		//We save the check-in 
+		Intent checkinIntent = new Intent(getBaseContext(),
+				CheckinService.class);
+		checkinIntent.putExtra(ApiConstants.CURRENT_TARGET, currentTarget);
+		startService(checkinIntent);
+		
+		//We set the next one
 		int i = currentRoute.waypoints.indexOf(currentTarget) + 1;
 		if (i < currentRoute.waypoints.size()) {
 			Waypoint nextTarget = currentRoute.waypoints.get(i + 1);
