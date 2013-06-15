@@ -121,6 +121,7 @@ public class RewardActivity extends Activity {
 				ApiConstants.CURRENT_PROFILE);
 		currentRoute = getIntent().getParcelableExtra(
 				ApiConstants.CURRENT_ROUTE);
+		reward = currentRoute.reward;
 	}
 }
 	

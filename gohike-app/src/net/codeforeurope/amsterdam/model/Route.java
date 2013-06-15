@@ -9,7 +9,8 @@ import android.os.Parcelable;
 public class Route extends BaseModelWithIcon implements Parcelable {
 
 	public List<Waypoint> waypoints = new ArrayList<Waypoint>();
-
+	public Reward reward = new Reward();
+	
 	public Route(Parcel in) {
 		this.id = in.readInt();
 		this.nameEn = in.readString();
@@ -19,6 +20,7 @@ public class Route extends BaseModelWithIcon implements Parcelable {
 		this.image = in.readParcelable(Image.class.getClassLoader());
 		this.icon = in.readParcelable(Image.class.getClassLoader());
 		in.readTypedList(this.waypoints, Waypoint.CREATOR);
+		this.reward = in.readParcelable(Reward.class.getClassLoader());
 	}
 
 	@Override
@@ -37,6 +39,7 @@ public class Route extends BaseModelWithIcon implements Parcelable {
 		dest.writeParcelable(this.image, 0);
 		dest.writeParcelable(this.icon, 0);
 		dest.writeTypedList(this.waypoints);
+		dest.writeParcelable(this.reward, 0);
 
 	}
 

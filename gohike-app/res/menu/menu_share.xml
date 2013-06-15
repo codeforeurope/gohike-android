@@ -3,7 +3,7 @@
     
   <item
         android:id="@+id/menu_share_badge"
-        android:icon="@drawable/icon_map"
+        android:icon="@drawable/icon_facebook"
         android:showAsAction="always"
         android:title="@string/share_reward"
         android:titleCondensed="@string/share_reward"/>
