@@ -61,7 +61,7 @@ public class NavigateRouteActivity extends Activity implements
 
 	LocationManager locationManager;
 
-	boolean checkInWindowOnScreen = false;
+	boolean checkinInProgress = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -222,8 +222,8 @@ public class NavigateRouteActivity extends Activity implements
 		Log.d("navigating_to", currentTarget.nameEn);
 		if (results[0] < CHECKIN_DISTANCE) {
 			Log.d("Checkin", "You can check in!");
-			if (checkInWindowOnScreen != true) {
-				checkInWindowOnScreen = true;
+			if (checkinInProgress != true) {
+				checkinInProgress = true;
 				CheckinDialogFragment c = new CheckinDialogFragment();
 				Bundle dialogArgs = new Bundle();
 				dialogArgs.putParcelable(ApiConstants.CURRENT_TARGET, currentTarget);
@@ -233,6 +233,14 @@ public class NavigateRouteActivity extends Activity implements
 		}
 	}
 
+	public void doWaypointFound() {
+		FoundDialogFragment d = new FoundDialogFragment();
+		Bundle dialogArgs = new Bundle();
+		dialogArgs.putParcelable(ApiConstants.CURRENT_TARGET, currentTarget);
+		d.setArguments(dialogArgs);
+		d.show(getFragmentManager(), "found");
+	}
+	
 	public void doNavigateToNextCheckin() {
 		
 		//We save the check-in 
@@ -241,17 +249,21 @@ public class NavigateRouteActivity extends Activity implements
 		checkinIntent.putExtra(ApiConstants.CURRENT_TARGET, currentTarget);
 		startService(checkinIntent);
 		
-		//We set the next one
-		int i = currentRoute.waypoints.indexOf(currentTarget) + 1;
-		if (i < currentRoute.waypoints.size()) {
-			Waypoint nextTarget = currentRoute.waypoints.get(i + 1);
+		//We set the next target
+		int nextRank = currentTarget.rank + 1;
+		if (nextRank  < currentRoute.waypoints.size()) {
+			Waypoint nextTarget = currentRoute.waypoints.get(nextRank );
 			currentTarget = nextTarget;
 		} else {
-			// Route is finished
+			// Route is finished, we return back
 			finish();
 			overridePendingTransition(R.anim.enter_from_left,
 					R.anim.leave_to_right);
 		}
+		
+		//set that the check-in process has finished
+		checkinInProgress = false;
+	
 	}
 
 	@Override

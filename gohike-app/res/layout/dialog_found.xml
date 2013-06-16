@@ -4,5 +4,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
+    <TextView
+            android:id="@+id/found_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/found_title"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+            
+ 
+    <TextView
+            android:id="@+id/found_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="description"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

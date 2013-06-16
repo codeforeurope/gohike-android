@@ -28,11 +28,7 @@ public class CheckinDialogFragment extends DialogFragment {
 	    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 	    
 	    currentTarget = getArguments().getParcelable(ApiConstants.CURRENT_TARGET);
-	    
-//	    Activity a = (NavigateRouteActivity)getActivity();
-//	    Log.d("checkindialog",a.currentTarget.getLocalizedName());
-	    //not working
-	    
+
 	    LayoutInflater inflater = getActivity().getLayoutInflater();
 
 	    LinearLayout waypointLayout = (LinearLayout) inflater.inflate(
@@ -47,55 +43,26 @@ public class CheckinDialogFragment extends DialogFragment {
 		
 		
 	    builder.setView(waypointLayout)
-	    .setTitle("You are close!") //R.string.pick_color
+	    .setTitle(R.string.checkin_close) //R.string.pick_color
 	    // Add action buttons
            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                @Override
                public void onClick(DialogInterface dialog, int id) {
-            	   	//user wants to check in
-            		//store the current check-in somewhere
-            		//get the next
-            		//set the navigation to the next
+					//User wants to check-in
             		((NavigateRouteActivity) getActivity())
-					.doNavigateToNextCheckin();
+					.doWaypointFound();
                }
            })
            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialog, int id) {
                    CheckinDialogFragment.this.getDialog().cancel();
+                   
+                   ((NavigateRouteActivity) getActivity())
+        		   .checkinInProgress = false;
                }
            });    
 	    
-//	           .setItems((new String[]{getString(R.string.yes),getString(R.string.no)}), 
-//	        		   new DialogInterface.OnClickListener() {
-//	               public void onClick(DialogInterface dialog, int which) {
-//	               // The 'which' argument contains the index position
-//	               // of the selected item
-//	            	   switch(which)
-//	            	   {
-//	            	   case 0: //user wants to check in
-//	            		   //store the current check-in somewhere
-//	            		   //get the next
-//	            		   //set the navigation to the next
-//	            			((NavigateRouteActivity) getActivity())
-//							.doNavigateToNextCheckin();
-//	            		   break;
-//	            	   case 1: //just dismiss dialog
-//	            		   dismiss();
-//	            		   
-//	            		   break;
-//	            	   }
-//	           }
-//	    });
-
 	    return builder.create();
-	}
-	
-	@Override
-	public void onDismiss (DialogInterface dialog)
-	{
-		((NavigateRouteActivity) getActivity())
-		   .checkInWindowOnScreen = false;
 	}
 	
 	

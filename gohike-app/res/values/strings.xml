@@ -23,5 +23,12 @@
      <string name="share_reward">Share Reward</string>
      <string name="yes">Yes</string>
      <string name="no">No</string>
+     <string name="found_title">Congratulations! You found it!</string>
+     <string name="route_continue">Continue!</string>
+     <string name="checkin_close">You are close!</string>
+     
+     
+     
+ 
 
 </resources>

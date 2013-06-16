@@ -19,6 +19,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -81,7 +82,14 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 		};
 		registerReceiver(receiver, filter);
 	}
-
+	
+	@Override
+	public void onActionModeFinished(ActionMode mode) {
+		//This should solve the exception of BroadcastReceiver leaking that shows when debugging
+		unregisterReceiver(receiver);
+		super.onActionModeFinished(mode);
+	}
+	
 	private void loadCheckins() {
 		Intent intent = new Intent(getBaseContext(), CheckinService.class);
 		intent.setAction(ApiConstants.ACTION_LOAD_CHECKINS);
@@ -107,7 +115,6 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						Waypoint wp = (Waypoint) v.getTag();
 						//here we show the Location Detail
 						openLocationDetail(wp);
@@ -219,6 +226,12 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		if(isRouteFinished()){
 			inflater.inflate(R.menu.route_detail_finished, menu);
@@ -226,7 +239,8 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 		else{
 			inflater.inflate(R.menu.route_detail, menu);	
 		}
-		return super.onCreateOptionsMenu(menu);
+		
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	private void setupActionBar() {
