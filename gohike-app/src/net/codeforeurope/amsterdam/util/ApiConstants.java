@@ -36,4 +36,9 @@ public class ApiConstants {
 	public static final String ACTION_CHECKINS_LOADED = "checkins_loaded";
 	public static final String LOCAL_CHECKINS = "local_checkins";
 
+	public static final String ACTION_GAME_DATA_UPDATED = "game_data_updated";
+	public static final String ACTION_PROMPT_FOR_UPDATE = "prompt_for_conent_update";
+	public static final String ACTION_GO_TO_PROFILES = "go_to_profile_grid";
+	public static final String UPDATE_SIZE = "update_size";
+
 }

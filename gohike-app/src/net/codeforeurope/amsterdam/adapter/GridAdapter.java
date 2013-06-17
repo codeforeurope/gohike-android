@@ -1,6 +1,6 @@
 package net.codeforeurope.amsterdam.adapter;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import net.codeforeurope.amsterdam.R;
 import net.codeforeurope.amsterdam.model.BaseModelWithIcon;
@@ -20,12 +20,12 @@ public class GridAdapter extends BaseAdapter {
 
 	protected LayoutInflater inflater;
 
-	protected List<? extends BaseModelWithIcon> profiles;
+	protected ArrayList<? extends BaseModelWithIcon> profiles;
 
 	protected Context context;
 
 	public GridAdapter(Context context,
-			List<? extends BaseModelWithIcon> profiles) {
+			ArrayList<? extends BaseModelWithIcon> profiles) {
 		super();
 		this.context = context;
 		this.profiles = profiles;
@@ -43,7 +43,8 @@ public class GridAdapter extends BaseAdapter {
 			mHolder = new MainListHolder();
 			v = inflater.inflate(R.layout.grid_item, null);
 			mHolder.topText = (TextView) v.findViewById(R.id.grid_item_top);
-			mHolder.bottomText = (TextView) v.findViewById(R.id.grid_item_bottom);
+			mHolder.bottomText = (TextView) v
+					.findViewById(R.id.grid_item_bottom);
 			v.setTag(mHolder);
 		} else {
 			mHolder = (MainListHolder) v.getTag();

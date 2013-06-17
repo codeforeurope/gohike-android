@@ -12,7 +12,7 @@ public class UpdateContentDialogFragment extends DialogFragment {
 	@Override
 	public void onCancel(DialogInterface dialog) {
 		// TODO Auto-generated method stub
-		((NewSplashActivity) getActivity()).skipUpdate();
+		((SplashActivity) getActivity()).skipUpdate();
 		super.onCancel(dialog);
 	}
 
@@ -33,14 +33,14 @@ public class UpdateContentDialogFragment extends DialogFragment {
 				.setPositiveButton(R.string.update_dialog_yes,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								((NewSplashActivity) getActivity())
+								((SplashActivity) getActivity())
 										.doUpdateContent();
 							}
 						})
 				.setNegativeButton(R.string.update_dialog_no,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								((NewSplashActivity) getActivity())
+								((SplashActivity) getActivity())
 										.skipUpdate();
 							}
 						});
