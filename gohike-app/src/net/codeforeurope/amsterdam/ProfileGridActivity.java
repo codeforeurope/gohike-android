@@ -1,6 +1,7 @@
 package net.codeforeurope.amsterdam;
 
 import net.codeforeurope.amsterdam.adapter.GridAdapter;
+import net.codeforeurope.amsterdam.model.Profile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -38,20 +39,14 @@ public class ProfileGridActivity extends AbstractGameActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		// TODO Auto-generated method stub
-		// GridAdapter adapter = (GridAdapter) parent.getAdapter();
-		// Profile profile = (Profile) adapter.getItem(position);
-		//
-		// // Intent intent = new Intent(getBaseContext(),
-		// // RouteGridActivity.class);
-		// Intent intent = new Intent(getBaseContext(),
-		// RouteDetailActivity.class);
-		// intent.putExtra(ApiConstants.GAME_DATA, gameData);
-		// intent.putExtra(ApiConstants.CURRENT_PROFILE, profile);
-		// intent.putExtra(ApiConstants.CURRENT_ROUTE, profile.routes.get(0));
-		// startActivity(intent);
-		// overridePendingTransition(R.anim.enter_from_right,
-		// R.anim.leave_to_left);
+		GridAdapter adapter = (GridAdapter) parent.getAdapter();
+		Profile profile = (Profile) adapter.getItem(position);
+		gameStateService.setCurrentProfile(profile);
+		gameStateService.setCurrentRoute(profile.routes.get(0));
+
+		Intent intent = new Intent(getBaseContext(), RouteDetailActivity.class);
+		startActivity(intent);
+		overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
 	}
 
 	@Override

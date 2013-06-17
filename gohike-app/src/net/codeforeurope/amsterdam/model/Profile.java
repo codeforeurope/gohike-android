@@ -1,15 +1,13 @@
 package net.codeforeurope.amsterdam.model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-
 public class Profile extends BaseModelWithIcon implements Parcelable {
 
-	public List<Route> routes = new ArrayList<Route>();
+	public ArrayList<Route> routes = new ArrayList<Route>();
 
 	public Profile(Parcel in) {
 		this.id = in.readInt();
@@ -20,7 +18,7 @@ public class Profile extends BaseModelWithIcon implements Parcelable {
 		this.image = in.readParcelable(Image.class.getClassLoader());
 		this.icon = in.readParcelable(Image.class.getClassLoader());
 		in.readTypedList(this.routes, Route.CREATOR);
-		
+
 	}
 
 	@Override

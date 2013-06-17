@@ -11,8 +11,6 @@ public class GameData implements Parcelable {
 
 	public ArrayList<Profile> profiles = new ArrayList<Profile>();
 
-	public ArrayList<Checkin> checkins = new ArrayList<Checkin>();
-
 	public GameData(Parcel in) {
 		this.version = in.readString();
 		in.readTypedList(this.profiles, Profile.CREATOR);
@@ -39,16 +37,5 @@ public class GameData implements Parcelable {
 			return new GameData[size];
 		}
 	};
-
-	public boolean isWaypointCheckedIn(Waypoint waypoint) {
-		for (Checkin checkin : checkins) {
-			if (checkin.locationId == waypoint.id
-					&& checkin.routeId == waypoint.routeId) {
-				return true;
-			}
-		}
-		return false;
-
-	}
 
 }

@@ -1,16 +1,15 @@
 package net.codeforeurope.amsterdam.model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Route extends BaseModelWithIcon implements Parcelable {
 
-	public List<Waypoint> waypoints = new ArrayList<Waypoint>();
+	public ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>();
 	public Reward reward = new Reward();
-	
+
 	public Route(Parcel in) {
 		this.id = in.readInt();
 		this.nameEn = in.readString();

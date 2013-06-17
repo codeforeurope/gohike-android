@@ -1,16 +1,10 @@
 package net.codeforeurope.amsterdam;
 
-import java.util.ArrayList;
-
-import net.codeforeurope.amsterdam.model.Checkin;
-import net.codeforeurope.amsterdam.model.GameData;
-import net.codeforeurope.amsterdam.model.Profile;
 import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.model.Waypoint;
 import net.codeforeurope.amsterdam.service.CheckinService;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -32,12 +26,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class RouteDetailActivity extends Activity implements OnClickListener {
-	GameData gameData;
-
-	Profile currentProfile;
-
-	Route currentRoute;
+public class RouteDetailActivity extends AbstractGameActivity implements
+		OnClickListener {
 
 	ImageView routeImage;
 
@@ -53,17 +43,16 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 
 	BroadcastReceiver receiver;
 
+	private Route currentRoute;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		setupDataReferences();
-		setupActionBar();
+
 		setupViewReferences();
 		setupBroadcastReceivers();
-		loadAndDisplayData();
-		loadCheckins();
 
 	}
 
@@ -74,34 +63,27 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void onReceive(Context context, Intent intent) {
-				ArrayList<Checkin> checkins = intent
-						.getParcelableArrayListExtra(ApiConstants.LOCAL_CHECKINS);
-				gameData.checkins = checkins;
+
 				updateWaypointDisplay();
 			}
 		};
 		registerReceiver(receiver, filter);
 	}
-	
+
 	@Override
 	public void onActionModeFinished(ActionMode mode) {
-		//This should solve the exception of BroadcastReceiver leaking that shows when debugging
+		// This should solve the exception of BroadcastReceiver leaking that
+		// shows when debugging
 		unregisterReceiver(receiver);
 		super.onActionModeFinished(mode);
 	}
-	
-	private void loadCheckins() {
-		Intent intent = new Intent(getBaseContext(), CheckinService.class);
-		intent.setAction(ApiConstants.ACTION_LOAD_CHECKINS);
-		startService(intent);
-
-	}
 
 	private void updateWaypointDisplay() {
+		Route currentRoute = gameStateService.getCurrentRoute();
 		int length = currentRoute.waypoints.size();
 		for (int i = 0; i < length; i++) {
 			Waypoint waypoint = currentRoute.waypoints.get(i);
-			if (gameData.isWaypointCheckedIn(waypoint)) {
+			if (gameStateService.isWaypointCheckedIn(waypoint)) {
 				RelativeLayout waypointItem = (RelativeLayout) waypointList
 						.getChildAt(i);
 				ImageView leftIcon = (ImageView) waypointItem
@@ -116,7 +98,7 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 					@Override
 					public void onClick(View v) {
 						Waypoint wp = (Waypoint) v.getTag();
-						//here we show the Location Detail
+						// here we show the Location Detail
 						openLocationDetail(wp);
 					}
 				});
@@ -124,14 +106,13 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 			}
 		}
 	}
-	
-	private void openLocationDetail(Waypoint wp)
-	{
+
+	private void openLocationDetail(Waypoint wp) {
 		Intent intent = new Intent(this, LocationDetailActivity.class);
-		intent.putExtra(ApiConstants.GAME_DATA, gameData);
-		intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
-		intent.putExtra(ApiConstants.CURRENT_ROUTE, currentRoute);
-		intent.putExtra(ApiConstants.CURRENT_WAYPOINT, wp);
+		// intent.putExtra(ApiConstants.GAME_DATA, gameData);
+		// intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
+		// intent.putExtra(ApiConstants.CURRENT_ROUTE, currentRoute);
+		// intent.putExtra(ApiConstants.CURRENT_WAYPOINT, wp);
 		startActivity(intent);
 		overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
 	}
@@ -192,19 +173,19 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 			return true;
 		case R.id.menu_start_hike:
 			Intent intent = new Intent(this, NavigateRouteActivity.class);
-			intent.putExtra(ApiConstants.GAME_DATA, gameData);
-			intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
-			intent.putExtra(ApiConstants.CURRENT_ROUTE, currentRoute);
-			intent.putExtra(ApiConstants.CURRENT_TARGET, getNextTarget());
+			// intent.putExtra(ApiConstants.GAME_DATA, gameData);
+			// intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
+			// intent.putExtra(ApiConstants.CURRENT_ROUTE, currentRoute);
+			// intent.putExtra(ApiConstants.CURRENT_TARGET, getNextTarget());
 			startActivity(intent);
 			overridePendingTransition(R.anim.enter_from_right,
 					R.anim.leave_to_left);
 			return true;
 		case R.id.menu_view_reward:
 			Intent intent1 = new Intent(this, RewardActivity.class);
-			intent1.putExtra(ApiConstants.GAME_DATA, gameData);
-			intent1.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
-			intent1.putExtra(ApiConstants.CURRENT_ROUTE, currentRoute);
+			// intent1.putExtra(ApiConstants.GAME_DATA, gameData);
+			// intent1.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
+			// intent1.putExtra(ApiConstants.CURRENT_ROUTE, currentRoute);
 			startActivity(intent1);
 			overridePendingTransition(R.anim.enter_from_right,
 					R.anim.leave_to_left);
@@ -213,33 +194,32 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
-	@SuppressWarnings("unused")
-	private void goUp() {
-		Intent intent = new Intent(this, RouteGridActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.putExtra(ApiConstants.GAME_DATA, gameData);
-		intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
-		startActivity(intent);
-		overridePendingTransition(R.anim.enter_from_left, R.anim.leave_to_right);
-	}
+
+	// @SuppressWarnings("unused")
+	// private void goUp() {
+	// Intent intent = new Intent(this, RouteGridActivity.class);
+	// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	// intent.putExtra(ApiConstants.GAME_DATA, gameData);
+	// intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
+	// startActivity(intent);
+	// overridePendingTransition(R.anim.enter_from_left, R.anim.leave_to_right);
+	// }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		
+
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		if(isRouteFinished()){
+		if (isRouteFinished()) {
 			inflater.inflate(R.menu.route_detail_finished, menu);
+		} else {
+			inflater.inflate(R.menu.route_detail, menu);
 		}
-		else{
-			inflater.inflate(R.menu.route_detail, menu);	
-		}
-		
+
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -249,17 +229,9 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 		actionBar.setTitle(currentRoute.getLocalizedName());
 	}
 
-	private void setupDataReferences() {
-		gameData = getIntent().getParcelableExtra(ApiConstants.GAME_DATA);
-		currentProfile = getIntent().getParcelableExtra(
-				ApiConstants.CURRENT_PROFILE);
-		currentRoute = getIntent().getParcelableExtra(
-				ApiConstants.CURRENT_ROUTE);
-	}
-
 	@Override
 	public void onClick(View v) {
-		Waypoint waypoint = getNextTarget();
+		Waypoint waypoint = gameStateService.getNextTarget();
 		Intent checkinIntent = new Intent(getBaseContext(),
 				CheckinService.class);
 		checkinIntent.putExtra(ApiConstants.CURRENT_TARGET, waypoint);
@@ -267,29 +239,26 @@ public class RouteDetailActivity extends Activity implements OnClickListener {
 
 	}
 
-	private Waypoint getNextTarget() {
-		//Returns the first not visited location
-		int waypoints = currentRoute.waypoints.size();
-		for(int i = 0; i < waypoints; i++)
-		{
-			Waypoint w = currentRoute.waypoints.get(i);
-			if (gameData.isWaypointCheckedIn(w) != true) {
-				return w;
-				
-			}
-		}
-		return null;
-
-//		return currentRoute.waypoints.get(0);
-	}
-	
-	private boolean isRouteFinished()
-	{
-		if (getNextTarget() == null){
+	private boolean isRouteFinished() {
+		if (gameStateService.getNextTarget() == null) {
 			return true;
-		}
-		else{
+		} else {
 			return false;
 		}
+	}
+
+	@Override
+	protected void onGameStateServiceConnected() {
+		// TODO Auto-generated method stub
+		currentRoute = gameStateService.getCurrentRoute();
+
+		loadAndDisplayData();
+		setupActionBar();
+	}
+
+	@Override
+	protected void onGameDataUpdated(Intent intent) {
+		// TODO Auto-generated method stub
+		onGameStateServiceConnected();
 	}
 }

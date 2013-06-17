@@ -39,10 +39,10 @@ public class RouteGridActivity extends Activity implements OnItemClickListener {
 	}
 
 	private void setupViewReferences() {
-		// adapter = new GridAdapter(this, currentProfile.routes);
-		// gridView = (GridView) findViewById(R.id.grid);
-		// gridView.setAdapter(adapter);
-		// gridView.setOnItemClickListener(this);
+		adapter = new GridAdapter(this, currentProfile.routes);
+		gridView = (GridView) findViewById(R.id.grid);
+		gridView.setAdapter(adapter);
+		gridView.setOnItemClickListener(this);
 	}
 
 	private void setupActionBar() {
