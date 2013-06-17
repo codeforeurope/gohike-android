@@ -9,7 +9,6 @@ import net.codeforeurope.amsterdam.model.Waypoint;
 import net.codeforeurope.amsterdam.service.CheckinService;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -28,7 +27,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class NavigateRouteActivity extends Activity implements
+public class NavigateRouteActivity extends AbstractGameActivity implements
 		SensorEventListener, LocationListener {
 	private static final int ANIMATION_DURATION = 300;
 
@@ -67,10 +66,12 @@ public class NavigateRouteActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-
 		setUpViewReferences();
-		loadData();
+		setupSensorReferences();
 
+	}
+
+	private void setupSensorReferences() {
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		accelerometer = sensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -79,22 +80,17 @@ public class NavigateRouteActivity extends Activity implements
 
 		locationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
+	}
 
+	private void setupActionBar() {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle(currentRoute.nameEn);
-
+		actionBar.setTitle(gameStateService.getCurrentRoute()
+				.getLocalizedName());
 	}
 
 	private void loadData() {
-		gameData = getIntent().getParcelableExtra(ApiConstants.GAME_DATA);
-		currentProfile = getIntent().getParcelableExtra(
-				ApiConstants.CURRENT_PROFILE);
-		currentRoute = getIntent().getParcelableExtra(
-				ApiConstants.CURRENT_ROUTE);
-
-		currentTarget = getIntent().getParcelableExtra(
-				ApiConstants.CURRENT_TARGET);
+		currentTarget = gameStateService.getNextTarget();
 	}
 
 	private void setUpViewReferences() {
@@ -142,7 +138,7 @@ public class NavigateRouteActivity extends Activity implements
 				SensorManager.SENSOR_DELAY_NORMAL);
 		List<String> providers = locationManager.getAllProviders();
 		for (String provider : providers) {
-			locationManager.requestLocationUpdates(provider, 400, 0, this);
+			locationManager.requestLocationUpdates(provider, 500, 0, this);
 		}
 
 	}
@@ -226,7 +222,8 @@ public class NavigateRouteActivity extends Activity implements
 				checkinInProgress = true;
 				CheckinDialogFragment c = new CheckinDialogFragment();
 				Bundle dialogArgs = new Bundle();
-				dialogArgs.putParcelable(ApiConstants.CURRENT_TARGET, currentTarget);
+				dialogArgs.putParcelable(ApiConstants.CURRENT_TARGET,
+						currentTarget);
 				c.setArguments(dialogArgs);
 				c.show(getFragmentManager(), "checkin");
 			}
@@ -240,19 +237,19 @@ public class NavigateRouteActivity extends Activity implements
 		d.setArguments(dialogArgs);
 		d.show(getFragmentManager(), "found");
 	}
-	
+
 	public void doNavigateToNextCheckin() {
-		
-		//We save the check-in 
+
+		// We save the check-in
 		Intent checkinIntent = new Intent(getBaseContext(),
 				CheckinService.class);
 		checkinIntent.putExtra(ApiConstants.CURRENT_TARGET, currentTarget);
 		startService(checkinIntent);
-		
-		//We set the next target
+
+		// We set the next target
 		int nextRank = currentTarget.rank + 1;
-		if (nextRank  < currentRoute.waypoints.size()) {
-			Waypoint nextTarget = currentRoute.waypoints.get(nextRank );
+		if (nextRank < currentRoute.waypoints.size()) {
+			Waypoint nextTarget = currentRoute.waypoints.get(nextRank);
 			currentTarget = nextTarget;
 		} else {
 			// Route is finished, we return back
@@ -260,10 +257,10 @@ public class NavigateRouteActivity extends Activity implements
 			overridePendingTransition(R.anim.enter_from_left,
 					R.anim.leave_to_right);
 		}
-		
-		//set that the check-in process has finished
+
+		// set that the check-in process has finished
 		checkinInProgress = false;
-	
+
 	}
 
 	@Override
@@ -280,6 +277,19 @@ public class NavigateRouteActivity extends Activity implements
 
 	@Override
 	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void onGameStateServiceConnected() {
+		// TODO Auto-generated method stub
+		loadData();
+		setupActionBar();
+	}
+
+	@Override
+	protected void onGameDataUpdated(Intent intent) {
 		// TODO Auto-generated method stub
 
 	}

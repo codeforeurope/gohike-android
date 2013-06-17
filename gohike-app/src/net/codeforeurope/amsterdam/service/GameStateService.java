@@ -33,7 +33,7 @@ public class GameStateService extends Service {
 
 	private Waypoint currentTarget;
 
-	private ArrayList<Checkin> checkins = new ArrayList<Checkin>();
+	private ArrayList<Checkin> checkins = null;
 
 	private final IBinder binder = new GameStateBinder();
 

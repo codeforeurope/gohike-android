@@ -59,6 +59,7 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 	private void setupBroadcastReceivers() {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ApiConstants.ACTION_CHECKINS_LOADED);
+		filter.addAction(ApiConstants.ACTION_CHECKIN_SAVED);
 		receiver = new BroadcastReceiver() {
 
 			@Override
@@ -79,7 +80,6 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 	}
 
 	private void updateWaypointDisplay() {
-		Route currentRoute = gameStateService.getCurrentRoute();
 		int length = currentRoute.waypoints.size();
 		for (int i = 0; i < length; i++) {
 			Waypoint waypoint = currentRoute.waypoints.get(i);
@@ -109,10 +109,7 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 
 	private void openLocationDetail(Waypoint wp) {
 		Intent intent = new Intent(this, LocationDetailActivity.class);
-		// intent.putExtra(ApiConstants.GAME_DATA, gameData);
-		// intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
-		// intent.putExtra(ApiConstants.CURRENT_ROUTE, currentRoute);
-		// intent.putExtra(ApiConstants.CURRENT_WAYPOINT, wp);
+		intent.putExtra(ApiConstants.CURRENT_WAYPOINT, wp);
 		startActivity(intent);
 		overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
 	}
@@ -173,10 +170,6 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 			return true;
 		case R.id.menu_start_hike:
 			Intent intent = new Intent(this, NavigateRouteActivity.class);
-			// intent.putExtra(ApiConstants.GAME_DATA, gameData);
-			// intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
-			// intent.putExtra(ApiConstants.CURRENT_ROUTE, currentRoute);
-			// intent.putExtra(ApiConstants.CURRENT_TARGET, getNextTarget());
 			startActivity(intent);
 			overridePendingTransition(R.anim.enter_from_right,
 					R.anim.leave_to_left);
@@ -249,11 +242,10 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 
 	@Override
 	protected void onGameStateServiceConnected() {
-		// TODO Auto-generated method stub
 		currentRoute = gameStateService.getCurrentRoute();
-
 		loadAndDisplayData();
 		setupActionBar();
+		updateWaypointDisplay();
 	}
 
 	@Override

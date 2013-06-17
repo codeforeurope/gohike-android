@@ -6,7 +6,6 @@ import net.codeforeurope.amsterdam.model.Reward;
 import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -18,14 +17,14 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class RewardActivity extends Activity {
+public class RewardActivity extends AbstractGameActivity {
 
 	GameData gameData;
-	
+
 	Profile currentProfile;
-	
+
 	Route currentRoute;
-	
+
 	Reward reward;
 
 	ImageView rewardImage;
@@ -33,19 +32,15 @@ public class RewardActivity extends Activity {
 	TextView rewardTitle;
 
 	TextView rewardDescription;
-		
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		setupDataReferences();
-		setupActionBar();
 		setupViewReferences();
-		loadAndDisplayData();
-
 	}
-	
+
 	private void loadAndDisplayData() {
 		Bitmap photo = BitmapFactory.decodeFile(reward.image.localPath);
 		rewardImage.setImageBitmap(photo);
@@ -76,16 +71,16 @@ public class RewardActivity extends Activity {
 			onBackPressed();
 			return true;
 		case R.id.menu_share_badge:
-			//TODO share on Facebook
-//			Intent intent = new Intent(this, NavigateRouteActivity.class);
-//			intent.putExtra(ApiConstants.GAME_DATA, gameData);
-//			intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
-//			intent.putExtra(ApiConstants.CURRENT_ROUTE, currentRoute);
-//			intent.putExtra(ApiConstants.CURRENT_TARGET,
-//					currentRoute.waypoints.get(0));
-//			startActivity(intent);
-//			overridePendingTransition(R.anim.enter_from_right,
-//					R.anim.leave_to_left);
+			// TODO share on Facebook
+			// Intent intent = new Intent(this, NavigateRouteActivity.class);
+			// intent.putExtra(ApiConstants.GAME_DATA, gameData);
+			// intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
+			// intent.putExtra(ApiConstants.CURRENT_ROUTE, currentRoute);
+			// intent.putExtra(ApiConstants.CURRENT_TARGET,
+			// currentRoute.waypoints.get(0));
+			// startActivity(intent);
+			// overridePendingTransition(R.anim.enter_from_right,
+			// R.anim.leave_to_left);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -115,14 +110,19 @@ public class RewardActivity extends Activity {
 		actionBar.setTitle(currentRoute.getLocalizedName());
 	}
 
-	private void setupDataReferences() {
-		gameData = getIntent().getParcelableExtra(ApiConstants.GAME_DATA);
-		currentProfile = getIntent().getParcelableExtra(
-				ApiConstants.CURRENT_PROFILE);
-		currentRoute = getIntent().getParcelableExtra(
-				ApiConstants.CURRENT_ROUTE);
+	@Override
+	protected void onGameStateServiceConnected() {
+		currentRoute = gameStateService.getCurrentRoute();
 		reward = currentRoute.reward;
+		setupActionBar();
+
+		loadAndDisplayData();
+
+	}
+
+	@Override
+	protected void onGameDataUpdated(Intent intent) {
+		// TODO Auto-generated method stub
+
 	}
 }
-	
-
