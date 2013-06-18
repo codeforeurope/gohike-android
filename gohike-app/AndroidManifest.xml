@@ -61,6 +61,11 @@
             android:label="@string/location_detail"
             android:theme="@style/TakeAHikeTheme" >
         </activity>
+        <activity 
+            android:name="net.codeforeurope.amsterdam.HelpFragmentActivity"
+            android:label="@string/how_to_play"
+            android:theme="@android:style/Theme.Holo.Dialog" >
+        </activity>
 
         <service
             android:name=".service.ContentApiService"
