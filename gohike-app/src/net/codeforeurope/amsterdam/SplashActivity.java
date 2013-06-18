@@ -69,7 +69,7 @@ public class SplashActivity extends AbstractGameActivity {
 
 	@Override
 	protected void onStop() {
-		unregisterReceiver(receiver);
+
 		super.onStop();
 	}
 
@@ -91,8 +91,9 @@ public class SplashActivity extends AbstractGameActivity {
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
+
 		super.onPause();
+		unregisterReceiver(receiver);
 	}
 
 	@Override

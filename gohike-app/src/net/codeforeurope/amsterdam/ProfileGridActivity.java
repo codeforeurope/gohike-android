@@ -65,8 +65,8 @@ public class ProfileGridActivity extends AbstractGameActivity implements
 
 	@Override
 	protected void onGameDataUpdated(Intent intent) {
-		// TODO Auto-generated method stub
-
+		adapter = new GridAdapter(this, gameStateService.getProfiles());
+		gridView.setAdapter(adapter);
 	}
 
 	@Override

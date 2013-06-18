@@ -13,7 +13,6 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -71,12 +70,25 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 		registerReceiver(receiver, filter);
 	}
 
+	// @Override
+	// public void onActionModeFinished(ActionMode mode) {
+	// // This should solve the exception of BroadcastReceiver leaking that
+	// // shows when debugging
+	// unregisterReceiver(receiver);
+	// super.onActionModeFinished(mode);
+	// }
+
 	@Override
-	public void onActionModeFinished(ActionMode mode) {
-		// This should solve the exception of BroadcastReceiver leaking that
-		// shows when debugging
+	protected void onPause() {
+		super.onPause();
 		unregisterReceiver(receiver);
-		super.onActionModeFinished(mode);
+	}
+
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		setupBroadcastReceivers();
+
 	}
 
 	private void updateWaypointDisplay() {

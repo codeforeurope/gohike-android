@@ -25,20 +25,35 @@ public abstract class AbstractGameActivity extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		setupReceiver();
-		bindToGameStateService();
+
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		setupReceiver();
+		bindToGameStateService();
 
 	}
 
 	@Override
-	protected void onStop() {
-		super.onStop();
+	protected void onPause() {
+
+		super.onPause();
+		unregisterReceiver(gameDataUpdateReceiver);
+	}
+
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		setupReceiver();
+
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
 		// Unbind from the service
 		if (mBound) {
 			unbindService(mConnection);
