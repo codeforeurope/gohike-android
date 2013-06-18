@@ -88,9 +88,7 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 	protected void onRestart() {
 		super.onRestart();
 		setupBroadcastReceivers();
-
-	}
-
+	
 	private void updateWaypointDisplay() {
 		int length = currentRoute.waypoints.size();
 		for (int i = 0; i < length; i++) {

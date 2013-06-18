@@ -5,6 +5,9 @@ import net.codeforeurope.amsterdam.model.Profile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -75,4 +78,30 @@ public class ProfileGridActivity extends AbstractGameActivity implements
 		gridView.setAdapter(adapter);
 	}
 
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.profile_select, menu);
+		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// app icon in action bar clicked; go home
+			onBackPressed();
+			return true;
+		case R.id.menu_view_help:
+			Intent intent = new Intent(this, HelpFragmentActivity.class);
+			startActivity(intent);
+//			overridePendingTransition(R.anim.enter_from_right,
+//					R.anim.leave_to_left);
+			//TODO show help here
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
 }
