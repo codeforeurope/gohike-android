@@ -40,5 +40,7 @@ public class ApiConstants {
 	public static final String ACTION_PROMPT_FOR_UPDATE = "prompt_for_conent_update";
 	public static final String ACTION_GO_TO_PROFILES = "go_to_profile_grid";
 	public static final String UPDATE_SIZE = "update_size";
+	public static final String PREFERENCES_FILE = "TakeAHikePreferences";
+	public static final String PREFERENCES_HELPSHOWN = "help_shown";
 
 }

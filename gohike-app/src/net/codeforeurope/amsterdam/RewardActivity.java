@@ -6,10 +6,12 @@ import net.codeforeurope.amsterdam.model.Reward;
 import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -71,22 +73,21 @@ public class RewardActivity extends AbstractGameActivity {
 			onBackPressed();
 			return true;
 		case R.id.menu_share_badge:
-			// TODO share on Facebook
-			// Intent intent = new Intent(this, NavigateRouteActivity.class);
-			// intent.putExtra(ApiConstants.GAME_DATA, gameData);
-			// intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
-			// intent.putExtra(ApiConstants.CURRENT_ROUTE, currentRoute);
-			// intent.putExtra(ApiConstants.CURRENT_TARGET,
-			// currentRoute.waypoints.get(0));
-			// startActivity(intent);
-			// overridePendingTransition(R.anim.enter_from_right,
-			// R.anim.leave_to_left);
+			// share on Facebook
+
+			Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+			Uri screenshotUri = Uri.parse(reward.image.localPath);
+//			Bitmap photo = BitmapFactory.decodeFile(reward.image.localPath);
+			sharingIntent.setType("image/png");
+			sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+			startActivity(Intent.createChooser(sharingIntent, getString( R.string.share_reward_using)));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
+	
 	@SuppressWarnings("unused")
 	private void goUp() {
 		Intent intent = new Intent(this, RouteDetailActivity.class);

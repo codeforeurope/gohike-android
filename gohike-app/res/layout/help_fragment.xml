@@ -9,7 +9,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/help1"
-            android:padding="40dp" />
+            android:padding="10dp" />
             
     <TextView
             android:id="@+id/text_help"

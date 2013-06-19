@@ -2,7 +2,9 @@ package net.codeforeurope.amsterdam;
 
 import net.codeforeurope.amsterdam.adapter.GridAdapter;
 import net.codeforeurope.amsterdam.model.Profile;
+import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +28,18 @@ public class ProfileGridActivity extends AbstractGameActivity implements
 		setContentView(R.layout.grid);
 		gridView = (GridView) findViewById(R.id.grid);
 		gridView.setOnItemClickListener(this);
+		
+		SharedPreferences myPrefs = getSharedPreferences(ApiConstants.PREFERENCES_FILE, MODE_PRIVATE);
+		int i = myPrefs.getInt(ApiConstants.PREFERENCES_HELPSHOWN, 0);
+		if(i == 0)
+		{
+			SharedPreferences.Editor e = myPrefs.edit();
+			e.putInt(ApiConstants.PREFERENCES_HELPSHOWN, 1); // add or overwrite helpShown
+			e.commit(); // this saves to disk and notifies observers
+			
+			showHelp();
+		}
+		
 	}
 
 	@Override
@@ -93,15 +107,17 @@ public class ProfileGridActivity extends AbstractGameActivity implements
 			onBackPressed();
 			return true;
 		case R.id.menu_view_help:
-			Intent intent = new Intent(this, HelpFragmentActivity.class);
-			startActivity(intent);
-//			overridePendingTransition(R.anim.enter_from_right,
-//					R.anim.leave_to_left);
-			//TODO show help here
+			// show help here
+			showHelp();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 	
+	private void showHelp()
+	{
+		Intent intent = new Intent(this, HelpFragmentActivity.class);
+		startActivity(intent);
+	}
 }

@@ -32,7 +32,7 @@ public abstract class AbstractGameActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		setupReceiver();
+//		setupReceiver();
 		bindToGameStateService();
 
 	}
@@ -44,11 +44,17 @@ public abstract class AbstractGameActivity extends Activity {
 		unregisterReceiver(gameDataUpdateReceiver);
 	}
 
+//	@Override
+//	protected void onRestart() {
+//		super.onRestart();
+//		setupReceiver();
+//
+//	}
+	
 	@Override
-	protected void onRestart() {
-		super.onRestart();
+	protected void onResume() {
 		setupReceiver();
-
+		super.onResume();
 	}
 
 	@Override
