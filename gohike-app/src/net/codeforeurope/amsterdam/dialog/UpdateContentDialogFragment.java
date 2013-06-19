@@ -1,5 +1,8 @@
-package net.codeforeurope.amsterdam;
+package net.codeforeurope.amsterdam.dialog;
 
+import net.codeforeurope.amsterdam.R;
+import net.codeforeurope.amsterdam.SplashActivity;
+import net.codeforeurope.amsterdam.R.string;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;

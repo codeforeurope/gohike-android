@@ -52,7 +52,7 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 
 	LocationManager locationManager;
 
-	boolean checkinInProgress = false;
+	public boolean checkinInProgress = false;
 
 	private TextView targetName;
 

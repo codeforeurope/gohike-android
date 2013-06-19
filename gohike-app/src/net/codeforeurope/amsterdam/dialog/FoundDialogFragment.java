@@ -1,5 +1,10 @@
-package net.codeforeurope.amsterdam;
+package net.codeforeurope.amsterdam.dialog;
 
+import net.codeforeurope.amsterdam.NavigateRouteActivity;
+import net.codeforeurope.amsterdam.R;
+import net.codeforeurope.amsterdam.R.id;
+import net.codeforeurope.amsterdam.R.layout;
+import net.codeforeurope.amsterdam.R.string;
 import net.codeforeurope.amsterdam.model.Waypoint;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.AlertDialog;
