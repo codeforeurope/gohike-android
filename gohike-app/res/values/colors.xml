@@ -5,6 +5,7 @@
     <color name="white">#FFFFFF</color>
     <color name="red">#FF0000</color>
     <color name="light_blue">#73c4dd</color>
+    <color name="black_overlay">#80000000</color>
     
     <color name="gray_frame">#ababab</color>
     <color name="gray_gradient_start">#cecece</color>

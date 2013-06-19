@@ -40,7 +40,7 @@ public class CheckinService extends IntentService {
 		} else {
 			handleSaveCheckins(intent, broadcastIntent);
 		}
-
+		db.close();
 		sendBroadcast(broadcastIntent);
 	}
 

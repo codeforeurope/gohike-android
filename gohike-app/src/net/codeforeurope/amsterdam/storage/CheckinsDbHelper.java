@@ -22,7 +22,10 @@ public class CheckinsDbHelper extends SQLiteOpenHelper {
 			+ CheckinsContract.CheckinsEntry.COLUMN_NAME_TIMESTAMP
 			+ INTEGER_TYPE + COMMA_SEP
 			+ CheckinsContract.CheckinsEntry.COLUMN_NAME_UPLOADED
-			+ INTEGER_TYPE + " )";
+			+ INTEGER_TYPE + " ); CREATE INDEX `"
+			+ CheckinsContract.CheckinsEntry.COLUMN_NAME_UPLOADED + "` ON `"
+			+ CheckinsContract.CheckinsEntry.TABLE_NAME + "` (`"
+			+ CheckinsContract.CheckinsEntry.COLUMN_NAME_UPLOADED + "`);";
 
 	private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS "
 			+ CheckinsContract.CheckinsEntry.TABLE_NAME;

@@ -46,7 +46,7 @@ public class FoundDialogFragment extends DialogFragment {
             		//get the next
             		//set the navigation to the next
             		((NavigateRouteActivity) getActivity())
-					.doNavigateToNextCheckin();
+					.doDismissTargetHint();
                }
            });
 	    return builder.create();

@@ -49,10 +49,14 @@ public class GameStateService extends Service {
 			startService(new Intent(getBaseContext(), ContentService.class));
 		}
 		if (checkins == null) {
-			startService(new Intent(getBaseContext(), CheckinService.class)
-					.setAction(ApiConstants.ACTION_LOAD_CHECKINS));
+			runLoadCheckins();
 		}
 
+	}
+
+	private void runLoadCheckins() {
+		startService(new Intent(getBaseContext(), CheckinService.class)
+				.setAction(ApiConstants.ACTION_LOAD_CHECKINS));
 	}
 
 	public ArrayList<Checkin> getCheckins() {
@@ -80,6 +84,9 @@ public class GameStateService extends Service {
 
 	protected void notifyGameDataUpdated() {
 		if (gameData != null && checkins != null) {
+			if (currentRoute != null) {
+				currentTarget = getNextTarget();
+			}
 			Intent intent = new Intent(ApiConstants.ACTION_GAME_DATA_UPDATED);
 			sendBroadcast(intent);
 		}
@@ -146,11 +153,12 @@ public class GameStateService extends Service {
 
 	public void setCurrentRoute(Route currentRoute) {
 		this.currentRoute = currentRoute;
+		this.currentTarget = getNextTarget();
 	}
 
-	public void setCurrentTarget(Waypoint currentTarget) {
-		this.currentTarget = currentTarget;
-	}
+	// public void setCurrentTarget(Waypoint currentTarget) {
+	// this.currentTarget = currentTarget;
+	// }
 
 	private void setupReceiver() {
 		IntentFilter filter = new IntentFilter();
@@ -158,12 +166,15 @@ public class GameStateService extends Service {
 		filter.addAction(ApiConstants.ACTION_REMOTE_CONTENT_LOADED);
 		filter.addAction(ApiConstants.ACTION_PING_COMPLETE);
 		filter.addAction(ApiConstants.ACTION_CHECKINS_LOADED);
+		filter.addAction(ApiConstants.ACTION_CHECKIN_SAVED);
 		receiver = new BroadcastReceiver() {
 
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				String action = intent.getAction();
-				if (ApiConstants.ACTION_PING_COMPLETE.equals(action)) {
+				if (ApiConstants.ACTION_CHECKIN_SAVED.equals(action)) {
+					runLoadCheckins();
+				} else if (ApiConstants.ACTION_PING_COMPLETE.equals(action)) {
 					processPingResponse(intent);
 				} else {
 					if (intent.hasExtra(ApiConstants.GAME_DATA)) {
@@ -206,12 +217,28 @@ public class GameStateService extends Service {
 		int waypoints = currentRoute.waypoints.size();
 		for (int i = 0; i < waypoints; i++) {
 			Waypoint w = currentRoute.waypoints.get(i);
-			if (isWaypointCheckedIn(w) != true) {
+			if (!isWaypointCheckedIn(w)) {
 				return w;
 
 			}
 		}
 		return null;
+	}
+
+	public void checkin() {
+		Intent checkinIntent = new Intent(getBaseContext(),
+				CheckinService.class);
+		checkinIntent.putExtra(ApiConstants.CURRENT_TARGET, getCurrentTarget());
+		startService(checkinIntent);
+
+	}
+
+	public boolean isRouteFinished() {
+		if (getNextTarget() == null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

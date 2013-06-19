@@ -2,7 +2,6 @@ package net.codeforeurope.amsterdam;
 
 import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.model.Waypoint;
-import net.codeforeurope.amsterdam.service.CheckinService;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.ActionBar;
 import android.content.BroadcastReceiver;
@@ -19,14 +18,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class RouteDetailActivity extends AbstractGameActivity implements
-		OnClickListener {
+public class RouteDetailActivity extends AbstractGameActivity {
 
 	ImageView routeImage;
 
@@ -37,8 +34,6 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 	LinearLayout waypointList;
 
 	private LayoutInflater inflater;
-
-	Button fakeIt;
 
 	BroadcastReceiver receiver;
 
@@ -70,14 +65,6 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 		registerReceiver(receiver, filter);
 	}
 
-	// @Override
-	// public void onActionModeFinished(ActionMode mode) {
-	// // This should solve the exception of BroadcastReceiver leaking that
-	// // shows when debugging
-	// unregisterReceiver(receiver);
-	// super.onActionModeFinished(mode);
-	// }
-
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -88,8 +75,9 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 	protected void onRestart() {
 		super.onRestart();
 		setupBroadcastReceivers();
+		updateWaypointDisplay();
 	}
-	
+
 	private void updateWaypointDisplay() {
 		int length = currentRoute.waypoints.size();
 		for (int i = 0; i < length; i++) {
@@ -162,8 +150,6 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 		inflater = (LayoutInflater) getBaseContext().getSystemService(
 				Context.LAYOUT_INFLATER_SERVICE);
 
-		fakeIt = (Button) findViewById(R.id.route_detail_fake_checkin);
-		fakeIt.setOnClickListener(this);
 	}
 
 	@Override
@@ -199,16 +185,6 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 		}
 	}
 
-	// @SuppressWarnings("unused")
-	// private void goUp() {
-	// Intent intent = new Intent(this, RouteGridActivity.class);
-	// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	// intent.putExtra(ApiConstants.GAME_DATA, gameData);
-	// intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
-	// startActivity(intent);
-	// overridePendingTransition(R.anim.enter_from_left, R.anim.leave_to_right);
-	// }
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -218,7 +194,7 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		if (isRouteFinished()) {
+		if (gameStateService.isRouteFinished()) {
 			inflater.inflate(R.menu.route_detail_finished, menu);
 		} else {
 			inflater.inflate(R.menu.route_detail, menu);
@@ -234,26 +210,9 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 	}
 
 	@Override
-	public void onClick(View v) {
-		Waypoint waypoint = gameStateService.getNextTarget();
-		Intent checkinIntent = new Intent(getBaseContext(),
-				CheckinService.class);
-		checkinIntent.putExtra(ApiConstants.CURRENT_TARGET, waypoint);
-		startService(checkinIntent);
-
-	}
-
-	private boolean isRouteFinished() {
-		if (gameStateService.getNextTarget() == null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	@Override
 	protected void onGameStateServiceConnected() {
 		currentRoute = gameStateService.getCurrentRoute();
+		// gameStateService.
 		loadAndDisplayData();
 		setupActionBar();
 		updateWaypointDisplay();

@@ -50,7 +50,7 @@ public class CheckinDialogFragment extends DialogFragment {
                public void onClick(DialogInterface dialog, int id) {
 					//User wants to check-in
             		((NavigateRouteActivity) getActivity())
-					.doWaypointFound();
+					.doCheckin();
                }
            })
            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

@@ -2,11 +2,7 @@ package net.codeforeurope.amsterdam;
 
 import java.util.List;
 
-import net.codeforeurope.amsterdam.model.GameData;
-import net.codeforeurope.amsterdam.model.Profile;
-import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.model.Waypoint;
-import net.codeforeurope.amsterdam.service.CheckinService;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.ActionBar;
 import android.content.Context;
@@ -33,16 +29,12 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 
 	private static final int COMPASS_UPDATE_THRESHOLD = 500;
 
-	private static final int CHECKIN_DISTANCE = 5000; // Change to 20 for
+	private static final int CHECKIN_DISTANCE = 5500; // Change to 20 for
 														// production
 
-	GameData gameData;
+	CheckinDialogFragment checkinDialog;
 
-	Profile currentProfile;
-
-	Route currentRoute;
-
-	Waypoint currentTarget;
+	FoundDialogFragment targetHintDialog;
 
 	SensorManager sensorManager;
 
@@ -50,7 +42,7 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 
 	ImageView compassTarget;
 
-	TextView debug;
+	TextView distanceText;
 
 	float targetBearing = 0;
 
@@ -62,12 +54,31 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 
 	boolean checkinInProgress = false;
 
+	private TextView targetName;
+
+	// private BroadcastReceiver checkinsReceiver;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
+		checkinDialog = new CheckinDialogFragment();
+		targetHintDialog = new FoundDialogFragment();
 		setUpViewReferences();
 		setupSensorReferences();
+
+		setupBroadcastReceiver();
+
+	}
+
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		setupBroadcastReceiver();
+
+	}
+
+	private void setupBroadcastReceiver() {
 
 	}
 
@@ -90,7 +101,16 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 	}
 
 	private void loadData() {
-		currentTarget = gameStateService.getNextTarget();
+		if (gameStateService.isRouteFinished()) {
+			checkinInProgress = false;
+			finish();
+			overridePendingTransition(R.anim.enter_from_left,
+					R.anim.leave_to_right);
+		} else {
+			Waypoint currentTarget = gameStateService.getCurrentTarget();
+			targetName.setText(currentTarget.getLocalizedName());
+			distanceText.setText("...");
+		}
 	}
 
 	private void setUpViewReferences() {
@@ -98,7 +118,8 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 		setContentView(R.layout.navigate);
 		compassRose = (ImageView) findViewById(R.id.navigate_rose);
 		compassTarget = (ImageView) findViewById(R.id.navigate_target);
-		debug = (TextView) findViewById(R.id.debug);
+		distanceText = (TextView) findViewById(R.id.navigate_overlay_target_distance);
+		targetName = (TextView) findViewById(R.id.navigate_overlay_target_text);
 	}
 
 	@Override
@@ -201,62 +222,44 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 
 	@Override
 	public void onLocationChanged(Location location) {
-		// TODO Auto-generated method stub
-		final float[] results = new float[3];
-		Location.distanceBetween(location.getLatitude(),
-				location.getLongitude(), currentTarget.latitude,
-				currentTarget.longitude, results);
-		final float bearing = results[1];
-		String data = "Distance: " + results[0] + ", Bearing: " + bearing
-				+ ", Final Bearing: " + results[2] + ", ACCY: "
-				+ location.getAccuracy();
-		Log.d("Navigate", data);
-		debug.setText(data);
-		targetBearing = results[2];
-		// Toast.makeText(getBaseContext(),, Toast.LENGTH_SHORT).show();
-
-		Log.d("navigating_to", currentTarget.nameEn);
-		if (results[0] < CHECKIN_DISTANCE) {
-			Log.d("Checkin", "You can check in!");
-			if (checkinInProgress != true) {
-				checkinInProgress = true;
-				CheckinDialogFragment c = new CheckinDialogFragment();
+		if (!checkinInProgress) {
+			Waypoint currentTarget = gameStateService.getCurrentTarget();
+			final float[] results = new float[3];
+			Location.distanceBetween(location.getLatitude(),
+					location.getLongitude(), currentTarget.latitude,
+					currentTarget.longitude, results);
+			updateDistance(results[0]);
+			targetBearing = results[2];
+			if (results[0] < CHECKIN_DISTANCE) {
 				Bundle dialogArgs = new Bundle();
 				dialogArgs.putParcelable(ApiConstants.CURRENT_TARGET,
 						currentTarget);
-				c.setArguments(dialogArgs);
-				c.show(getFragmentManager(), "checkin");
+				checkinDialog.setArguments(dialogArgs);
+				checkinDialog.show(getFragmentManager(), "checkin");
+				checkinInProgress = true;
 			}
 		}
+
 	}
 
-	public void doWaypointFound() {
-		FoundDialogFragment d = new FoundDialogFragment();
-		Bundle dialogArgs = new Bundle();
-		dialogArgs.putParcelable(ApiConstants.CURRENT_TARGET, currentTarget);
-		d.setArguments(dialogArgs);
-		d.show(getFragmentManager(), "found");
-	}
-
-	public void doNavigateToNextCheckin() {
-
-		// We save the check-in
-		Intent checkinIntent = new Intent(getBaseContext(),
-				CheckinService.class);
-		checkinIntent.putExtra(ApiConstants.CURRENT_TARGET, currentTarget);
-		startService(checkinIntent);
-
-		// We set the next target
-		int nextRank = currentTarget.rank + 1;
-		if (nextRank < currentRoute.waypoints.size()) {
-			Waypoint nextTarget = currentRoute.waypoints.get(nextRank);
-			currentTarget = nextTarget;
+	private void updateDistance(float rawDistance) {
+		String distance;
+		if (rawDistance > 1000) {
+			distance = getString(R.string.target_distance_km,
+					rawDistance / 1000);
 		} else {
-			// Route is finished, we return back
-			finish();
-			overridePendingTransition(R.anim.enter_from_left,
-					R.anim.leave_to_right);
+			distance = getString(R.string.target_distance_m, rawDistance);
 		}
+
+		distanceText.setText(distance);
+
+	}
+
+	public void doCheckin() {
+		gameStateService.checkin();
+	}
+
+	public void doDismissTargetHint() {
 
 		// set that the check-in process has finished
 		checkinInProgress = false;
@@ -283,14 +286,25 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 
 	@Override
 	protected void onGameStateServiceConnected() {
-		// TODO Auto-generated method stub
 		loadData();
 		setupActionBar();
 	}
 
 	@Override
 	protected void onGameDataUpdated(Intent intent) {
-		// TODO Auto-generated method stub
+		loadData();
+		setupActionBar();
+		if (checkinInProgress) {
+			showTargetHintDialog();
+		}
+	}
 
+	private void showTargetHintDialog() {
+		Bundle dialogArgs = new Bundle();
+		dialogArgs.putParcelable(ApiConstants.CURRENT_TARGET,
+				gameStateService.getCurrentTarget());
+		targetHintDialog.setArguments(dialogArgs);
+		targetHintDialog.show(getFragmentManager(), "found");
+		checkinInProgress = true;
 	}
 }

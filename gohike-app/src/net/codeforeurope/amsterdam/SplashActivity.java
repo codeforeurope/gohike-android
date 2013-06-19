@@ -1,6 +1,5 @@
 package net.codeforeurope.amsterdam;
 
-import net.codeforeurope.amsterdam.model.GameData;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,8 +8,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 
 public class SplashActivity extends AbstractGameActivity {
-
-	private GameData gameData;
 
 	private BroadcastReceiver receiver;
 

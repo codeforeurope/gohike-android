@@ -2,35 +2,82 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/navigate_background"  >
-	
-    <ImageView
-        android:id="@+id/navigate_rose"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/compass_rose"
-        android:contentDescription="@string/compass_rose" />
-    
-     <ImageView
-        android:id="@+id/navigate_target"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/compass_target"
-         android:contentDescription="@string/compass_target" />
+    android:background="@drawable/navigate_background"
+    android:orientation="vertical" >
 
-     <TextView
-         android:id="@+id/debug"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:layout_alignTop="@+id/navigate_rose"
-         android:layout_centerHorizontal="true"
-         android:layout_marginTop="14dp"
-         android:gravity="center_horizontal"
-         android:text="TextView" />
+    <RelativeLayout
+        android:id="@+id/navigate_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black_overlay" >
+
+        <ImageView
+            android:id="@+id/navigate_overlay_target_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/target_icon"
+            android:src="@drawable/waypoint_target_white" />
+
+        <TextView
+            android:id="@+id/navigate_overlay_target_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/navigate_overlay_target_distance"
+            android:layout_toRightOf="@+id/navigate_overlay_target_icon"
+            android:paddingRight="5dp"
+            android:text="Marie Heinekenplein Marie Heinekenplein"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/navigate_overlay_target_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="5dp"
+            android:text="999m"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/navigate_overlay" >
+
+        <ImageView
+            android:id="@+id/navigate_rose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/compass_rose"
+            android:src="@drawable/compass_rose" />
+
+        <ImageView
+            android:id="@+id/navigate_target"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/compass_target"
+            android:src="@drawable/compass_target" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/navigate_progress"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/ab_solid_dark_holo"
+        android:gravity="center"
+        android:orientation="horizontal" >
+    </LinearLayout>
 
 </RelativeLayout>

@@ -33,6 +33,13 @@
      <string name="help4">Get reward!</string>
      <string name="lets_play">Let\'s play!</string>
      
+     
+     <string name="target_icon">Target Icon</string>
+     <string name="target_distance_m">%.0fm</string>
+     <string name="target_distance_km">%.1fkm</string>
+     
+     
+     
  
 
 </resources>
