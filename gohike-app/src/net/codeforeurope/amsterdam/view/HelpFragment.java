@@ -2,7 +2,6 @@ package net.codeforeurope.amsterdam.view;
 
 import net.codeforeurope.amsterdam.HelpFragmentActivity;
 import net.codeforeurope.amsterdam.R;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -52,7 +51,7 @@ public class HelpFragment extends Fragment implements OnClickListener {
 		   break;
 	   case 4:
 		   checkinImage.setImageResource(R.drawable.help4);
-		   b.setVisibility(0); //visible
+		   b.setVisibility(android.view.View.VISIBLE); 
 		   b.setOnClickListener(this);
 		   break;
 		   

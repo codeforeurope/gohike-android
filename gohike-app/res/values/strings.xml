@@ -34,6 +34,11 @@
      <string name="target_distance_m">%.0fm</string>
      <string name="target_distance_km">%.1fkm</string>
      <string name="share_reward_using">Share reward using</string>
+     <string name="go_hike">Go Hike!</string>
+     <string name="not_found_dialog_title">Not visited yet!</string>
+     <string name="not_found_dialog_message">Hike to discover places and find out more about them. Go hike now?</string>
+     <string name="not_found_dialog_yes">Let\'s go!</string>
+     <string name="not_found_dialog_no">Not now</string>
 
 
 </resources>
