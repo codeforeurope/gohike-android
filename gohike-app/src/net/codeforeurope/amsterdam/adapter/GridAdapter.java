@@ -24,6 +24,8 @@ public class GridAdapter extends BaseAdapter {
 
 	protected Context context;
 
+	private int columnWidth = 0;
+
 	public GridAdapter(Context context,
 			ArrayList<? extends BaseModelWithIcon> profiles) {
 		super();
@@ -51,17 +53,34 @@ public class GridAdapter extends BaseAdapter {
 
 		}
 		final BaseModelWithIcon model = profiles.get(position);
-		LayerDrawable layerDrawable = getBackground(model);
+		LayerDrawable layerDrawable = getBackground(model, v);
+
 		v.setBackgroundDrawable(layerDrawable);
-		mHolder.topText.setText(model.nameEn);
-		mHolder.bottomText.setText("6 routes");
+
+		mHolder.topText.setText(model.getLocalizedName());
+
+		mHolder.bottomText.setText(context.getResources().getQuantityString(
+				R.plurals.number_of_routes, model.getNumberOfChildren(),
+				model.getNumberOfChildren()));
 		return v;
 
 	}
 
-	private LayerDrawable getBackground(final BaseModelWithIcon model) {
+	private LayerDrawable getBackground(final BaseModelWithIcon model, View v) {
 		Bitmap bitmap = BitmapFactory.decodeFile(model.image.localPath);
+		if (v.getMeasuredWidth() > 0) {
+			columnWidth = v.getMeasuredWidth();
+
+		}
+		if (columnWidth > 0) {
+			float ratio = (float) bitmap.getWidth()
+					/ (float) bitmap.getHeight();
+
+			bitmap = Bitmap.createScaledBitmap(bitmap,
+					(int) (columnWidth * ratio), columnWidth, false);
+		}
 		StreamDrawable drawable = new StreamDrawable(bitmap, 6, 2);
+
 		Drawable drawable2 = context.getResources().getDrawable(
 				R.drawable.grid_item);
 

@@ -49,4 +49,9 @@ public class Profile extends BaseModelWithIcon implements Parcelable {
 		}
 	};
 
+	@Override
+	public int getNumberOfChildren() {
+		return routes.size();
+	}
+
 }

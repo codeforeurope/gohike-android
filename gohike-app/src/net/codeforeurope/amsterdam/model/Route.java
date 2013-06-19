@@ -52,4 +52,9 @@ public class Route extends BaseModelWithIcon implements Parcelable {
 		}
 	};
 
+	@Override
+	public int getNumberOfChildren() {
+		return waypoints.size();
+	}
+
 }

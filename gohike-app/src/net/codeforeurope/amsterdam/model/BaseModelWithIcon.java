@@ -7,6 +7,6 @@ public abstract class BaseModelWithIcon extends BaseModel {
 	@SerializedName("icon_data")
 	public Image icon;
 
-	
+	public abstract int getNumberOfChildren();
 
 }

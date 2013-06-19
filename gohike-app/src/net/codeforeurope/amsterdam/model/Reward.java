@@ -37,15 +37,18 @@ public class Reward extends BaseModelWithIcon implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		// TODO Auto-generated method stub
 		dest.writeInt(this.id);
 		dest.writeString(this.nameEn);
 		dest.writeString(this.nameNl);
 		dest.writeString(this.descriptionEn);
 		dest.writeString(this.descriptionNl);
 		dest.writeParcelable(this.image, 0);
-		
+
 	}
 
-	
+	@Override
+	public int getNumberOfChildren() {
+		return 0;
+	}
+
 }
