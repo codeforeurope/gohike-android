@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/grid_item_top"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_alignParentTop="true"
         android:background="@drawable/grid_item_top"
         android:gravity="center"
@@ -23,7 +23,7 @@
     <TextView
         android:id="@+id/grid_item_bottom"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+       	android:layout_height="30dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:background="@drawable/grid_item_bottom"
