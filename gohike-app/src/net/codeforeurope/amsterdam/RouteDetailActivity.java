@@ -82,9 +82,24 @@ public class RouteDetailActivity extends AbstractGameActivity {
 		int length = currentRoute.waypoints.size();
 		for (int i = 0; i < length; i++) {
 			Waypoint waypoint = currentRoute.waypoints.get(i);
+			RelativeLayout waypointItem = (RelativeLayout) waypointList
+					.getChildAt(i);
+
+			waypointItem.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Waypoint wp = (Waypoint) v.getTag();
+					// here we show the Location Detail
+					if (gameStateService.isWaypointCheckedIn(wp)) {
+						openLocationDetail(wp);
+					} else {
+						// alert
+					}
+				}
+			});
 			if (gameStateService.isWaypointCheckedIn(waypoint)) {
-				RelativeLayout waypointItem = (RelativeLayout) waypointList
-						.getChildAt(i);
+
 				ImageView leftIcon = (ImageView) waypointItem
 						.findViewById(R.id.waypoint_item_icon_left);
 
@@ -92,15 +107,6 @@ public class RouteDetailActivity extends AbstractGameActivity {
 						.findViewById(R.id.waypoint_item_icon_right);
 				rightIcon.setVisibility(View.VISIBLE);
 				leftIcon.getDrawable().setLevel(1);
-				waypointItem.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						Waypoint wp = (Waypoint) v.getTag();
-						// here we show the Location Detail
-						openLocationDetail(wp);
-					}
-				});
 
 			}
 		}

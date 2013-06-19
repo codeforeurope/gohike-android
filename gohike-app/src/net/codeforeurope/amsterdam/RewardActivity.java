@@ -6,7 +6,6 @@ import net.codeforeurope.amsterdam.model.Reward;
 import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.ActionBar;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -77,17 +76,17 @@ public class RewardActivity extends AbstractGameActivity {
 
 			Intent sharingIntent = new Intent(Intent.ACTION_SEND);
 			Uri screenshotUri = Uri.parse(reward.image.localPath);
-//			Bitmap photo = BitmapFactory.decodeFile(reward.image.localPath);
+			// Bitmap photo = BitmapFactory.decodeFile(reward.image.localPath);
 			sharingIntent.setType("image/png");
 			sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-			startActivity(Intent.createChooser(sharingIntent, getString( R.string.share_reward_using)));
+			startActivity(Intent.createChooser(sharingIntent,
+					getString(R.string.share_reward_using)));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
-	
 	@SuppressWarnings("unused")
 	private void goUp() {
 		Intent intent = new Intent(this, RouteDetailActivity.class);

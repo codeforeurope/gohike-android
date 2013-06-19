@@ -1,7 +1,10 @@
 package net.codeforeurope.amsterdam;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import net.codeforeurope.amsterdam.dialog.CheckinDialogFragment;
+import net.codeforeurope.amsterdam.dialog.FoundDialogFragment;
 import net.codeforeurope.amsterdam.model.Waypoint;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.ActionBar;
@@ -16,15 +19,21 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class NavigateRouteActivity extends AbstractGameActivity implements
 		SensorEventListener, LocationListener {
+	private static final LayoutParams PROGRESS_IMAGE_LAYOUT_PARAMS = new ViewGroup.LayoutParams(
+			ViewGroup.LayoutParams.WRAP_CONTENT,
+			ViewGroup.LayoutParams.WRAP_CONTENT);
+
 	private static final int ANIMATION_DURATION = 300;
 
 	private static final int COMPASS_UPDATE_THRESHOLD = 500;
@@ -55,6 +64,8 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 	public boolean checkinInProgress = false;
 
 	private TextView targetName;
+
+	private LinearLayout progressView;
 
 	// private BroadcastReceiver checkinsReceiver;
 
@@ -111,6 +122,7 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 			targetName.setText(currentTarget.getLocalizedName());
 			distanceText.setText("...");
 		}
+
 	}
 
 	private void setUpViewReferences() {
@@ -120,6 +132,7 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 		compassTarget = (ImageView) findViewById(R.id.navigate_target);
 		distanceText = (TextView) findViewById(R.id.navigate_overlay_target_distance);
 		targetName = (TextView) findViewById(R.id.navigate_overlay_target_text);
+		progressView = (LinearLayout) findViewById(R.id.navigate_progress);
 	}
 
 	@Override
@@ -198,11 +211,12 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 				float orientation[] = new float[3];
 				SensorManager.getOrientation(R, orientation);
 				azimuth = -1 * (float) Math.toDegrees(orientation[0]);
-
-				Log.d("Navigate", "Sensor:" + event.sensor.getType() + " TS: "
-						+ event.timestamp + " PREV: " + timestamp + " DIFF: "
-						+ difference + " ACCY: " + event.accuracy);
-				Log.d("Navigate", "Azimuth: " + azimuth);
+				//
+				// Log.d("Navigate", "Sensor:" + event.sensor.getType() +
+				// " TS: "
+				// + event.timestamp + " PREV: " + timestamp + " DIFF: "
+				// + difference + " ACCY: " + event.accuracy);
+				// Log.d("Navigate", "Azimuth: " + azimuth);
 				compassRose.animate().setDuration(ANIMATION_DURATION)
 						.rotation(360 + azimuth);
 
@@ -288,15 +302,42 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 	protected void onGameStateServiceConnected() {
 		loadData();
 		setupActionBar();
+		updateProgress();
 	}
 
 	@Override
 	protected void onGameDataUpdated(Intent intent) {
 		loadData();
 		setupActionBar();
+		updateProgress();
 		if (checkinInProgress) {
 			showTargetHintDialog();
 		}
+	}
+
+	private void updateProgress() {
+
+		ArrayList<Waypoint> waypoints = gameStateService.getCurrentRoute().waypoints;
+		int numberOfWaypoints = waypoints.size();
+		if (progressView.getChildCount() != numberOfWaypoints) {
+			progressView.removeAllViews();
+		}
+		for (int i = 0; i < numberOfWaypoints; i++) {
+			Waypoint waypoint = waypoints.get(i);
+			ImageView progressImage = (ImageView) progressView.getChildAt(i);
+			if (progressImage == null) {
+				progressImage = new ImageView(getBaseContext());
+				progressImage.setLayoutParams(PROGRESS_IMAGE_LAYOUT_PARAMS);
+				progressView.addView(progressImage);
+			}
+			if (gameStateService.isWaypointCheckedIn(waypoint)) {
+				progressImage.setImageResource(R.drawable.progress_check);
+			} else {
+				progressImage.setImageResource(R.drawable.progress_target);
+			}
+
+		}
+
 	}
 
 	private void showTargetHintDialog() {

@@ -1,5 +1,6 @@
 package net.codeforeurope.amsterdam;
 
+import net.codeforeurope.amsterdam.dialog.UpdateContentDialogFragment;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.content.BroadcastReceiver;
 import android.content.Context;
