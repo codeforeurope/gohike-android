@@ -5,17 +5,14 @@ import net.codeforeurope.amsterdam.model.Waypoint;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import net.codeforeurope.amsterdam.view.NotVisitedDialogFragment;
 import android.app.ActionBar;
-import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,14 +26,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class RouteDetailActivity extends AbstractGameActivity {
+public class RouteDetailActivity extends AbstractGameActivity implements
+		OnClickListener {
 
 	ImageView routeImage;
 
 	TextView routeTitle;
 
 	TextView routeDescription;
-	
+
 	Button goHikeButton;
 
 	LinearLayout waypointList;
@@ -87,9 +85,9 @@ public class RouteDetailActivity extends AbstractGameActivity {
 	}
 
 	private void updateButtonVisibility() {
-		if(gameStateService.isRouteFinished() == false)
-		{
+		if (gameStateService.isRouteFinished() == false) {
 			goHikeButton.setVisibility(android.view.View.VISIBLE);
+			goHikeButton.setOnClickListener(this);
 		}
 	}
 
@@ -117,25 +115,23 @@ public class RouteDetailActivity extends AbstractGameActivity {
 						openLocationDetail(wp);
 					}
 				});
-			}
-			else
-			{
+			} else {
 				waypointItem.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						// here we show the Dialog "Go Hike Now?"
 						showNotFoundYetDialog();
 					}
-				});				
+				});
 			}
 		}
 	}
 
 	private void showNotFoundYetDialog() {
-		 DialogFragment newFragment = new NotVisitedDialogFragment();
-		 newFragment.show(getFragmentManager(), "notvisited");
+		DialogFragment newFragment = new NotVisitedDialogFragment();
+		newFragment.show(getFragmentManager(), "notvisited");
 	}
-	
+
 	private void openLocationDetail(Waypoint wp) {
 		Intent intent = new Intent(this, LocationDetailActivity.class);
 		intent.putExtra(ApiConstants.CURRENT_WAYPOINT, wp);
@@ -148,7 +144,7 @@ public class RouteDetailActivity extends AbstractGameActivity {
 		routeImage.setImageBitmap(photo);
 		routeTitle.setText(currentRoute.getLocalizedName());
 		routeDescription.setText(currentRoute.getLocalizedDescription());
-		
+
 		int length = currentRoute.waypoints.size();
 		for (int i = 0; i < length; i++) {
 			Waypoint waypoint = currentRoute.waypoints.get(i);
@@ -211,9 +207,8 @@ public class RouteDetailActivity extends AbstractGameActivity {
 	public void startHike() {
 		Intent intent = new Intent(this, NavigateRouteActivity.class);
 		startActivity(intent);
-		overridePendingTransition(R.anim.enter_from_right,
-				R.anim.leave_to_left);
-		
+		overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
+
 	}
 
 	@Override
@@ -254,5 +249,12 @@ public class RouteDetailActivity extends AbstractGameActivity {
 	protected void onGameDataUpdated(Intent intent) {
 		// TODO Auto-generated method stub
 		onGameStateServiceConnected();
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+
+		startHike();
 	}
 }
