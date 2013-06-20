@@ -21,11 +21,12 @@
      <string name="share_reward">Share Reward</string>
      <string name="yes">Yes</string>
      <string name="no">No</string>
-     <string name="found_title">Congratulations! You found it!</string>
+     <string name="found_title">Great! You found it!</string>
      <string name="route_continue">Continue!</string>
+     <string name="checkin_look_around">Look around! Have you found it?</string>
      <string name="checkin_close">You are close!</string>
      <string name="how_to_play">How to play</string>
-     <string name="help1">Choose a Profile</string>
+     <string name="help1">Choose your route</string>
      <string name="help2">Follow the arrow</string>
      <string name="help3">Find locations</string>
      <string name="help4">Get reward!</string>
@@ -39,6 +40,7 @@
      <string name="not_found_dialog_message">Hike to discover places and find out more about them. Go hike now?</string>
      <string name="not_found_dialog_yes">Let\'s go!</string>
      <string name="not_found_dialog_no">Not now</string>
+     <!-- Translated -->
 
 
 </resources>
