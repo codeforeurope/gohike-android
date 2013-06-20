@@ -149,7 +149,11 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 			onBackPressed();
 			return true;
 		case R.id.menu_show_map:
-
+			Intent i = new Intent(getBaseContext(),
+					OrientationMapActivity.class);
+			startActivity(i);
+			overridePendingTransition(R.anim.enter_from_right,
+					R.anim.leave_to_left);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

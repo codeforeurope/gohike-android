@@ -7,6 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class SplashActivity extends AbstractGameActivity {
 
@@ -84,7 +88,14 @@ public class SplashActivity extends AbstractGameActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// startService(new Intent(getBaseContext(), ContentService.class));
+
+		int resultCode = GooglePlayServicesUtil
+				.isGooglePlayServicesAvailable(this);
+
+		if (ConnectionResult.SUCCESS != resultCode) {
+			Log.e("PLAY", "no play services");
+
+		}
 	}
 
 	@Override
