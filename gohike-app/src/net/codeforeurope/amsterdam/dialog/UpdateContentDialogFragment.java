@@ -2,7 +2,6 @@ package net.codeforeurope.amsterdam.dialog;
 
 import net.codeforeurope.amsterdam.R;
 import net.codeforeurope.amsterdam.SplashActivity;
-import net.codeforeurope.amsterdam.R.string;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -43,8 +42,7 @@ public class UpdateContentDialogFragment extends DialogFragment {
 				.setNegativeButton(R.string.update_dialog_no,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								((SplashActivity) getActivity())
-										.skipUpdate();
+								((SplashActivity) getActivity()).skipUpdate();
 							}
 						});
 		// Create the AlertDialog object and return it

@@ -2,21 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" android:padding="10dp" >
     
     <TextView
-            android:id="@+id/found_title"
+            android:id="@+id/next_target_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/found_title"
+            android:text="Marie Heinekenplein"
             android:textAppearance="?android:attr/textAppearanceLarge" />
             
- 
-    <TextView
-            android:id="@+id/found_text"
-            android:layout_width="wrap_content"
+    <ImageView
+            android:id="@+id/next_target_image"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="description"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:contentDescription="@string/reward_image" />
+ 
+<!--     <TextView -->
+<!--             android:id="@+id/next_target_text" -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:text="description" -->
+<!--             android:textAppearance="?android:attr/textAppearanceMedium" /> -->
 
 </LinearLayout>

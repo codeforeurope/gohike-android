@@ -1,33 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="@drawable/layout_background">
-    
-<LinearLayout android:id="@+id/location_detail"
+    android:layout_height="match_parent"
+    android:background="@drawable/layout_background" >
+
+    <LinearLayout
+        android:id="@+id/location_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" android:padding="10dp">
-        
-  <ImageView
+        android:orientation="vertical"
+        android:padding="10dp" >
+
+        <ImageView
             android:id="@+id/location_detail_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/reward_image" />
-        
-    <TextView
+
+        <TextView
             android:id="@+id/location_detail_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceLarge" />
-    
-   <TextView
+
+        <TextView
             android:id="@+id/location_detail_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceMedium" />
-   
-</LinearLayout>    
-    
+        
+         <Button android:id="@+id/route_gohike_button"
+            android:layout_width="fill_parent" 
+            android:layout_height="wrap_content" 
+            android:text="@string/route_continue"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="gone"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/go_hike_button"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
 </ScrollView>

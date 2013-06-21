@@ -39,6 +39,8 @@ public class GameStateService extends Service {
 
 	private BroadcastReceiver receiver;
 
+	private Waypoint previousTarget;
+
 	public void doUpdateContent() {
 		Intent intent = new Intent(getBaseContext(), ContentApiService.class);
 		startService(intent);
@@ -216,13 +218,18 @@ public class GameStateService extends Service {
 		// Returns the first not visited location
 		int waypoints = currentRoute.waypoints.size();
 		for (int i = 0; i < waypoints; i++) {
-			Waypoint w = currentRoute.waypoints.get(i);
-			if (!isWaypointCheckedIn(w)) {
-				return w;
-
+			Waypoint wp = currentRoute.waypoints.get(i);
+			if (!isWaypointCheckedIn(wp)) {
+				return wp;
+			} else {
+				previousTarget = wp;
 			}
 		}
 		return null;
+	}
+
+	public Waypoint getPreviousTarget() {
+		return previousTarget;
 	}
 
 	public void checkin() {

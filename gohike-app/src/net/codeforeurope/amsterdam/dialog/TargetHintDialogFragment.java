@@ -16,16 +16,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class CheckinDialogFragment extends DialogFragment {
+public class TargetHintDialogFragment extends DialogFragment {
 
 	Waypoint currentTarget;
 
-	public CheckinDialogFragment() {
+	public TargetHintDialogFragment() {
 		// TODO Auto-generated constructor stub
-
 	}
 
-	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -35,37 +33,31 @@ public class CheckinDialogFragment extends DialogFragment {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 
 		LinearLayout waypointLayout = (LinearLayout) inflater.inflate(
-				R.layout.dialog_checkin, null);
-		TextView checkinTitle = (TextView) waypointLayout
-				.findViewById(R.id.checkin_title);
-		ImageView checkinImage = (ImageView) waypointLayout
-				.findViewById(R.id.checkin_image);
-		checkinTitle.setText(currentTarget.getLocalizedName());
+				R.layout.dialog_found, null);
+		TextView foundTitle = (TextView) waypointLayout
+				.findViewById(R.id.next_target_title);
+		ImageView targetImage = (ImageView) waypointLayout
+				.findViewById(R.id.next_target_image);
+		foundTitle.setText(currentTarget.getLocalizedName());
 		Bitmap photo = BitmapFactory.decodeFile(currentTarget.image.localPath);
-		checkinImage.setImageBitmap(photo);
+		targetImage.setImageBitmap(photo);
 
 		builder.setView(waypointLayout)
-				.setTitle(R.string.checkin_close)
+				.setTitle(R.string.next_stop)
 				// R.string.pick_color
 				// Add action buttons
-				.setPositiveButton(R.string.yes,
+				.setPositiveButton(R.string.route_continue,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
-								// User wants to check-in
+								// user wants to check in
+								// store the current check-in somewhere
+								// get the next
+								// set the navigation to the next
 								((NavigateRouteActivity) getActivity())
-										.doCheckin();
-							}
-						})
-				.setNegativeButton(R.string.no,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								getDialog().cancel();
-
-								((NavigateRouteActivity) getActivity()).checkinInProgress = false;
+										.doDismissTargetHint();
 							}
 						});
-
 		return builder.create();
 	}
 

@@ -42,5 +42,6 @@ public class ApiConstants {
 	public static final String UPDATE_SIZE = "update_size";
 	public static final String PREFERENCES_FILE = "TakeAHikePreferences";
 	public static final String PREFERENCES_HELPSHOWN = "help_shown";
+	public static final String JUST_FOUND = "just_found";
 
 }

@@ -21,7 +21,8 @@
      <string name="share_reward">Share Reward</string>
      <string name="yes">Yes</string>
      <string name="no">No</string>
-     <string name="found_title">Great! You found it!</string>
+     <string name="found_it">Great! You found it!</string>
+     <string name="next_stop">Next Stop &#8230;</string>
      <string name="route_continue">Continue!</string>
      <string name="checkin_look_around">Look around! Have you found it?</string>
      <string name="checkin_close">You are close!</string>

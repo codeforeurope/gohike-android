@@ -21,7 +21,8 @@
      <string name="share_reward">Delen ornderscheiding</string>
      <string name="yes">Ja</string>
      <string name="no">Nee</string>
-     <string name="found_title">Geweldig! Je hebt het gevonden!</string>
+     <string name="found_it">Geweldig! Je hebt het gevonden!</string>
+     <string name="next_stop">Volgende Doel &#8230;</string>
      <string name="route_continue">Voortzetten!</string>
      <string name="checkin_look_around">Kijk om je heen! Heb je het al gespot?</string>
      <string name="checkin_close">Je bent nu dichtbij!</string>

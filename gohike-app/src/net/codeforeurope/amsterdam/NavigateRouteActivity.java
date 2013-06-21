@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.codeforeurope.amsterdam.dialog.CheckinDialogFragment;
-import net.codeforeurope.amsterdam.dialog.FoundDialogFragment;
+import net.codeforeurope.amsterdam.dialog.TargetHintDialogFragment;
 import net.codeforeurope.amsterdam.model.Waypoint;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.ActionBar;
@@ -39,11 +39,13 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 	private static final int COMPASS_UPDATE_THRESHOLD = 500;
 
 	private static final int CHECKIN_DISTANCE = 5500; // Change to 20 for
-														// production
+
+	private static final int SHOW_LOCATION_DETAIL = 1234;
+	// production
 
 	CheckinDialogFragment checkinDialog;
 
-	FoundDialogFragment targetHintDialog;
+	TargetHintDialogFragment targetHintDialog;
 
 	SensorManager sensorManager;
 
@@ -74,7 +76,7 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 
 		super.onCreate(savedInstanceState);
 		checkinDialog = new CheckinDialogFragment();
-		targetHintDialog = new FoundDialogFragment();
+		targetHintDialog = new TargetHintDialogFragment();
 		setUpViewReferences();
 		setupSensorReferences();
 
@@ -315,8 +317,29 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 		setupActionBar();
 		updateProgress();
 		if (checkinInProgress) {
+			showLocationDetail();
+			// showTargetHintDialog();
+		}
+	}
+
+	private void showLocationDetail() {
+		Intent intent = new Intent(getBaseContext(),
+				LocationDetailActivity.class);
+		intent.putExtra(ApiConstants.CURRENT_WAYPOINT,
+				gameStateService.getPreviousTarget());
+		intent.putExtra(ApiConstants.JUST_FOUND, true);
+		startActivityForResult(intent, SHOW_LOCATION_DETAIL);
+		overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
+
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		if (requestCode == SHOW_LOCATION_DETAIL) {
 			showTargetHintDialog();
 		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	private void updateProgress() {
