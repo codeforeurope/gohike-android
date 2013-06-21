@@ -43,6 +43,11 @@
      <string name="not_found_dialog_yes">Let\'s go!</string>
      <string name="not_found_dialog_no">Not now</string>
      <string name="app_id">547542925309510</string>
+     <string name="earned_reward">I just earned a "%s" badge by playing Take a Hike!</string>
+     <string name="share_reward_success">Success</string>
+     <string name="share_reward_success_message">Thanks for sharing your badge with friends</string>
+     <string name="share_reward_error">Sorry, there was an error sharing your badge</string>
+    
      <!-- Translated -->
 
 
