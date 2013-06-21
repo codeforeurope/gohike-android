@@ -10,6 +10,7 @@ public class ApiConstants {
 	public static final String ERROR_MESSAGE = "error_message";
 	public static final String ERROR = "error";
 	public static final String BASE_URL = "http://gohike.herokuapp.com/api/%s";
+	public static final String WEB_BASE_URL = "http://www.gotakeahike.nl/%s";
 
 	public static final String ACTION_CONTENT_LOADED = "data_loaded";
 	public static final String GAME_DATA = "game_data";
