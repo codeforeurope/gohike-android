@@ -28,18 +28,19 @@ public class ProfileGridActivity extends AbstractGameActivity implements
 		setContentView(R.layout.grid);
 		gridView = (GridView) findViewById(R.id.grid);
 		gridView.setOnItemClickListener(this);
-		
-		SharedPreferences myPrefs = getSharedPreferences(ApiConstants.PREFERENCES_FILE, MODE_PRIVATE);
+
+		SharedPreferences myPrefs = getSharedPreferences(
+				ApiConstants.PREFERENCES_FILE, MODE_PRIVATE);
 		int i = myPrefs.getInt(ApiConstants.PREFERENCES_HELPSHOWN, 0);
-		if(i == 0)
-		{
+		if (i == 0) {
 			SharedPreferences.Editor e = myPrefs.edit();
-			e.putInt(ApiConstants.PREFERENCES_HELPSHOWN, 1); // add or overwrite helpShown
+			e.putInt(ApiConstants.PREFERENCES_HELPSHOWN, 1); // add or overwrite
+																// helpShown
 			e.commit(); // this saves to disk and notifies observers
-			
+
 			showHelp();
 		}
-		
+
 	}
 
 	@Override
@@ -93,12 +94,12 @@ public class ProfileGridActivity extends AbstractGameActivity implements
 	}
 
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.profile_select, menu);
 		return super.onPrepareOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -114,9 +115,8 @@ public class ProfileGridActivity extends AbstractGameActivity implements
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
-	private void showHelp()
-	{
+
+	private void showHelp() {
 		Intent intent = new Intent(this, HelpFragmentActivity.class);
 		startActivity(intent);
 	}

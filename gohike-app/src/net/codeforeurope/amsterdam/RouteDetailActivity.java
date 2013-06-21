@@ -213,20 +213,13 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		if (gameStateService.isRouteFinished()) {
+		if (gameStateService != null && gameStateService.isRouteFinished()) {
 			inflater.inflate(R.menu.route_detail_finished, menu);
 		} else {
 			inflater.inflate(R.menu.route_detail, menu);
 		}
-
-		return super.onPrepareOptionsMenu(menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	private void setupActionBar() {
