@@ -6,7 +6,6 @@ import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -70,9 +69,7 @@ public class ProfileGridActivity extends AbstractGameActivity implements
 
 	@Override
 	protected void onRestart() {
-		// TODO Auto-generated method stub
 		super.onRestart();
-		Log.d("RESTART", "restarting");
 	}
 
 	@Override

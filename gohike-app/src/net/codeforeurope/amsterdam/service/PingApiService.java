@@ -24,7 +24,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -77,10 +76,10 @@ public class PingApiService extends AbstractApiService {
 			throws JSONException, ParseException, UnsupportedEncodingException {
 		Gson gson = buildGson();
 		Reader reader = new InputStreamReader(responseStream, "UTF-8");
-		long start = System.currentTimeMillis();
+		// long start = System.currentTimeMillis();
 		PingResult result = gson.fromJson(reader, PingResult.class);
-		long end = System.currentTimeMillis();
-		Log.i(NAME, "Time to parse: " + (end - start) + "ms");
+		// long end = System.currentTimeMillis();
+		// Log.i(NAME, "Time to parse: " + (end - start) + "ms");
 		broadCastIntent.setAction(ApiConstants.ACTION_PING_COMPLETE);
 		broadCastIntent.putExtra(ApiConstants.PING_RESULT, result);
 

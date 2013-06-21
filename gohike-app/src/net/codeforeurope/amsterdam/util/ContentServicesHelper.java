@@ -15,7 +15,6 @@ import net.codeforeurope.amsterdam.model.GameData;
 import net.codeforeurope.amsterdam.model.Image;
 import net.codeforeurope.amsterdam.model.gson.ImageTypeAdapter;
 import android.content.Context;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -77,14 +76,15 @@ public class ContentServicesHelper {
 		return gson;
 	}
 
-	public static GameData parseGameData(File contentFile) throws FileNotFoundException, UnsupportedEncodingException {
+	public static GameData parseGameData(File contentFile)
+			throws FileNotFoundException, UnsupportedEncodingException {
 		InputStream contentFileInput = new FileInputStream(contentFile);
 		Reader reader = new InputStreamReader(contentFileInput, "UTF-8");
 		Gson gson = buildGson(contentFile.getParentFile());
-		long start = System.currentTimeMillis();
+		// long start = System.currentTimeMillis();
 		GameData game = gson.fromJson(reader, GameData.class);
-		long end = System.currentTimeMillis();
-		Log.i("GameDataParser", "Time to parse: " + (end - start) + "ms");
+		// long end = System.currentTimeMillis();
+		// Log.i("GameDataParser", "Time to parse: " + (end - start) + "ms");
 		return game;
 	}
 }
