@@ -116,9 +116,12 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 	private void loadData() {
 		if (gameStateService.isRouteFinished()) {
 			checkinInProgress = false;
+			Intent intent = new Intent(this, RewardActivity.class);
+			startActivity(intent);
 			finish();
-			overridePendingTransition(R.anim.enter_from_left,
-					R.anim.leave_to_right);
+			overridePendingTransition(R.anim.enter_from_right,
+					R.anim.leave_to_left);
+
 		} else {
 			Waypoint currentTarget = gameStateService.getCurrentTarget();
 			targetName.setText(currentTarget.getLocalizedName());
@@ -242,7 +245,7 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 
 	@Override
 	public void onLocationChanged(Location location) {
-		if (!checkinInProgress) {
+		if (!checkinInProgress && !gameStateService.isRouteFinished()) {
 			Waypoint currentTarget = gameStateService.getCurrentTarget();
 			final float[] results = new float[3];
 			Location.distanceBetween(location.getLatitude(),

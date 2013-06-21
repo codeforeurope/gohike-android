@@ -82,10 +82,14 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 		super.onRestart();
 		setupBroadcastReceivers();
 		updateWaypointDisplay();
+		updateButtonVisibility();
+		invalidateOptionsMenu();
 	}
 
 	private void updateButtonVisibility() {
-		if (gameStateService.isRouteFinished() == false) {
+		if (gameStateService.isRouteFinished()) {
+			goHikeButton.setVisibility(android.view.View.GONE);
+		} else {
 			goHikeButton.setVisibility(android.view.View.VISIBLE);
 			goHikeButton.setOnClickListener(this);
 		}

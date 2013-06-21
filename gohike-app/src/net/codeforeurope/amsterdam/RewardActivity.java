@@ -28,15 +28,10 @@ import com.facebook.Session;
 import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
-import com.facebook.model.GraphObject;
 
 public class RewardActivity extends AbstractGameActivity {
 
 	private static final String PUBLISH_ACTIONS = "publish_actions";
-
-	private interface GraphObjectWithId extends GraphObject {
-		String getId();
-	}
 
 	private StatusCallback facebookStatusCallback = new StatusCallback() {
 
@@ -112,16 +107,6 @@ public class RewardActivity extends AbstractGameActivity {
 		return false;
 	}
 
-	@SuppressWarnings("unused")
-	private void goUp() {
-		Intent intent = new Intent(this, RouteDetailActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.putExtra(ApiConstants.GAME_DATA, gameData);
-		intent.putExtra(ApiConstants.CURRENT_PROFILE, currentProfile);
-		startActivity(intent);
-		overridePendingTransition(R.anim.enter_from_left, R.anim.leave_to_right);
-	}
-
 	private void loadAndDisplayData() {
 		Bitmap photo = BitmapFactory.decodeFile(reward.image.localPath);
 		rewardImage.setImageBitmap(photo);
@@ -161,8 +146,9 @@ public class RewardActivity extends AbstractGameActivity {
 		String alertMessage = null;
 		if (response.getError() == null) {
 			title = getString(R.string.share_reward_success);
-			String id = response.getGraphObject().cast(GraphObjectWithId.class)
-					.getId();
+			// String id =
+			// response.getGraphObject().cast(GraphObjectWithId.class)
+			// .getId();
 			alertMessage = getString(R.string.share_reward_success_message);
 		} else {
 			title = getString(R.string.share_reward_error);
