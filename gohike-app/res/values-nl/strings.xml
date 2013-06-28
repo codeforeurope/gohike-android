@@ -12,7 +12,7 @@
     <string name="reward">Onderscheiding</string>
     <string name="view_reward">Bekijk onderscheiding</string>
     <string name="update_dialog_title">Actualiseren van de inhoud?</string>
-    <string name="update_dialog_message">Er is een nieuwe versie van de inhoud beschikbaar is. De grootte van de download is% .1 f MB. Zullen we verder gaan en bij te werken?</string>
+    <string name="update_dialog_message">Er is een nieuwe versie van de inhoud beschikbaar is. De grootte van de download is %.1f MB. Zullen we verder gaan en bij te werken?</string>
     <string name="update_dialog_yes">Ja!</string>
     <string name="update_dialog_no">Nee, later</string>
     <string name="route_image">Route afbeelding</string>
