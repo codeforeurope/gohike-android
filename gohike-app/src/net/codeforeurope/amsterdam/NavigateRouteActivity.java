@@ -38,7 +38,7 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 
 	private static final int COMPASS_UPDATE_THRESHOLD = 500;
 
-	private static final int CHECKIN_DISTANCE = 5500; // Change to 20 for
+	private static final int CHECKIN_DISTANCE = 20; // Change to 20 for
 
 	private static final int SHOW_LOCATION_DETAIL = 1234;
 	// production
