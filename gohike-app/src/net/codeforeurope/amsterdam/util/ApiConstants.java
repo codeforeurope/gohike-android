@@ -24,7 +24,7 @@ public class ApiConstants {
 	public static final String PING_RESULT = "ping_result";
 	public static final String CONTENT_VERSION = "content_version";
 	public static final String ACTION_CONTENT_LOAD_ERROR = "data_load_error";
-	public static final Locale NETHERLANDS_LOCALE = new Locale("nl");
+	public static final Locale NETHERLANDS_LOCALE = new Locale("nl", "NL");
 	public static final String OUTSTANDING_CHECKINS = "outstanding_checkins";
 	public static final String UPLOADED_CHECKINS = "uploaded_checkins";
 	public static final String CHECKINS_UPLOADED = "checkins_uploaded";
