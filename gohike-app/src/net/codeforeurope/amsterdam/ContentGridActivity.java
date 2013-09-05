@@ -1,7 +1,11 @@
 package net.codeforeurope.amsterdam;
 
-import net.codeforeurope.amsterdam.adapter.GridAdapter;
-import net.codeforeurope.amsterdam.model.BaseModel;
+import java.util.ArrayList;
+
+import net.codeforeurope.amsterdam.adapter.ContentGridAdapter;
+import net.codeforeurope.amsterdam.adapter.ContentGridAdapter.OnGridItemClickListener;
+import net.codeforeurope.amsterdam.model.Profile;
+import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.service.CatalogApiService;
 import net.codeforeurope.amsterdam.service.ImageDownloadService;
 import net.codeforeurope.amsterdam.util.ActionConstants;
@@ -16,16 +20,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
+import android.widget.ListView;
 
 public class ContentGridActivity extends AbstractGameActivity implements
-		OnItemClickListener {
+		OnGridItemClickListener {
 
-	GridView gridView;
-	GridAdapter adapter;
+	ListView gridView;
+	ContentGridAdapter adapter;
 
 	BroadcastReceiver receiver = new Receiver();
 
@@ -35,9 +36,12 @@ public class ContentGridActivity extends AbstractGameActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.grid);
-		gridView = (GridView) findViewById(R.id.grid);
-		gridView.setOnItemClickListener(this);
+		setContentView(R.layout.content_grid);
+		adapter = new ContentGridAdapter(getBaseContext());
+		adapter.setListener(this);
+		gridView = (ListView) findViewById(R.id.content_grid);
+		gridView.setAdapter(adapter);
+
 		setupActionBar();
 		setupReceivers();
 
@@ -65,19 +69,6 @@ public class ContentGridActivity extends AbstractGameActivity implements
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		GridAdapter adapter = (GridAdapter) parent.getAdapter();
-		BaseModel profile = (BaseModel) adapter.getItem(position);
-		// gameStateService.setCurrentProfile(profile);
-		// gameStateService.setCurrentRoute(profile.routes.get(0));
-
-		Intent intent = new Intent(getBaseContext(), RouteDetailActivity.class);
-		startActivity(intent);
-		overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
 	}
 
 	@Override
@@ -160,11 +151,21 @@ public class ContentGridActivity extends AbstractGameActivity implements
 						DataConstants.IMAGE_DOWNLOAD_TARGET, 0));
 
 			} else if (ActionConstants.IMAGE_DOWNLOAD_COMPLETE.equals(action)) {
+				ArrayList<Profile> profiles = intent
+						.getParcelableArrayListExtra(DataConstants.CATALOG_PROFILES);
 				progressDialog.setIndeterminate(true);
 				progressDialog.dismiss();
+				adapter.setProfiles(profiles);
 			}
 
 		}
+
+	}
+
+	@Override
+	public void onGridItemClicked(Route route) {
+		// TODO Auto-generated method stub
+		route.name.getLocalizedValue();
 
 	}
 

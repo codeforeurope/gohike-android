@@ -2,7 +2,6 @@ package net.codeforeurope.amsterdam.adapter;
 
 import java.util.ArrayList;
 
-import net.codeforeurope.amsterdam.R;
 import android.content.Context;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
@@ -36,12 +35,12 @@ public class GridAdapter extends BaseAdapter {
 		View v = convertView;
 
 		if (convertView == null) {
-			mHolder = new MainListHolder();
-			v = inflater.inflate(R.layout.grid_item, null);
-			mHolder.topText = (TextView) v.findViewById(R.id.grid_item_top);
-			mHolder.bottomText = (TextView) v
-					.findViewById(R.id.grid_item_bottom);
-			v.setTag(mHolder);
+			// mHolder = new MainListHolder();
+			// v = inflater.inflate(R.layout.grid_item, null);
+			// mHolder.topText = (TextView) v.findViewById(R.id.grid_item_top);
+			// mHolder.bottomText = (TextView) v
+			// .findViewById(R.id.grid_item_bottom);
+			// v.setTag(mHolder);
 		} else {
 			mHolder = (MainListHolder) v.getTag();
 
@@ -59,29 +58,6 @@ public class GridAdapter extends BaseAdapter {
 		return v;
 
 	}
-
-	// private LayerDrawable getBackground(final Parcelable model, View v) {
-	// Bitmap bitmap = BitmapFactory.decodeFile(model.image.localPath);
-	// if (v.getMeasuredWidth() > 0) {
-	// columnWidth = v.getMeasuredWidth();
-	//
-	// }
-	// if (columnWidth > 0) {
-	// float ratio = (float) bitmap.getWidth()
-	// / (float) bitmap.getHeight();
-	//
-	// bitmap = Bitmap.createScaledBitmap(bitmap,
-	// (int) (columnWidth * ratio), columnWidth, false);
-	// }
-	// StreamDrawable drawable = new StreamDrawable(bitmap, 6, 2);
-	//
-	// Drawable drawable2 = context.getResources().getDrawable(
-	// R.drawable.grid_item);
-	//
-	// LayerDrawable layerDrawable = new LayerDrawable(new Drawable[] {
-	// drawable, drawable2 });
-	// return layerDrawable;
-	// }
 
 	class MainListHolder {
 
