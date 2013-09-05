@@ -1,3 +1,6 @@
 [submodule "facebook-android-sdk"]
 	path = facebook-android-sdk
 	url = git://github.com/facebook/facebook-android-sdk.git
+[submodule "grid-headers"]
+	path = grid-headers
+	url = https://github.com/TonicArtos/StickyGridHeaders.git
