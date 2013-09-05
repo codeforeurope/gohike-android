@@ -12,8 +12,12 @@ public class ApiConstants {
 	public static final String BASE_URL = "http://gohike.herokuapp.com/api/%s";
 	public static final String WEB_BASE_URL = "http://www.gotakeahike.nl/%s";
 
+	public static final String GOHIKE_SETTINGS = "gohike_settings";
+
 	public static final String ACTION_CONTENT_LOADED = "data_loaded";
 	public static final String GAME_DATA = "game_data";
+
+	public static final String LOCATE_DATA = "locate_data";
 	public static final String CURRENT_PROFILE = "current_profile";
 	public static final String CURRENT_ROUTE = "current_route";
 	public static final String CURRENT_WAYPOINT = "current_waypoint";
@@ -44,5 +48,7 @@ public class ApiConstants {
 	public static final String PREFERENCES_FILE = "TakeAHikePreferences";
 	public static final String PREFERENCES_HELPSHOWN = "help_shown";
 	public static final String JUST_FOUND = "just_found";
+	public static final String CURRENT_CITY_ID = "current_city_id";
+	public static final String CURRENT_CITY_NAME = "current_city_name";
 
 }

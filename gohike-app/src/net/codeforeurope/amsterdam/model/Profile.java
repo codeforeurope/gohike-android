@@ -5,37 +5,27 @@ import java.util.ArrayList;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Profile extends BaseModelWithIcon implements Parcelable {
+public class Profile extends BaseModel implements Parcelable {
 
 	public ArrayList<Route> routes = new ArrayList<Route>();
 
 	public Profile(Parcel in) {
-		this.id = in.readInt();
-		this.nameEn = in.readString();
-		this.nameNl = in.readString();
-		this.descriptionEn = in.readString();
-		this.descriptionNl = in.readString();
+		this.id = in.readLong();
+		this.name = in.readParcelable(TranslatedString.class.getClassLoader());
 		this.image = in.readParcelable(Image.class.getClassLoader());
-		this.icon = in.readParcelable(Image.class.getClassLoader());
 		in.readTypedList(this.routes, Route.CREATOR);
-
 	}
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(this.id);
-		dest.writeString(this.nameEn);
-		dest.writeString(this.nameNl);
-		dest.writeString(this.descriptionEn);
-		dest.writeString(this.descriptionNl);
+		dest.writeLong(this.id);
+		dest.writeParcelable(this.name, 0);
 		dest.writeParcelable(this.image, 0);
-		dest.writeParcelable(this.icon, 0);
 		dest.writeTypedList(this.routes);
 	}
 
@@ -50,8 +40,12 @@ public class Profile extends BaseModelWithIcon implements Parcelable {
 	};
 
 	@Override
-	public int getNumberOfChildren() {
-		return routes.size();
+	public long getNumberOfImages() {
+		long numberOfImages = super.getNumberOfImages();
+		for (Route route : routes) {
+			numberOfImages += route.getNumberOfImages();
+		}
+		return numberOfImages;
 	}
 
 }

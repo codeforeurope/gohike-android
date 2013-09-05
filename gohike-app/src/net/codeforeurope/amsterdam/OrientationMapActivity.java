@@ -1,6 +1,5 @@
 package net.codeforeurope.amsterdam;
 
-import net.codeforeurope.amsterdam.model.Waypoint;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -13,10 +12,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 public class OrientationMapActivity extends AbstractGameActivity implements
 		OnMyLocationChangeListener {
@@ -78,21 +75,21 @@ public class OrientationMapActivity extends AbstractGameActivity implements
 		}
 	}
 
-	@Override
-	protected void onGameStateServiceConnected() {
-		Waypoint currentTarget = gameStateService.getCurrentTarget();
-		targetPosition = new LatLng(currentTarget.latitude,
-				currentTarget.longitude);
-
-		map.addMarker(new MarkerOptions()
-				.position(targetPosition)
-				.draggable(false)
-				.title(currentTarget.getLocalizedName())
-				.icon(BitmapDescriptorFactory
-						.fromResource(R.drawable.blue_map_marker)));
-
-		// zoomIn();
-	}
+	// @Override
+	// protected void onGameStateServiceConnected() {
+	// Waypoint currentTarget = gameStateService.getCurrentTarget();
+	// targetPosition = new LatLng(currentTarget.latitude,
+	// currentTarget.longitude);
+	//
+	// map.addMarker(new MarkerOptions()
+	// .position(targetPosition)
+	// .draggable(false)
+	// .title(currentTarget.getLocalizedName())
+	// .icon(BitmapDescriptorFactory
+	// .fromResource(R.drawable.blue_map_marker)));
+	//
+	// // zoomIn();
+	// }
 
 	private void zoomIn() {
 

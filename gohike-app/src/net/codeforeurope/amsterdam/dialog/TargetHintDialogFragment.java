@@ -6,11 +6,11 @@ import net.codeforeurope.amsterdam.model.Waypoint;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,7 +38,7 @@ public class TargetHintDialogFragment extends DialogFragment {
 				.findViewById(R.id.next_target_title);
 		ImageView targetImage = (ImageView) waypointLayout
 				.findViewById(R.id.next_target_image);
-		foundTitle.setText(currentTarget.getLocalizedName());
+		// foundTitle.setText(currentTarget.getLocalizedName());
 		Bitmap photo = BitmapFactory.decodeFile(currentTarget.image.localPath);
 		targetImage.setImageBitmap(photo);
 

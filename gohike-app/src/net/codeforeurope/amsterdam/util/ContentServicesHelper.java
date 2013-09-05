@@ -1,7 +1,6 @@
 package net.codeforeurope.amsterdam.util;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,24 +9,39 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
+import java.net.URL;
+import java.util.ArrayList;
 
-import net.codeforeurope.amsterdam.model.GameData;
 import net.codeforeurope.amsterdam.model.Image;
-import net.codeforeurope.amsterdam.model.gson.ImageTypeAdapter;
+import net.codeforeurope.amsterdam.model.LocateData;
+import net.codeforeurope.amsterdam.model.Profile;
+import net.codeforeurope.amsterdam.model.TranslatedString;
+import net.codeforeurope.amsterdam.model.gson.TranslatedStringTypeAdapter;
 import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 public class ContentServicesHelper {
 
-	public static File ensureContentDirectory(Context context) {
-		File contentDirectory = new File(context.getFilesDir(), "content");
-		if (!contentDirectory.exists()) {
-			contentDirectory.mkdir();
+	public static <T> File ensureImagesDirectory(Context context, Class<T> clazz) {
+		String imagesDirectoryName = clazz.getSimpleName().toLowerCase();
+		File baseDirectory = context.getFilesDir();
+		File imagesDirectory = ensureSubDirectory(imagesDirectoryName,
+				baseDirectory);
+		return imagesDirectory;
+	}
+
+	public static File ensureSubDirectory(String subDirectoryName,
+			File baseDirectory) {
+		File imagesDirectory = new File(baseDirectory, subDirectoryName);
+		if (!imagesDirectory.exists()) {
+			imagesDirectory.mkdir();
 		}
-		return contentDirectory;
+		return imagesDirectory;
 	}
 
 	public static File getContentFile(File contentDirectory) {
@@ -39,21 +53,25 @@ public class ContentServicesHelper {
 		return contentFile;
 	}
 
-	public static File writeOutContentFile(File contentDirectory,
-			InputStream input, String version) throws FileNotFoundException,
-			IOException {
+	public static String writeOutImageFile(Image image, File target)
+			throws FileNotFoundException, IOException {
+		if (image.url != null) {
+			final URL url = new URL(image.url);
+			InputStream input = url.openConnection().getInputStream();
 
-		File jsonFile = new File(contentDirectory, version + ".json");
-		OutputStream output = new FileOutputStream(jsonFile);
+			OutputStream output = new FileOutputStream(target);
 
-		byte[] buffer = new byte[1024];
-		int len = 0;
-		while ((len = input.read(buffer)) >= 0) {
-			output.write(buffer, 0, len);
+			byte[] buffer = new byte[8192];
+			int len = 0;
+			while ((len = input.read(buffer)) >= 0) {
+				output.write(buffer, 0, len);
+			}
+			input.close();
+			output.close();
+			return target.getPath();
+		} else {
+			return null;
 		}
-		input.close();
-		output.close();
-		return jsonFile;
 	}
 
 	public static String parseContentVersion(InputStream input)
@@ -68,23 +86,31 @@ public class ContentServicesHelper {
 		return version;
 	}
 
-	private static Gson buildGson(File contentDirectory) {
+	private static Gson buildCatalogGson() {
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(Image.class, new ImageTypeAdapter(
-				contentDirectory));
+		gsonBuilder.registerTypeAdapter(TranslatedString.class,
+				new TranslatedStringTypeAdapter());
+		// gsonBuilder.registerTypeAdapter(Image.class, new ImageTypeAdapter());
 		Gson gson = gsonBuilder.create();
 		return gson;
 	}
 
-	public static GameData parseGameData(File contentFile)
-			throws FileNotFoundException, UnsupportedEncodingException {
-		InputStream contentFileInput = new FileInputStream(contentFile);
-		Reader reader = new InputStreamReader(contentFileInput, "UTF-8");
-		Gson gson = buildGson(contentFile.getParentFile());
-		// long start = System.currentTimeMillis();
-		GameData game = gson.fromJson(reader, GameData.class);
-		// long end = System.currentTimeMillis();
-		// Log.i("GameDataParser", "Time to parse: " + (end - start) + "ms");
-		return game;
+	public static LocateData parseLocateResponse(InputStream streamResponse)
+			throws UnsupportedEncodingException {
+		Reader reader = new InputStreamReader(streamResponse, "UTF-8");
+		Gson gson = new Gson();
+		LocateData locateData = gson.fromJson(reader, LocateData.class);
+		return locateData;
+	}
+
+	public static ArrayList<Profile> parseCatalogResponse(
+			InputStream streamResponse) throws UnsupportedEncodingException {
+		Reader reader = new InputStreamReader(streamResponse, "UTF-8");
+		Type listType = new TypeToken<ArrayList<Profile>>() {
+		}.getType();
+
+		Gson gson = buildCatalogGson();
+		ArrayList<Profile> profiles = gson.fromJson(reader, listType);
+		return profiles;
 	}
 }

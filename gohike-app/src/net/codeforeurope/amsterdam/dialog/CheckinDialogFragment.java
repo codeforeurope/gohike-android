@@ -6,11 +6,11 @@ import net.codeforeurope.amsterdam.model.Waypoint;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,7 +40,7 @@ public class CheckinDialogFragment extends DialogFragment {
 				.findViewById(R.id.checkin_title);
 		ImageView checkinImage = (ImageView) waypointLayout
 				.findViewById(R.id.checkin_image);
-		checkinTitle.setText(currentTarget.getLocalizedName());
+		// checkinTitle.setText(currentTarget.getLocalizedName());
 		Bitmap photo = BitmapFactory.decodeFile(currentTarget.image.localPath);
 		checkinImage.setImageBitmap(photo);
 

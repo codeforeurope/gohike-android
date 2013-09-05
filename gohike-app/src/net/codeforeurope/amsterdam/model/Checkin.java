@@ -11,13 +11,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class Checkin implements Parcelable {
 
-	public int id = 0;
+	public long id = 0;
 
 	@SerializedName("location_id")
-	public int locationId;
+	public long locationId;
 
 	@SerializedName("route_id")
-	public int routeId;
+	public long routeId;
 
 	public Date timestamp;
 
@@ -26,9 +26,9 @@ public class Checkin implements Parcelable {
 	}
 
 	public Checkin(Parcel in) {
-		id = in.readInt();
-		locationId = in.readInt();
-		routeId = in.readInt();
+		id = in.readLong();
+		locationId = in.readLong();
+		routeId = in.readLong();
 		try {
 			timestamp = ApiConstants.DATE_FORMAT.parse(in.readString());
 		} catch (ParseException e) {
@@ -45,9 +45,9 @@ public class Checkin implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(id);
-		dest.writeInt(locationId);
-		dest.writeInt(routeId);
+		dest.writeLong(id);
+		dest.writeLong(locationId);
+		dest.writeLong(routeId);
 		dest.writeString(ApiConstants.DATE_FORMAT.format(timestamp));
 
 	}

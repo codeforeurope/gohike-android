@@ -1,26 +1,32 @@
 package net.codeforeurope.amsterdam;
 
-import net.codeforeurope.amsterdam.service.GameStateService;
-import net.codeforeurope.amsterdam.service.GameStateService.GameStateBinder;
-import net.codeforeurope.amsterdam.util.ApiConstants;
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
+import net.codeforeurope.amsterdam.dialog.ErrorDialogFragment;
+import net.codeforeurope.amsterdam.model.City;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
+import android.content.IntentSender;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.IBinder;
+import android.support.v4.app.FragmentActivity;
 
-public abstract class AbstractGameActivity extends Activity {
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationRequest;
 
-	protected GameStateService gameStateService;
+public abstract class AbstractGameActivity extends FragmentActivity implements
+		GooglePlayServicesClient.ConnectionCallbacks,
+		GooglePlayServicesClient.OnConnectionFailedListener {
 
-	protected BroadcastReceiver gameDataUpdateReceiver;
+	private final static int GOOGLE_PLAY_CONNECTION_FAILURE = 12345;
 
-	private boolean mBound = false;
+	protected ProgressDialog progressDialog;
+
+	protected LocationClient locationClient;
+
+	protected LocationRequest locationRequest;
 
 	@Override
 	protected void onStart() {
@@ -32,80 +38,159 @@ public abstract class AbstractGameActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//		setupReceiver();
-		bindToGameStateService();
 
+		locationClient = new LocationClient(this, this, this);
+		locationRequest = LocationRequest.create();
+		// Use high accuracy
+		locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+		// Set the update interval to 5 seconds
+		locationRequest.setInterval(1000);
+		// Set the fastest update interval to 1 second
+		locationRequest.setFastestInterval(1000);
+
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setCanceledOnTouchOutside(false);
 	}
 
 	@Override
 	protected void onPause() {
 
 		super.onPause();
-		unregisterReceiver(gameDataUpdateReceiver);
+		// unregisterReceiver(gameDataUpdateReceiver);
 	}
 
-//	@Override
-//	protected void onRestart() {
-//		super.onRestart();
-//		setupReceiver();
-//
-//	}
-	
+	protected boolean isCitySelected() {
+		return getApp().getSelectedCityId() > 0;
+	}
+
+	protected GoHikeApplication getApp() {
+		return (GoHikeApplication) getApplication();
+	}
+
 	@Override
 	protected void onResume() {
-		setupReceiver();
+		// setupReceiver();
 		super.onResume();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		// Unbind from the service
-		if (mBound) {
-			unbindService(mConnection);
-			mBound = false;
+
+	}
+
+	protected void onGameDataUpdated(Intent intent) {
+
+	}
+
+	protected void gotoGrid() {
+		Intent intent = new Intent(getBaseContext(), ContentGridActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
+	protected void saveSelectedCity(City city) {
+		getApp().setSelectedCity(city);
+	}
+
+	protected String getCurrentCityName() {
+		// TODO Auto-generated method stub
+		return getApp().getSelectedCityName();
+	}
+
+	/*
+	 * Google Play setup crap
+	 */
+
+	private void showErrorDialog(int errorCode) {
+		Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(errorCode,
+				this, GOOGLE_PLAY_CONNECTION_FAILURE);
+
+		// If Google Play services can provide an error dialog
+		if (errorDialog != null) {
+			// Create a new DialogFragment for the error dialog
+			ErrorDialogFragment errorFragment = new ErrorDialogFragment();
+			// Set the dialog in the DialogFragment
+			errorFragment.setDialog(errorDialog);
+			// Show the error dialog in the DialogFragment
+			errorFragment.show(getSupportFragmentManager(), "Location Updates");
 		}
 	}
 
-	/** Defines callbacks for service binding, passed to bindService() */
-	private ServiceConnection mConnection = new ServiceConnection() {
-
-		@Override
-		public void onServiceConnected(ComponentName className, IBinder service) {
-			// We've bound to LocalService, cast the IBinder and get
-			// LocalService instance
-			GameStateBinder binder = (GameStateBinder) service;
-			gameStateService = binder.getService();
-			mBound = true;
-			onGameStateServiceConnected();
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName arg0) {
-			mBound = false;
-		}
-	};
-
-	private void setupReceiver() {
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(ApiConstants.ACTION_GAME_DATA_UPDATED);
-		gameDataUpdateReceiver = new BroadcastReceiver() {
-
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				onGameDataUpdated(intent);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.android.gms.common.GooglePlayServicesClient.
+	 * OnConnectionFailedListener
+	 * #onConnectionFailed(com.google.android.gms.common.ConnectionResult)
+	 */
+	@Override
+	public void onConnectionFailed(ConnectionResult connectionResult) {
+		/*
+		 * Google Play services can resolve some errors it detects. If the error
+		 * has a resolution, try sending an Intent to start a Google Play
+		 * services activity that can resolve error.
+		 */
+		if (connectionResult.hasResolution()) {
+			try {
+				// Start an Activity that tries to resolve the error
+				connectionResult.startResolutionForResult(this,
+						GOOGLE_PLAY_CONNECTION_FAILURE);
+				/*
+				 * Thrown if Google Play services canceled the original
+				 * PendingIntent
+				 */
+			} catch (IntentSender.SendIntentException e) {
+				// Log the error
+				e.printStackTrace();
 			}
-		};
-		registerReceiver(gameDataUpdateReceiver, filter);
+		} else {
+			/*
+			 * If no resolution is available, display a dialog to the user with
+			 * the error.
+			 */
+			showErrorDialog(connectionResult.getErrorCode());
+		}
+
 	}
 
-	protected abstract void onGameStateServiceConnected();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks
+	 * #onConnected(android.os.Bundle)
+	 */
+	@Override
+	public void onConnected(Bundle bundle) {
+		// TODO Auto-generated method stub
 
-	private void bindToGameStateService() {
-		Intent intent = new Intent(this, GameStateService.class);
-		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
 
-	protected abstract void onGameDataUpdated(Intent intent);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks
+	 * #onDisconnected()
+	 */
+	@Override
+	public void onDisconnected() {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * Moves the screen to city selection screen
+	 * 
+	 * @param finish
+	 */
+	public void gotoCityList(boolean finish) {
+		Intent intent = new Intent(getBaseContext(), CityListActivity.class);
+		startActivity(intent);
+		if (finish) {
+			finish();
+		}
+	}
 
 }

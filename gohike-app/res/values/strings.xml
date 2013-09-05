@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Take a Hike!</string>
-    <string name="profiles">Profiles</string>
+    
     <string name="routes">Routes</string>
     <string name="start_hike">Start</string>
     <string name="show_map">Map</string>
@@ -12,43 +12,51 @@
     <string name="reward">Reward</string>
     <string name="view_reward">View Reward</string>
     
-     <string name="update_dialog_title">Update Content?</string>
-     <string name="update_dialog_message">There is a new version of content available. The size of the download is %.1f MB. Shall we go ahead and update? </string>
-     <string name="update_dialog_yes">Go for it!</string>
-     <string name="update_dialog_no">Nah, later</string>
-     <string name="route_image">Route Image</string>
-     <string name="reward_image">Reward Image</string>
-     <string name="share_reward">Share Reward</string>
-     <string name="yes">Yes</string>
-     <string name="no">No</string>
-     <string name="found_it">Great! You found it!</string>
-     <string name="next_stop">Next Stop &#8230;</string>
-     <string name="route_continue">Continue!</string>
-     <string name="checkin_look_around">Look around! Have you found it?</string>
-     <string name="checkin_close">You are close!</string>
-     <string name="how_to_play">How to play</string>
-     <string name="orientation_map">Map</string>
-     <string name="help1">Choose a Profile</string>
-     <string name="help2">Follow the arrow</string>
-     <string name="help3">Find locations</string>
-     <string name="help4">Get reward!</string>
-     <string name="lets_play">Let\'s play!</string>
-     <string name="target_icon">Target Icon</string>
-     <string name="target_distance_m">%.0fm</string>
-     <string name="target_distance_km">%.1fkm</string>
-     <string name="share_reward_using">Share reward using</string>
-     <string name="go_hike">Go Hike!</string>
-     <string name="not_found_dialog_title">Not visited yet!</string>
-     <string name="not_found_dialog_message">Hike to discover places and find out more about them. Go hike now?</string>
-     <string name="not_found_dialog_yes">Let\'s go!</string>
-     <string name="not_found_dialog_no">Not now</string>
-     <string name="app_id">547542925309510</string>
-     <string name="earned_reward">I just earned a "%s" badge by playing Take a Hike!</string>
-     <string name="share_reward_success">Success</string>
-     <string name="share_reward_success_message">Thanks for sharing your badge with friends</string>
-     <string name="share_reward_error">Sorry, there was an error sharing your badge</string>
-    
-     <!-- Translated -->
+    <string name="route_image">Route Image</string>
+    <string name="reward_image">Reward Image</string>
+    <string name="share_reward">Share Reward</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="found_it">Great! You found it!</string>
+    <string name="next_stop">Next Stop &#8230;</string>
+    <string name="route_continue">Continue!</string>
+    <string name="checkin_look_around">Look around! Have you found it?</string>
+    <string name="checkin_close">You are close!</string>
+    <string name="how_to_play">How to play</string>
+    <string name="orientation_map">Map</string>
+    <string name="help1">Choose a Profile</string>
+    <string name="help2">Follow the arrow</string>
+    <string name="help3">Find locations</string>
+    <string name="help4">Get reward!</string>
+    <string name="lets_play">Let\'s play!</string>
+    <string name="target_icon">Target Icon</string>
+    <string name="target_distance_m">%.0fm</string>
+    <string name="target_distance_km">%.1fkm</string>
+    <string name="share_reward_using">Share reward using</string>
+    <string name="go_hike">Go Hike!</string>
+    <string name="not_found_dialog_title">Not visited yet!</string>
+    <string name="not_found_dialog_message">Hike to discover places and find out more about them. Go hike now?</string>
+    <string name="not_found_dialog_yes">Let\'s go!</string>
+    <string name="not_found_dialog_no">Not now</string>
+    <string name="app_id">547542925309510</string>
+    <string name="earned_reward">I just earned a "%s" badge by playing Take a Hike!</string>
+    <string name="share_reward_success">Success</string>
+    <string name="share_reward_success_message">Thanks for sharing your badge with friends</string>
+    <string name="share_reward_error">Sorry, there was an error sharing your badge</string>
 
-
+    <!-- Translated -->
+ 	<string name="first_launch_title">Welcome!</string>
+    <string name="first_launch_message">Thanks for downloading Take a Hike! Since this is the first time you used the app let us take you through some setup.\n
+          First, let\'s find out where you are so that we can serve you relevant content. On the next screen, you will select one city.\n
+          Please make sure that the location services are enabled in the phone settings.\n
+          It may take a little bit for your phone to get a lock on your location, so bear with us. Tap OK to continue.</string>
+	<string name="city_list_locating">Locating you</string>
+	<string name="city_list_loading_cities">Loading cities</string>
+	<string name="city_list_section_within">Close by</string>
+	<string name="city_list_section_other">All cities</string>
+	<string name="city_list_actionbar_title">Choose City</string>
+	
+	<string name="content_grid_actionbar_title">Profiles</string>
+	<string name="content_grid_loading_catalog">Loading Catalog</string>
+	<string name="content_grid_downloading_images">Offlining Images</string>
 </resources>

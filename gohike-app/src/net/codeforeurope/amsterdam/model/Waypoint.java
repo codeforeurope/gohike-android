@@ -8,10 +8,12 @@ import com.google.gson.annotations.SerializedName;
 public class Waypoint extends BaseModel implements Parcelable {
 
 	@SerializedName("location_id")
-	public int id;
+	public long id;
 
 	@SerializedName("route_id")
-	public int routeId;
+	public long routeId;
+
+	public TranslatedString description;
 
 	public double latitude;
 
@@ -20,12 +22,11 @@ public class Waypoint extends BaseModel implements Parcelable {
 	public int rank;
 
 	public Waypoint(Parcel in) {
-		this.id = in.readInt();
-		this.routeId = in.readInt();
-		this.nameEn = in.readString();
-		this.nameNl = in.readString();
-		this.descriptionEn = in.readString();
-		this.descriptionNl = in.readString();
+		this.id = in.readLong();
+		this.routeId = in.readLong();
+		this.name = in.readParcelable(TranslatedString.class.getClassLoader());
+		this.description = in.readParcelable(TranslatedString.class
+				.getClassLoader());
 		this.image = in.readParcelable(Image.class.getClassLoader());
 		this.latitude = in.readDouble();
 		this.longitude = in.readDouble();
@@ -41,12 +42,10 @@ public class Waypoint extends BaseModel implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(this.id);
-		dest.writeInt(this.routeId);
-		dest.writeString(this.nameEn);
-		dest.writeString(this.nameNl);
-		dest.writeString(this.descriptionEn);
-		dest.writeString(this.descriptionNl);
+		dest.writeLong(this.id);
+		dest.writeLong(this.routeId);
+		dest.writeParcelable(this.name, 0);
+		dest.writeParcelable(this.description, 0);
 		dest.writeParcelable(this.image, 0);
 		dest.writeDouble(this.latitude);
 		dest.writeDouble(this.longitude);

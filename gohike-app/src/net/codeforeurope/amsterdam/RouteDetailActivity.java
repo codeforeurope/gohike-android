@@ -16,7 +16,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -87,48 +86,48 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 	}
 
 	private void updateButtonVisibility() {
-		if (gameStateService.isRouteFinished()) {
-			goHikeButton.setVisibility(android.view.View.GONE);
-		} else {
-			goHikeButton.setVisibility(android.view.View.VISIBLE);
-			goHikeButton.setOnClickListener(this);
-		}
+		// if (gameStateService.isRouteFinished()) {
+		// goHikeButton.setVisibility(android.view.View.GONE);
+		// } else {
+		// goHikeButton.setVisibility(android.view.View.VISIBLE);
+		// goHikeButton.setOnClickListener(this);
+		// }
 	}
 
 	private void updateWaypointDisplay() {
-		int length = currentRoute.waypoints.size();
-		for (int i = 0; i < length; i++) {
-			Waypoint waypoint = currentRoute.waypoints.get(i);
-			RelativeLayout waypointItem = (RelativeLayout) waypointList
-					.getChildAt(i);
-			if (gameStateService.isWaypointCheckedIn(waypoint)) {
-
-				ImageView leftIcon = (ImageView) waypointItem
-						.findViewById(R.id.waypoint_item_icon_left);
-
-				ImageView rightIcon = (ImageView) waypointItem
-						.findViewById(R.id.waypoint_item_icon_right);
-				rightIcon.setVisibility(View.VISIBLE);
-				leftIcon.getDrawable().setLevel(1);
-				waypointItem.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						Waypoint wp = (Waypoint) v.getTag();
-						// here we show the Location Detail
-						openLocationDetail(wp);
-					}
-				});
-			} else {
-				waypointItem.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						// here we show the Dialog "Go Hike Now?"
-						showNotFoundYetDialog();
-					}
-				});
-			}
-		}
+		// int length = currentRoute.waypoints.size();
+		// for (int i = 0; i < length; i++) {
+		// Waypoint waypoint = currentRoute.waypoints.get(i);
+		// RelativeLayout waypointItem = (RelativeLayout) waypointList
+		// .getChildAt(i);
+		// if (gameStateService.isWaypointCheckedIn(waypoint)) {
+		//
+		// ImageView leftIcon = (ImageView) waypointItem
+		// .findViewById(R.id.waypoint_item_icon_left);
+		//
+		// ImageView rightIcon = (ImageView) waypointItem
+		// .findViewById(R.id.waypoint_item_icon_right);
+		// rightIcon.setVisibility(View.VISIBLE);
+		// leftIcon.getDrawable().setLevel(1);
+		// waypointItem.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// Waypoint wp = (Waypoint) v.getTag();
+		// // here we show the Location Detail
+		// openLocationDetail(wp);
+		// }
+		// });
+		// } else {
+		// waypointItem.setOnClickListener(new OnClickListener() {
+		// @Override
+		// public void onClick(View v) {
+		// // here we show the Dialog "Go Hike Now?"
+		// showNotFoundYetDialog();
+		// }
+		// });
+		// }
+		// }
 	}
 
 	private void showNotFoundYetDialog() {
@@ -146,8 +145,8 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 	private void loadAndDisplayData() {
 		Bitmap photo = BitmapFactory.decodeFile(currentRoute.image.localPath);
 		routeImage.setImageBitmap(photo);
-		routeTitle.setText(currentRoute.getLocalizedName());
-		routeDescription.setText(currentRoute.getLocalizedDescription());
+		// routeTitle.setText(currentRoute.getLocalizedName());
+		// routeDescription.setText(currentRoute.getLocalizedDescription());
 
 		int length = currentRoute.waypoints.size();
 		for (int i = 0; i < length; i++) {
@@ -156,7 +155,7 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 					R.layout.waypoint_item, null);
 			TextView itemTitle = (TextView) waypointItem
 					.findViewById(R.id.waypoint_item_title);
-			itemTitle.setText(waypoint.getLocalizedName());
+			// itemTitle.setText(waypoint.getLocalizedName());
 			waypointItem.setTag(waypoint);
 			if (i == 0) {
 				waypointItem
@@ -217,35 +216,35 @@ public class RouteDetailActivity extends AbstractGameActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		if (gameStateService != null && gameStateService.isRouteFinished()) {
-			inflater.inflate(R.menu.route_detail_finished, menu);
-		} else {
-			inflater.inflate(R.menu.route_detail, menu);
-		}
+		// MenuInflater inflater = getMenuInflater();
+		// if (gameStateService != null && gameStateService.isRouteFinished()) {
+		// inflater.inflate(R.menu.route_detail_finished, menu);
+		// } else {
+		// inflater.inflate(R.menu.route_detail, menu);
+		// }
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	private void setupActionBar() {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle(currentRoute.getLocalizedName());
+		// actionBar.setTitle(currentRoute.getLocalizedName());
 	}
 
-	@Override
-	protected void onGameStateServiceConnected() {
-		currentRoute = gameStateService.getCurrentRoute();
-		// gameStateService.
-		loadAndDisplayData();
-		setupActionBar();
-		updateWaypointDisplay();
-		updateButtonVisibility();
-	}
+	// @Override
+	// protected void onGameStateServiceConnected() {
+	// currentRoute = gameStateService.getCurrentRoute();
+	// // gameStateService.
+	// loadAndDisplayData();
+	// setupActionBar();
+	// updateWaypointDisplay();
+	// updateButtonVisibility();
+	// }
 
 	@Override
 	protected void onGameDataUpdated(Intent intent) {
 		// TODO Auto-generated method stub
-		onGameStateServiceConnected();
+		// onGameStateServiceConnected();
 	}
 
 	@Override

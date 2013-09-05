@@ -5,21 +5,34 @@ import java.util.ArrayList;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Route extends BaseModelWithIcon implements Parcelable {
+import com.google.gson.annotations.SerializedName;
+
+public class Route extends BaseModel implements Parcelable {
+
+	@SerializedName("profile_id")
+	public long profileId;
+
+	public TranslatedString description;
+	@SerializedName("published_key")
+	public String publishedKey;
+
+	public Image icon;
 
 	public ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>();
 	public Reward reward = new Reward();
 
 	public Route(Parcel in) {
-		this.id = in.readInt();
-		this.nameEn = in.readString();
-		this.nameNl = in.readString();
-		this.descriptionEn = in.readString();
-		this.descriptionNl = in.readString();
+		this.id = in.readLong();
+		this.profileId = in.readLong();
+		this.name = in.readParcelable(TranslatedString.class.getClassLoader());
+		this.description = in.readParcelable(TranslatedString.class
+				.getClassLoader());
+		this.publishedKey = in.readString();
 		this.image = in.readParcelable(Image.class.getClassLoader());
 		this.icon = in.readParcelable(Image.class.getClassLoader());
 		in.readTypedList(this.waypoints, Waypoint.CREATOR);
 		this.reward = in.readParcelable(Reward.class.getClassLoader());
+
 	}
 
 	@Override
@@ -30,11 +43,11 @@ public class Route extends BaseModelWithIcon implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(this.id);
-		dest.writeString(this.nameEn);
-		dest.writeString(this.nameNl);
-		dest.writeString(this.descriptionEn);
-		dest.writeString(this.descriptionNl);
+		dest.writeLong(this.id);
+		dest.writeLong(this.profileId);
+		dest.writeParcelable(this.name, 0);
+		dest.writeParcelable(this.description, 0);
+		dest.writeString(this.publishedKey);
 		dest.writeParcelable(this.image, 0);
 		dest.writeParcelable(this.icon, 0);
 		dest.writeTypedList(this.waypoints);
@@ -53,8 +66,18 @@ public class Route extends BaseModelWithIcon implements Parcelable {
 	};
 
 	@Override
-	public int getNumberOfChildren() {
-		return waypoints.size();
+	public long getNumberOfImages() {
+		long numberOfImages = super.getNumberOfImages();
+		if (this.icon != null && this.icon.url != null) {
+			numberOfImages++;
+		}
+		if (reward != null) {
+			numberOfImages += reward.getNumberOfImages();
+		}
+		for (Waypoint waypoint : waypoints) {
+			numberOfImages += waypoint.getNumberOfImages();
+		}
+		return numberOfImages;
 	}
 
 }

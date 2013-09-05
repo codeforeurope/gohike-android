@@ -3,7 +3,13 @@ package net.codeforeurope.amsterdam.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Reward extends BaseModelWithIcon implements Parcelable {
+import com.google.gson.annotations.SerializedName;
+
+public class Reward extends BaseModel implements Parcelable {
+
+	@SerializedName("route_id")
+	public long routeId;
+	public TranslatedString description;
 
 	public Reward() {
 		// TODO Auto-generated constructor stub
@@ -11,11 +17,11 @@ public class Reward extends BaseModelWithIcon implements Parcelable {
 
 	public Reward(Parcel in) {
 		// TODO Auto-generated constructor stub
-		this.id = in.readInt();
-		this.nameEn = in.readString();
-		this.nameNl = in.readString();
-		this.descriptionEn = in.readString();
-		this.descriptionNl = in.readString();
+		this.id = in.readLong();
+		this.routeId = in.readLong();
+		this.name = in.readParcelable(TranslatedString.class.getClassLoader());
+		this.description = in.readParcelable(TranslatedString.class
+				.getClassLoader());
 		this.image = in.readParcelable(Image.class.getClassLoader());
 	}
 
@@ -37,18 +43,12 @@ public class Reward extends BaseModelWithIcon implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(this.id);
-		dest.writeString(this.nameEn);
-		dest.writeString(this.nameNl);
-		dest.writeString(this.descriptionEn);
-		dest.writeString(this.descriptionNl);
+		dest.writeLong(this.id);
+		dest.writeLong(this.routeId);
+		dest.writeParcelable(this.name, 0);
+		dest.writeParcelable(this.description, 0);
 		dest.writeParcelable(this.image, 0);
 
-	}
-
-	@Override
-	public int getNumberOfChildren() {
-		return 0;
 	}
 
 }

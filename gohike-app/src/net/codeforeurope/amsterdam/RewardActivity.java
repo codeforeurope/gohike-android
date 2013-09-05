@@ -3,7 +3,7 @@ package net.codeforeurope.amsterdam;
 import java.util.Arrays;
 import java.util.List;
 
-import net.codeforeurope.amsterdam.model.Profile;
+import net.codeforeurope.amsterdam.model.BaseModel;
 import net.codeforeurope.amsterdam.model.Reward;
 import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.util.ApiConstants;
@@ -59,7 +59,7 @@ public class RewardActivity extends AbstractGameActivity {
 
 	private UiLifecycleHelper facebookUiHelper;
 
-	Profile currentProfile;
+	BaseModel currentProfile;
 
 	Route currentRoute;
 
@@ -77,12 +77,13 @@ public class RewardActivity extends AbstractGameActivity {
 		// Bitmap image = BitmapFactory.decodeFile(reward.image.localPath);
 
 		Bundle postParams = new Bundle();
-		postParams.putString("name", reward.getLocalizedName());
-		postParams.putString("description", reward.getLocalizedDescription());
+		// postParams.putString("name", reward.getLocalizedName());
+		// postParams.putString("description",
+		// reward.getLocalizedDescription());
 		postParams.putString("link", String.format(ApiConstants.WEB_BASE_URL,
 				"rewards/" + reward.id));
-		postParams.putString("message",
-				getString(R.string.earned_reward, reward.getLocalizedName()));
+		// postParams.putString("message",
+		// getString(R.string.earned_reward, reward.getLocalizedName()));
 
 		Request request = new Request(Session.getActiveSession(), "me/feed",
 				postParams, HttpMethod.POST, new Request.Callback() {
@@ -90,7 +91,8 @@ public class RewardActivity extends AbstractGameActivity {
 					@Override
 					public void onCompleted(Response response) {
 						// TODO Auto-generated method stub
-						showPublishResult(reward.getLocalizedName(), response);
+						// showPublishResult(reward.getLocalizedName(),
+						// response);
 					}
 				});
 
@@ -110,8 +112,8 @@ public class RewardActivity extends AbstractGameActivity {
 	private void loadAndDisplayData() {
 		Bitmap photo = BitmapFactory.decodeFile(reward.image.localPath);
 		rewardImage.setImageBitmap(photo);
-		rewardTitle.setText(reward.getLocalizedName());
-		rewardDescription.setText(reward.getLocalizedDescription());
+		// rewardTitle.setText(reward.getLocalizedName());
+		// rewardDescription.setText(reward.getLocalizedDescription());
 
 	}
 
@@ -130,7 +132,7 @@ public class RewardActivity extends AbstractGameActivity {
 	private void setupActionBar() {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle(currentRoute.getLocalizedName());
+		// actionBar.setTitle(currentRoute.getLocalizedName());
 	}
 
 	private void setupViewReferences() {
@@ -187,15 +189,15 @@ public class RewardActivity extends AbstractGameActivity {
 
 	}
 
-	@Override
-	protected void onGameStateServiceConnected() {
-		currentRoute = gameStateService.getCurrentRoute();
-		reward = currentRoute.reward;
-		setupActionBar();
-
-		loadAndDisplayData();
-
-	}
+	// @Override
+	// protected void onGameStateServiceConnected() {
+	// currentRoute = gameStateService.getCurrentRoute();
+	// reward = currentRoute.reward;
+	// setupActionBar();
+	//
+	// loadAndDisplayData();
+	//
+	// }
 
 	@Override
 	protected void onPause() {

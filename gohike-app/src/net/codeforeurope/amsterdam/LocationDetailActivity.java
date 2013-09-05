@@ -81,7 +81,7 @@ public class LocationDetailActivity extends AbstractGameActivity implements
 	private void setupActionBar() {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle(currentWaypoint.getLocalizedName());
+		// actionBar.setTitle(currentWaypoint.getLocalizedName());
 	}
 
 	private void setupViewReferences() {
@@ -97,8 +97,8 @@ public class LocationDetailActivity extends AbstractGameActivity implements
 		Bitmap photo = BitmapFactory
 				.decodeFile(currentWaypoint.image.localPath);
 		locationImage.setImageBitmap(photo);
-		locationTitle.setText(currentWaypoint.getLocalizedName());
-		locationDescription.setText(currentWaypoint.getLocalizedDescription());
+		// locationTitle.setText(currentWaypoint.getLocalizedName());
+		// locationDescription.setText(currentWaypoint.getLocalizedDescription());
 		if (getIntent().getBooleanExtra(ApiConstants.JUST_FOUND, false)) {
 			goHikeButton.setVisibility(android.view.View.VISIBLE);
 			goHikeButton.setOnClickListener(this);
@@ -108,14 +108,14 @@ public class LocationDetailActivity extends AbstractGameActivity implements
 
 	}
 
-	@Override
-	protected void onGameStateServiceConnected() {
-		currentWaypoint = getIntent().getParcelableExtra(
-				ApiConstants.CURRENT_WAYPOINT);
-
-		setupActionBar();
-		loadAndDisplayData();
-	}
+	// @Override
+	// protected void onGameStateServiceConnected() {
+	// currentWaypoint = getIntent().getParcelableExtra(
+	// ApiConstants.CURRENT_WAYPOINT);
+	//
+	// setupActionBar();
+	// loadAndDisplayData();
+	// }
 
 	@Override
 	protected void onGameDataUpdated(Intent intent) {

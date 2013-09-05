@@ -7,12 +7,18 @@ public class Image implements Parcelable {
 
 	public String localPath;
 
+	public String md5;
+
+	public String url;
+
 	public Image() {
 
 	}
 
 	public Image(Parcel in) {
 		this.localPath = in.readString();
+		this.md5 = in.readString();
+		this.url = in.readString();
 	}
 
 	@Override
@@ -24,6 +30,8 @@ public class Image implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(this.localPath);
+		dest.writeString(this.md5);
+		dest.writeString(this.url);
 
 	}
 
