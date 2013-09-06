@@ -10,6 +10,7 @@ import java.util.List;
 import net.codeforeurope.amsterdam.model.Checkin;
 import net.codeforeurope.amsterdam.model.gson.CheckinExclusionStrategy;
 import net.codeforeurope.amsterdam.model.gson.DateTypeAdapter;
+import net.codeforeurope.amsterdam.util.ActionConstants;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import net.codeforeurope.amsterdam.util.AppSecret;
 
@@ -73,7 +74,7 @@ public class CheckinsApiService extends AbstractApiService {
 			throws JSONException, ParseException, UnsupportedEncodingException {
 		ArrayList<Checkin> checkins = intent
 				.getParcelableArrayListExtra(ApiConstants.OUTSTANDING_CHECKINS);
-		broadCastIntent.setAction(ApiConstants.CHECKINS_UPLOADED);
+		broadCastIntent.setAction(ActionConstants.CHECKINS_UPLOAD_COMPLETE);
 		broadCastIntent.setClass(getBaseContext(), CheckinService.class);
 		broadCastIntent.putParcelableArrayListExtra(
 				ApiConstants.UPLOADED_CHECKINS, checkins);

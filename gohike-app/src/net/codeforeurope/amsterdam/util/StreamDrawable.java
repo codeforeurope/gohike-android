@@ -1,5 +1,6 @@
 package net.codeforeurope.amsterdam.util;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
@@ -10,9 +11,9 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.BitmapDrawable;
 
-public class StreamDrawable extends Drawable {
+public class StreamDrawable extends BitmapDrawable {
 
 	private final float mCornerRadius;
 	private final RectF mRect = new RectF();
@@ -20,10 +21,12 @@ public class StreamDrawable extends Drawable {
 	private final Paint mPaint;
 	private final int mMargin;
 
-	public StreamDrawable(Bitmap bitmap, float cornerRadius, int margin) {
+	public StreamDrawable(Resources resources, final Bitmap bitmap,
+			final float cornerRadius, final int margin) {
+		super(resources, bitmap);
 		mCornerRadius = cornerRadius;
 
-		mBitmapShader = new BitmapShader(bitmap, Shader.TileMode.CLAMP,
+		mBitmapShader = new BitmapShader(getBitmap(), Shader.TileMode.CLAMP,
 				Shader.TileMode.CLAMP);
 
 		mPaint = new Paint();

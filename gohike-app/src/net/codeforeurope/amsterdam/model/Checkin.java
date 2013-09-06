@@ -62,4 +62,8 @@ public class Checkin implements Parcelable {
 		}
 	};
 
+	public String uniqueKey() {
+		return locationId + "-" + routeId;
+	}
+
 }

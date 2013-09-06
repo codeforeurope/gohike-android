@@ -63,4 +63,7 @@ public class Waypoint extends BaseModel implements Parcelable {
 		}
 	};
 
+	public String uniqueKey() {
+		return id + "-" + routeId;
+	}
 }

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="@drawable/layout_background" >
+    android:layout_height="match_parent"
+    android:background="@drawable/layout_background" >
 
     <LinearLayout
         android:id="@+id/route_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" android:padding="10dp"  
-         >
+        android:orientation="vertical"
+        android:padding="10dp" >
 
         <ImageView
             android:id="@+id/route_detail_image"
@@ -21,8 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Route Title"
-            android:textAppearance="?android:attr/textAppearanceLarge" 
-         />
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
             android:id="@+id/route_detail_description"
@@ -30,26 +30,51 @@
             android:layout_height="wrap_content"
             android:text="Medium Text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-        
-        <Button android:id="@+id/route_gohike_button"
-            android:layout_width="fill_parent" 
-            android:layout_height="wrap_content" 
-            android:text="@string/go_hike"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:visibility="gone"
+
+        <Button
+            android:id="@+id/route_gohike_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/go_hike_button"
-            android:textColor="@color/white" />
-
+            android:text="@string/route_detail_go_hike"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"
+            android:visibility="gone" />
+         <Button
+            android:id="@+id/route_download_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/go_hike_button"
+            android:text="@string/route_detail_download"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"
+            android:visibility="gone" />
+		<Button
+            android:id="@+id/route_facebook_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/go_hike_button"
+            android:text="@string/route_detail_facebook"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:lines="2"
+            android:textColor="@color/white"
+            android:visibility="gone" />
         <LinearLayout
             android:id="@+id/route_detail_waypoints"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" android:background="@drawable/waypoint_list">
+            android:background="@drawable/waypoint_list"
+            android:orientation="vertical" >
         </LinearLayout>
-        
     </LinearLayout>
 
 </ScrollView>

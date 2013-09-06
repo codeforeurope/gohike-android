@@ -2,6 +2,8 @@ package net.codeforeurope.amsterdam;
 
 import net.codeforeurope.amsterdam.dialog.ErrorDialogFragment;
 import net.codeforeurope.amsterdam.model.City;
+import net.codeforeurope.amsterdam.model.Route;
+import net.codeforeurope.amsterdam.model.Waypoint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,6 +12,10 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.facebook.Session;
+import com.facebook.Session.StatusCallback;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -27,6 +33,33 @@ public abstract class AbstractGameActivity extends FragmentActivity implements
 	protected LocationClient locationClient;
 
 	protected LocationRequest locationRequest;
+
+	protected StatusCallback facebookStatusCallback = new StatusCallback() {
+
+		private boolean permissionsRequested = false;
+
+		@Override
+		public void call(Session session, SessionState state,
+				Exception exception) {
+			// if (shouldShareBadge && session.isOpened()) {
+			// if (facebookHasPublishPermissions(session)) {
+			// doShareReward();
+			// } else {
+			// if (!permissionsRequested) {
+			// Session.NewPermissionsRequest newPermissionsRequest = new
+			// Session.NewPermissionsRequest(
+			// RewardActivity.this,
+			// Arrays.asList(PUBLISH_ACTIONS));
+			// session.requestNewPublishPermissions(newPermissionsRequest);
+			// permissionsRequested = true;
+			// }
+			// }
+			//
+			// }
+		}
+	};
+
+	protected UiLifecycleHelper facebookUiHelper;
 
 	@Override
 	protected void onStart() {
@@ -50,13 +83,21 @@ public abstract class AbstractGameActivity extends FragmentActivity implements
 
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setCanceledOnTouchOutside(false);
+
+		facebookUiHelper = new UiLifecycleHelper(this, facebookStatusCallback);
+		facebookUiHelper.onCreate(savedInstanceState);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		facebookUiHelper.onActivityResult(requestCode, resultCode, data);
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override
 	protected void onPause() {
-
 		super.onPause();
-		// unregisterReceiver(gameDataUpdateReceiver);
+		facebookUiHelper.onPause();
 	}
 
 	protected boolean isCitySelected() {
@@ -69,21 +110,25 @@ public abstract class AbstractGameActivity extends FragmentActivity implements
 
 	@Override
 	protected void onResume() {
-		// setupReceiver();
 		super.onResume();
+		Session session = Session.getActiveSession();
+		if (session != null && (session.isOpened() || session.isClosed())) {
+			facebookStatusCallback.call(session, session.getState(), null);
+		}
+		facebookUiHelper.onResume();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
+		facebookUiHelper.onDestroy();
 	}
 
 	protected void onGameDataUpdated(Intent intent) {
 
 	}
 
-	protected void gotoGrid() {
+	protected void gotoContentGrid() {
 		Intent intent = new Intent(getBaseContext(), ContentGridActivity.class);
 		startActivity(intent);
 		finish();
@@ -94,7 +139,6 @@ public abstract class AbstractGameActivity extends FragmentActivity implements
 	}
 
 	protected String getCurrentCityName() {
-		// TODO Auto-generated method stub
 		return getApp().getSelectedCityName();
 	}
 
@@ -180,6 +224,10 @@ public abstract class AbstractGameActivity extends FragmentActivity implements
 
 	}
 
+	public Route getCurrentRoute() {
+		return getApp().getCurrentRoute();
+	}
+
 	/**
 	 * Moves the screen to city selection screen
 	 * 
@@ -193,4 +241,29 @@ public abstract class AbstractGameActivity extends FragmentActivity implements
 		}
 	}
 
+	public void gotoRouteDetail(Route route) {
+		getApp().setCurrentRoute(route);
+		Intent intent = new Intent(getBaseContext(), RouteDetailActivity.class);
+		startActivity(intent);
+		overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
+	}
+
+	public boolean isWaypointCheckedIn(Waypoint waypoint) {
+		return getApp().isWaypointCheckedIn(waypoint);
+	}
+
+	public boolean isRouteFinished() {
+		return isRouteFinished(getCurrentRoute());
+	}
+
+	public boolean isRouteFinished(Route route) {
+
+		return getApp().isRouteFinished(route);
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.enter_from_left, R.anim.leave_to_right);
+	}
 }

@@ -6,8 +6,10 @@ import net.codeforeurope.amsterdam.model.Checkin;
 import net.codeforeurope.amsterdam.model.Waypoint;
 import net.codeforeurope.amsterdam.storage.CheckinsContract;
 import net.codeforeurope.amsterdam.storage.CheckinsDbHelper;
+import net.codeforeurope.amsterdam.util.ActionConstants;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import net.codeforeurope.amsterdam.util.CheckinUtil;
+import net.codeforeurope.amsterdam.util.DataConstants;
 import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.ContentValues;
@@ -31,10 +33,11 @@ public class CheckinService extends IntentService {
 		Intent broadcastIntent = new Intent();
 		db = new CheckinsDbHelper(getBaseContext()).getWritableDatabase();
 
-		if (ApiConstants.ACTION_LOAD_CHECKINS.equals(intent.getAction())) {
+		if (ActionConstants.LOAD_CHECKINS.equals(intent.getAction())) {
 			handleLoadCheckins(broadcastIntent);
 
-		} else if (ApiConstants.CHECKINS_UPLOADED.equals(intent.getAction())) {
+		} else if (ActionConstants.CHECKINS_UPLOAD_COMPLETE.equals(intent
+				.getAction())) {
 			handleCheckinsUploaded(intent, broadcastIntent);
 
 		} else {
@@ -45,10 +48,10 @@ public class CheckinService extends IntentService {
 	}
 
 	private void handleLoadCheckins(Intent broadcastIntent) {
-		broadcastIntent.setAction(ApiConstants.ACTION_CHECKINS_LOADED);
+		broadcastIntent.setAction(ActionConstants.CHECKINS_LOAD_COMPLETE);
 		ArrayList<Checkin> localCheckins = loadLocalCheckins();
 		broadcastIntent.putParcelableArrayListExtra(
-				ApiConstants.LOCAL_CHECKINS, localCheckins);
+				DataConstants.LOCAL_CHECKINS, localCheckins);
 	}
 
 	private void handleSaveCheckins(Intent intent, Intent broadcastIntent) {

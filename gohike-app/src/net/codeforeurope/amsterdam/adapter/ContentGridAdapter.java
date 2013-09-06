@@ -31,6 +31,7 @@ public class ContentGridAdapter extends BaseAdapter implements
 
 	public static interface OnGridItemClickListener {
 		public void onGridItemClicked(Route route);
+
 	}
 
 	private OnGridItemClickListener listener = null;
@@ -79,8 +80,11 @@ public class ContentGridAdapter extends BaseAdapter implements
 		headerLabel.setText(profile.name.getLocalizedValue());
 		ImageView headerIcon = (ImageView) convertView
 				.findViewById(R.id.content_grid_header_icon);
-		Bitmap photo = BitmapFactory.decodeFile(profile.image.localPath);
-		headerIcon.setImageBitmap(photo);
+
+		Bitmap icon = BitmapFactory.decodeFile(profile.image.localPath);
+		StreamDrawable iconDrawable = new StreamDrawable(
+				context.getResources(), icon, 24, 0);
+		headerIcon.setImageDrawable(iconDrawable);
 
 		GridLayout routeGridLayout = (GridLayout) convertView
 				.findViewById(R.id.content_grid_items);
@@ -100,8 +104,8 @@ public class ContentGridAdapter extends BaseAdapter implements
 					.findViewById(R.id.content_grid_item_top);
 			topText.setText(route.name.getLocalizedValue());
 
-			LayerDrawable background = getBackground(route, gridItemLayout,
-					params.width);
+			LayerDrawable background = getGridItemBackground(route,
+					gridItemLayout, params.width);
 			gridItemWrapper.setBackgroundDrawable(background);
 
 			routeGridLayout.addView(gridItemLayout, params);
@@ -132,7 +136,7 @@ public class ContentGridAdapter extends BaseAdapter implements
 		return params;
 	}
 
-	private LayerDrawable getBackground(final Route model, View v,
+	private LayerDrawable getGridItemBackground(final Route model, View v,
 			int columnWidth) {
 		Bitmap bitmap = BitmapFactory.decodeFile(model.icon.localPath);
 		if (v.getMeasuredWidth() > 0) {
@@ -146,7 +150,8 @@ public class ContentGridAdapter extends BaseAdapter implements
 			bitmap = Bitmap.createScaledBitmap(bitmap,
 					(int) (columnWidth * ratio), columnWidth, false);
 		}
-		StreamDrawable drawable = new StreamDrawable(bitmap, 6, 2);
+		StreamDrawable drawable = new StreamDrawable(context.getResources(),
+				bitmap, 6, 2);
 
 		Drawable drawable2 = context.getResources().getDrawable(
 				R.drawable.grid_item);

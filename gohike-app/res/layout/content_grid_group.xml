@@ -7,7 +7,8 @@
     <RelativeLayout
         android:id="@+id/content_grid_header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@drawable/content_grid_header" >
 
         <ImageView
             android:id="@+id/content_grid_header_icon"
@@ -15,7 +16,8 @@
             android:layout_height="40dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp" />
+
+            android:padding="4dp" />
 
         <TextView
             android:id="@+id/content_grid_header_label"
@@ -23,7 +25,11 @@
             android:layout_height="40dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="60dp" />
+            android:layout_marginLeft="40dp"
+            android:lines="1"
+            android:padding="6dp"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
     </RelativeLayout>
 
     <GridLayout

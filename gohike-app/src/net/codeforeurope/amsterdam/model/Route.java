@@ -80,4 +80,8 @@ public class Route extends BaseModel implements Parcelable {
 		return numberOfImages;
 	}
 
+	public boolean isDownloaded() {
+		return !waypoints.isEmpty();
+	}
+
 }

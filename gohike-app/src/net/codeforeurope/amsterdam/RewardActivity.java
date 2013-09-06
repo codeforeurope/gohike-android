@@ -1,6 +1,5 @@
 package net.codeforeurope.amsterdam;
 
-import java.util.Arrays;
 import java.util.List;
 
 import net.codeforeurope.amsterdam.model.BaseModel;
@@ -9,7 +8,6 @@ import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,39 +23,10 @@ import com.facebook.Request;
 import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
-import com.facebook.Session.StatusCallback;
-import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
 
 public class RewardActivity extends AbstractGameActivity {
 
 	private static final String PUBLISH_ACTIONS = "publish_actions";
-
-	private StatusCallback facebookStatusCallback = new StatusCallback() {
-
-		private boolean permissionsRequested = false;
-
-		@Override
-		public void call(Session session, SessionState state,
-				Exception exception) {
-			if (shouldShareBadge && session.isOpened()) {
-				if (facebookHasPublishPermissions(session)) {
-					doShareReward();
-				} else {
-					if (!permissionsRequested) {
-						Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(
-								RewardActivity.this,
-								Arrays.asList(PUBLISH_ACTIONS));
-						session.requestNewPublishPermissions(newPermissionsRequest);
-						permissionsRequested = true;
-					}
-				}
-
-			}
-		}
-	};
-
-	private UiLifecycleHelper facebookUiHelper;
 
 	BaseModel currentProfile;
 
@@ -77,13 +46,15 @@ public class RewardActivity extends AbstractGameActivity {
 		// Bitmap image = BitmapFactory.decodeFile(reward.image.localPath);
 
 		Bundle postParams = new Bundle();
-		// postParams.putString("name", reward.getLocalizedName());
-		// postParams.putString("description",
-		// reward.getLocalizedDescription());
+		postParams.putString("name", reward.name.getLocalizedValue());
+		postParams.putString("description",
+				reward.description.getLocalizedValue());
 		postParams.putString("link", String.format(ApiConstants.WEB_BASE_URL,
 				"rewards/" + reward.id));
-		// postParams.putString("message",
-		// getString(R.string.earned_reward, reward.getLocalizedName()));
+		postParams.putString(
+				"message",
+				getString(R.string.earned_reward,
+						reward.name.getLocalizedValue()));
 
 		Request request = new Request(Session.getActiveSession(), "me/feed",
 				postParams, HttpMethod.POST, new Request.Callback() {
@@ -162,63 +133,12 @@ public class RewardActivity extends AbstractGameActivity {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		facebookUiHelper.onActivityResult(requestCode, resultCode, data);
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setupViewReferences();
-		facebookUiHelper = new UiLifecycleHelper(this, facebookStatusCallback);
-		facebookUiHelper.onCreate(savedInstanceState);
-	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		facebookUiHelper.onDestroy();
-	}
-
-	@Override
-	protected void onGameDataUpdated(Intent intent) {
-		// TODO Auto-generated method stub
-
-	}
-
-	// @Override
-	// protected void onGameStateServiceConnected() {
-	// currentRoute = gameStateService.getCurrentRoute();
-	// reward = currentRoute.reward;
-	// setupActionBar();
-	//
-	// loadAndDisplayData();
-	//
-	// }
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		facebookUiHelper.onPause();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		Session session = Session.getActiveSession();
-		if (session != null && (session.isOpened() || session.isClosed())) {
-			facebookStatusCallback.call(session, session.getState(), null);
-		}
-		facebookUiHelper.onResume();
-	}
-
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		overridePendingTransition(R.anim.enter_from_left, R.anim.leave_to_right);
 	}
 
 	@Override

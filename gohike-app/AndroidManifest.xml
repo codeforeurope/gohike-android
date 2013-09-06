@@ -100,13 +100,13 @@
             android:name=".service.ImageDownloadService"
             android:exported="false" />
         <service
-            android:name=".service.PingApiService"
-            android:exported="false" />
-        <service
-            android:name=".service.ContentService"
+            android:name=".service.RouteApiService"
             android:exported="false" />
         <service
             android:name=".service.CheckinService"
+            android:exported="false" />
+        <service
+            android:name=".service.LocalRoutesService"
             android:exported="false" />
         <service
             android:name=".service.CheckinsApiService"
@@ -114,9 +114,7 @@
         <service
             android:name=".service.LocateApiService"
             android:exported="false" />
-        <service
-            android:name=".service.GameStateService"
-            android:exported="false" />
+       
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

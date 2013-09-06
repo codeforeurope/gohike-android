@@ -4,33 +4,13 @@
     android:layout_height="match_parent"
     android:background="@drawable/layout_background" >
 
-    <!--
-    <GridView
-        android:id="@+id/grid"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"
-        android:columnWidth="130dp"
-        android:horizontalSpacing="20dp"
-        android:numColumns="2"
-        android:scrollbarStyle="outsideOverlay"
-        android:stretchMode="columnWidth"
-        android:verticalScrollbarPosition="right"
-        android:verticalSpacing="20dp"
-        
-        android:listSelector="@android:color/transparent"
-       
-         >
-    </GridView>
-    -->
+    
 
     <ListView
         android:id="@+id/content_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent" 
-        android:padding="4dp"
+        android:layout_margin="4dp"
         android:listSelector="@android:color/transparent" />
 
 </RelativeLayout>

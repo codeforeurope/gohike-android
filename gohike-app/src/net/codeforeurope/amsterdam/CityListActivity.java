@@ -115,7 +115,7 @@ public class CityListActivity extends AbstractGameActivity implements
 		if (id > 0) {
 			City city = (City) listAdapter.getItem(position);
 			saveSelectedCity(city);
-			gotoGrid();
+			gotoContentGrid();
 			overridePendingTransition(R.anim.enter_from_right,
 					R.anim.leave_to_left);
 		}

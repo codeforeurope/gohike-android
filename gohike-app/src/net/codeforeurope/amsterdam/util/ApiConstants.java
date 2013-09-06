@@ -31,7 +31,7 @@ public class ApiConstants {
 	public static final Locale NETHERLANDS_LOCALE = new Locale("nl", "NL");
 	public static final String OUTSTANDING_CHECKINS = "outstanding_checkins";
 	public static final String UPLOADED_CHECKINS = "uploaded_checkins";
-	public static final String CHECKINS_UPLOADED = "checkins_uploaded";
+
 	public static final String CHECKIN = "checkin";
 	public static final String ACTION_CHECKIN_SAVED = "checkin_saved";
 	public static final String ACTION_CHECKINS_UPLOADED = "checkins_uploaded";
@@ -50,5 +50,7 @@ public class ApiConstants {
 	public static final String JUST_FOUND = "just_found";
 	public static final String CURRENT_CITY_ID = "current_city_id";
 	public static final String CURRENT_CITY_NAME = "current_city_name";
+
+	public static final String ROUTE_FILE_NAME = "route.json";
 
 }

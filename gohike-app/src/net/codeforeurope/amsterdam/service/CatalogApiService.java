@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import net.codeforeurope.amsterdam.model.Profile;
 import net.codeforeurope.amsterdam.util.ActionConstants;
@@ -29,7 +30,7 @@ public class CatalogApiService extends AbstractApiService {
 
 	private static String NAME = "CatalogApiService";
 
-	public static String END_POINT = "catalog/%d";
+	public static String END_POINT = "%s/catalog/%d";
 
 	public CatalogApiService() {
 		super(NAME);
@@ -41,7 +42,7 @@ public class CatalogApiService extends AbstractApiService {
 
 		long cityId = intent.getLongExtra(DataConstants.CITY_ID, 0);
 		final HttpGet request = new HttpGet(String.format(getEndpointUrl(),
-				cityId));
+				Locale.getDefault().getLanguage(), cityId));
 		request.addHeader("Content-Type", "application/json");
 		return request;
 	}

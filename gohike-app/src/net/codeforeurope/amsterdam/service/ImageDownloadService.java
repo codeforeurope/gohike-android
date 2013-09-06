@@ -39,24 +39,26 @@ public class ImageDownloadService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		ensureDownloadDirectories();
-		Intent broadcastIntent = new Intent(
-				ActionConstants.IMAGE_DOWNLOAD_COMPLETE);
+		Intent broadcastIntent = new Intent(ActionConstants.IMAGE_DOWNLOAD_COMPLETE);
 
 		try {
-			if (ActionConstants.CATALOG_DOWNLOAD_COMPLETE.equals(intent
-					.getAction())) {
-				ArrayList<Profile> profiles = intent
-						.getParcelableArrayListExtra(DataConstants.CATALOG_PROFILES);
+			if (ActionConstants.CATALOG_DOWNLOAD_COMPLETE.equals(intent.getAction())) {
+				ArrayList<Profile> profiles = intent.getParcelableArrayListExtra(DataConstants.CATALOG_PROFILES);
 				setNumberOfImagesToDownload(profiles);
 				downloadImagesForProfiles(profiles);
-				broadcastIntent.putExtra(DataConstants.CATALOG_PROFILES,
-						profiles);
+				broadcastIntent.putExtra(DataConstants.CATALOG_PROFILES, profiles);
 			} else {
-				Route route = intent
-						.getParcelableExtra(DataConstants.DOWNLOADED_ROUTE);
-				setNumberOfImagesToDownload(route);
-				downloadImages(route);
-				broadcastIntent.putExtra(DataConstants.DOWNLOADED_ROUTE, route);
+				if (intent.hasExtra(DataConstants.DOWNLOADED_ROUTE)) {
+					Route route = intent.getParcelableExtra(DataConstants.DOWNLOADED_ROUTE);
+					setNumberOfImagesToDownload(route);
+					downloadImages(route);
+					broadcastIntent.putExtra(DataConstants.DOWNLOADED_ROUTE, route);
+				} else {
+					ArrayList<Route> routes = intent.getParcelableArrayListExtra(DataConstants.LOCAL_ROUTES);
+					setNumberOfImagesToDownload(routes);
+					downloadImagesForRoutes(routes);
+					broadcastIntent.putExtra(DataConstants.LOCAL_ROUTES, routes);
+				}
 			}
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -72,26 +74,22 @@ public class ImageDownloadService extends IntentService {
 		this.imagesToDownload += route.getNumberOfImages();
 	}
 
-	private void setNumberOfImagesToDownload(ArrayList<Profile> profiles) {
-		for (Profile profile : profiles) {
-			this.imagesToDownload += profile.getNumberOfImages();
+	private void setNumberOfImagesToDownload(ArrayList<? extends BaseModel> models) {
+		for (BaseModel model : models) {
+			this.imagesToDownload += model.getNumberOfImages();
 		}
 
 	}
 
 	private void ensureDownloadDirectories() {
 		directories.put(Profile.class.getSimpleName().toLowerCase(),
-				ContentServicesHelper.ensureImagesDirectory(getBaseContext(),
-						Profile.class));
+				ContentServicesHelper.ensureImagesDirectory(getBaseContext(), Profile.class));
 		directories.put(Route.class.getSimpleName().toLowerCase(),
-				ContentServicesHelper.ensureImagesDirectory(getBaseContext(),
-						Route.class));
+				ContentServicesHelper.ensureImagesDirectory(getBaseContext(), Route.class));
 		directories.put(Waypoint.class.getSimpleName().toLowerCase(),
-				ContentServicesHelper.ensureImagesDirectory(getBaseContext(),
-						Waypoint.class));
+				ContentServicesHelper.ensureImagesDirectory(getBaseContext(), Waypoint.class));
 		directories.put(Reward.class.getSimpleName().toLowerCase(),
-				ContentServicesHelper.ensureImagesDirectory(getBaseContext(),
-						Reward.class));
+				ContentServicesHelper.ensureImagesDirectory(getBaseContext(), Reward.class));
 	}
 
 	/**
@@ -101,8 +99,7 @@ public class ImageDownloadService extends IntentService {
 	 * @throws MalformedURLException
 	 * @throws IOException
 	 */
-	private void downloadImages(Profile profile) throws MalformedURLException,
-			IOException {
+	private void downloadImages(Profile profile) throws MalformedURLException, IOException {
 		File imagesDirectory = ensureImagesDirectory(profile);
 		downloadImage(imagesDirectory, profile.image);
 		downloadImagesForRoutes(profile.routes);
@@ -117,8 +114,7 @@ public class ImageDownloadService extends IntentService {
 	 * @throws MalformedURLException
 	 * @throws IOException
 	 */
-	private void downloadImages(Route route) throws MalformedURLException,
-			IOException {
+	private void downloadImages(Route route) throws MalformedURLException, IOException {
 		File imagesDirectory = ensureImagesDirectory(route);
 		downloadImage(imagesDirectory, route.image);
 		downloadImage(imagesDirectory, route.icon);
@@ -134,8 +130,7 @@ public class ImageDownloadService extends IntentService {
 	 * @throws MalformedURLException
 	 * @throws IOException
 	 */
-	private void downloadImages(Reward reward) throws MalformedURLException,
-			IOException {
+	private void downloadImages(Reward reward) throws MalformedURLException, IOException {
 		if (reward != null) {
 			File imagesDirectory = ensureImagesDirectory(reward);
 			downloadImage(imagesDirectory, reward.image);
@@ -150,8 +145,7 @@ public class ImageDownloadService extends IntentService {
 	 * @throws MalformedURLException
 	 * @throws IOException
 	 */
-	private void downloadImages(Waypoint waypoint)
-			throws MalformedURLException, IOException {
+	private void downloadImages(Waypoint waypoint) throws MalformedURLException, IOException {
 		File imagesDirectory = ensureImagesDirectory(waypoint);
 		downloadImage(imagesDirectory, waypoint.image);
 
@@ -164,8 +158,7 @@ public class ImageDownloadService extends IntentService {
 	 * @throws MalformedURLException
 	 * @throws IOException
 	 */
-	private void downloadImagesForProfiles(ArrayList<Profile> profiles)
-			throws MalformedURLException, IOException {
+	private void downloadImagesForProfiles(ArrayList<Profile> profiles) throws MalformedURLException, IOException {
 
 		for (Profile profile : profiles) {
 			downloadImages(profile);
@@ -180,8 +173,7 @@ public class ImageDownloadService extends IntentService {
 	 * @throws MalformedURLException
 	 * @throws IOException
 	 */
-	private void downloadImagesForRoutes(ArrayList<Route> routes)
-			throws MalformedURLException, IOException {
+	private void downloadImagesForRoutes(ArrayList<Route> routes) throws MalformedURLException, IOException {
 		for (Route route : routes) {
 			downloadImages(route);
 		}
@@ -192,8 +184,7 @@ public class ImageDownloadService extends IntentService {
 	 * @throws MalformedURLException
 	 * @throws IOException
 	 */
-	private void downloadImagesForWaypoints(ArrayList<Waypoint> waypoints)
-			throws MalformedURLException, IOException {
+	private void downloadImagesForWaypoints(ArrayList<Waypoint> waypoints) throws MalformedURLException, IOException {
 		for (Waypoint waypoint : waypoints) {
 			downloadImages(waypoint);
 		}
@@ -207,13 +198,11 @@ public class ImageDownloadService extends IntentService {
 	 * @throws MalformedURLException
 	 * @throws IOException
 	 */
-	private void downloadImage(File imagesDirectory, Image image)
-			throws MalformedURLException, IOException {
+	private void downloadImage(File imagesDirectory, Image image) throws MalformedURLException, IOException {
 
 		File imageFile = new File(imagesDirectory, image.md5 + ".jpg");
 		if (!imageFile.exists()) {
-			image.localPath = ContentServicesHelper.writeOutImageFile(image,
-					imageFile);
+			image.localPath = ContentServicesHelper.writeOutImageFile(image, imageFile);
 		} else {
 			image.localPath = imageFile.getPath();
 		}
@@ -227,10 +216,8 @@ public class ImageDownloadService extends IntentService {
 	private void notifyImageDownloaded() {
 		imagesDownloaded++;
 		Intent intent = new Intent(ActionConstants.IMAGE_DOWNLOAD_PROGRESS);
-		intent.putExtra(DataConstants.IMAGE_DOWNLOAD_PROGRESS,
-				(int) imagesDownloaded);
-		intent.putExtra(DataConstants.IMAGE_DOWNLOAD_TARGET,
-				(int) imagesToDownload);
+		intent.putExtra(DataConstants.IMAGE_DOWNLOAD_PROGRESS, (int) imagesDownloaded);
+		intent.putExtra(DataConstants.IMAGE_DOWNLOAD_TARGET, (int) imagesToDownload);
 		sendBroadcast(intent);
 	}
 
@@ -242,8 +229,8 @@ public class ImageDownloadService extends IntentService {
 	 */
 	private File ensureImagesDirectory(BaseModel model) {
 		String className = model.getClass().getSimpleName().toLowerCase();
-		File imagesDirectory = ContentServicesHelper.ensureSubDirectory(
-				String.valueOf(model.id), directories.get(className));
+		File imagesDirectory = ContentServicesHelper.ensureSubDirectory(String.valueOf(model.id),
+				directories.get(className));
 		return imagesDirectory;
 	}
 }

@@ -48,13 +48,11 @@ public class TranslatedString implements Parcelable {
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		// TODO Auto-generated method stub
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(TRANSLATIONS, translations);
 		dest.writeBundle(bundle);

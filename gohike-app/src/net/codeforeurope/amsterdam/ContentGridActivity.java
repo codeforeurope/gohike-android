@@ -79,15 +79,19 @@ public class ContentGridActivity extends AbstractGameActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		registerReceiver(receiver, receiverFilter);
-		progressDialog
-				.setMessage(getString(R.string.content_grid_loading_catalog));
-		progressDialog.show();
-		Intent intent = new Intent(getApplicationContext(),
-				CatalogApiService.class);
-		intent.putExtra(DataConstants.CITY_ID, getApp().getSelectedCityId());
-		startService(intent);
+		if (getApp().shouldRequestCatalog()) {
+
+			progressDialog
+					.setMessage(getString(R.string.content_grid_loading_catalog));
+			progressDialog.show();
+			Intent intent = new Intent(getApplicationContext(),
+					CatalogApiService.class);
+			intent.putExtra(DataConstants.CITY_ID, getApp().getSelectedCityId());
+			startService(intent);
+		} else {
+			adapter.setProfiles(getApp().getCurrentCatalog());
+		}
 	}
 
 	@Override
@@ -107,7 +111,7 @@ public class ContentGridActivity extends AbstractGameActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			gotoCityList(true);
+			gotoCityList(false);
 			overridePendingTransition(R.anim.enter_from_left,
 					R.anim.leave_to_right);
 			return true;
@@ -155,6 +159,7 @@ public class ContentGridActivity extends AbstractGameActivity implements
 						.getParcelableArrayListExtra(DataConstants.CATALOG_PROFILES);
 				progressDialog.setIndeterminate(true);
 				progressDialog.dismiss();
+				getApp().storeCatalog(profiles);
 				adapter.setProfiles(profiles);
 			}
 
@@ -164,9 +169,7 @@ public class ContentGridActivity extends AbstractGameActivity implements
 
 	@Override
 	public void onGridItemClicked(Route route) {
-		// TODO Auto-generated method stub
-		route.name.getLocalizedValue();
-
+		gotoRouteDetail(route);
 	}
 
 }
