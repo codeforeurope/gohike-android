@@ -3,7 +3,6 @@ package net.codeforeurope.amsterdam.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -29,25 +28,22 @@ public class LocalRoutesService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		final Intent broadCastIntent = new Intent();
 		final Context context = getBaseContext();
-		String action = intent.getAction();
 		try {
-			if (ActionConstants.LOAD_ROUTES.equals(action)) {
-				ArrayList<Route> routes = new ArrayList<Route>();
-				File routesDirectory = ContentServicesHelper.ensureImagesDirectory(context, Route.class);
-				for (File routeDirectory : routesDirectory.listFiles()) {
-					File routeContentFile = new File(routeDirectory, ApiConstants.ROUTE_FILE_NAME);
 
-					if (routeContentFile.exists() && routeContentFile.length() > 0) {
-						InputStream responseStream = new FileInputStream(routeContentFile);
-						Route route = ContentServicesHelper.parseRouteDownloadResponse(responseStream);
-						routes.add(route);
-					}
+			ArrayList<Route> routes = new ArrayList<Route>();
+			File routesDirectory = ContentServicesHelper.ensureImagesDirectory(context, Route.class);
+			for (File routeDirectory : routesDirectory.listFiles()) {
+				File routeContentFile = new File(routeDirectory, ApiConstants.ROUTE_FILE_NAME);
+
+				if (routeContentFile.exists() && routeContentFile.length() > 0) {
+					InputStream responseStream = new FileInputStream(routeContentFile);
+					Route route = ContentServicesHelper.parseRouteDownloadResponse(responseStream);
+					routes.add(route);
 				}
-				broadCastIntent.setAction(ActionConstants.ROUTES_LOAD_COMPLETE);
-				broadCastIntent.putExtra(DataConstants.LOCAL_ROUTES, routes);
-			} else if (ActionConstants.ROUTES_STORE_ROUTE.equals(action)) {
-
 			}
+			broadCastIntent.setAction(ActionConstants.ROUTES_LOAD_COMPLETE);
+			broadCastIntent.putExtra(DataConstants.LOCAL_ROUTES, routes);
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
@@ -55,10 +51,6 @@ public class LocalRoutesService extends IntentService {
 		} finally {
 			sendBroadcast(broadCastIntent);
 		}
-	}
-
-	private InputStream getOriginalContentFile() throws IOException {
-		return getAssets().open("content.json");
 	}
 
 }

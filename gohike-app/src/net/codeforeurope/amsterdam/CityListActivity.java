@@ -20,8 +20,7 @@ import android.widget.ListView;
 
 import com.google.android.gms.location.LocationListener;
 
-public class CityListActivity extends AbstractGameActivity implements
-		LocationListener, OnItemClickListener {
+public class CityListActivity extends AbstractGameActivity implements LocationListener, OnItemClickListener {
 
 	LocateData locateData;
 
@@ -50,8 +49,7 @@ public class CityListActivity extends AbstractGameActivity implements
 			@Override
 			public void onReceive(Context context, Intent intent) {
 
-				locateData = intent
-						.getParcelableExtra(ApiConstants.LOCATE_DATA);
+				locateData = intent.getParcelableExtra(ApiConstants.LOCATE_DATA);
 				progressDialog.dismiss();
 				listAdapter.setCities(locateData);
 
@@ -84,14 +82,11 @@ public class CityListActivity extends AbstractGameActivity implements
 
 	@Override
 	public void onLocationChanged(Location location) {
-		if (location.hasAccuracy() && location.getAccuracy() < 15
-				&& locateData == null) {
-			Intent intent = new Intent(getApplicationContext(),
-					LocateApiService.class);
+		if (location.hasAccuracy() && location.getAccuracy() < 15 && locateData == null) {
+			Intent intent = new Intent(getApplicationContext(), LocateApiService.class);
 			intent.putExtra(DataConstants.LOCATE_CURRENT_LOCATION, location);
 			startService(intent);
-			progressDialog
-					.setMessage(getString(R.string.city_list_loading_cities));
+			progressDialog.setMessage(getString(R.string.city_list_loading_cities));
 			if (locationClient.isConnected()) {
 				locationClient.removeLocationUpdates(this);
 			}
@@ -110,14 +105,12 @@ public class CityListActivity extends AbstractGameActivity implements
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		if (id > 0) {
 			City city = (City) listAdapter.getItem(position);
 			saveSelectedCity(city);
 			gotoContentGrid();
-			overridePendingTransition(R.anim.enter_from_right,
-					R.anim.leave_to_left);
+			overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
 		}
 
 	}

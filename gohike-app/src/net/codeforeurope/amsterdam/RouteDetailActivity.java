@@ -155,15 +155,18 @@ public class RouteDetailActivity extends AbstractGameActivity implements OnClick
 					@Override
 					public void onClick(View v) {
 						// here we show the Dialog "Go Hike Now?"
-						showNotFoundYetDialog();
+						showNotFoundYetDialog((Waypoint) v.getTag());
 					}
 				});
 			}
 		}
 	}
 
-	private void showNotFoundYetDialog() {
+	private void showNotFoundYetDialog(Waypoint waypoint) {
+		Bundle arguments = new Bundle();
+		arguments.putParcelable(DataConstants.WAYPOINT, waypoint);
 		DialogFragment newFragment = new NotVisitedDialogFragment();
+		newFragment.setArguments(arguments);
 		newFragment.show(getFragmentManager(), "notvisited");
 	}
 
@@ -224,7 +227,7 @@ public class RouteDetailActivity extends AbstractGameActivity implements OnClick
 			onBackPressed();
 			return true;
 		case R.id.menu_start_hike:
-			startHike();
+			startHike(null);
 			return true;
 		case R.id.menu_view_reward:
 			Intent intent1 = new Intent(this, RewardActivity.class);
@@ -236,8 +239,11 @@ public class RouteDetailActivity extends AbstractGameActivity implements OnClick
 		}
 	}
 
-	public void startHike() {
+	public void startHike(Waypoint waypoint) {
 		Intent intent = new Intent(this, NavigateRouteActivity.class);
+		if (waypoint != null) {
+			intent.putExtra(DataConstants.WAYPOINT, waypoint);
+		}
 		startActivity(intent);
 		overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
 
@@ -273,7 +279,7 @@ public class RouteDetailActivity extends AbstractGameActivity implements OnClick
 
 		switch (v.getId()) {
 		case R.id.route_gohike_button:
-			startHike();
+			startHike(null);
 			break;
 		case R.id.route_download_button:
 			Intent intent = new Intent(getBaseContext(), RouteApiService.class);

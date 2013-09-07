@@ -1,10 +1,12 @@
 package net.codeforeurope.amsterdam;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import net.codeforeurope.amsterdam.dialog.CheckinDialogFragment;
 import net.codeforeurope.amsterdam.dialog.TargetHintDialogFragment;
+import net.codeforeurope.amsterdam.model.Waypoint;
 import net.codeforeurope.amsterdam.util.ApiConstants;
+import net.codeforeurope.amsterdam.util.DataConstants;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +16,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -26,11 +27,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class NavigateRouteActivity extends AbstractGameActivity implements
-		SensorEventListener, LocationListener {
+import com.google.android.gms.location.LocationListener;
+
+public class NavigateRouteActivity extends AbstractGameActivity implements SensorEventListener, LocationListener {
 	private static final LayoutParams PROGRESS_IMAGE_LAYOUT_PARAMS = new ViewGroup.LayoutParams(
-			ViewGroup.LayoutParams.WRAP_CONTENT,
-			ViewGroup.LayoutParams.WRAP_CONTENT);
+			ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
 	private static final int ANIMATION_DURATION = 300;
 
@@ -67,6 +68,11 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 
 	private LinearLayout progressView;
 
+	float[] mGravity;
+	float[] mGeomagnetic;
+	long timestamp = 0;
+	float azimuth = 0;
+
 	// private BroadcastReceiver checkinsReceiver;
 
 	@Override
@@ -95,37 +101,47 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 
 	private void setupSensorReferences() {
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-		accelerometer = sensorManager
-				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		magnetometer = sensorManager
-				.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+		accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-		locationManager = (LocationManager) this
-				.getSystemService(Context.LOCATION_SERVICE);
+		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 	}
 
 	private void setupActionBar() {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		// actionBar.setTitle(gameStateService.getCurrentRoute()
-		// .getLocalizedName());
+		actionBar.setTitle(getCurrentRoute().name.getLocalizedValue());
 	}
 
 	private void loadData() {
-		// if (gameStateService.isRouteFinished()) {
-		// checkinInProgress = false;
-		// Intent intent = new Intent(this, RewardActivity.class);
-		// startActivity(intent);
-		// finish();
-		// overridePendingTransition(R.anim.enter_from_right,
-		// R.anim.leave_to_left);
-		//
-		// } else {
-		// Waypoint currentTarget = gameStateService.getCurrentTarget();
-		// targetName.setText(currentTarget.getLocalizedName());
-		// distanceText.setText("...");
-		// }
+		if (isRouteFinished()) {
+			checkinInProgress = false;
+			Intent intent = new Intent(this, RewardActivity.class);
+			startActivity(intent);
+			finish();
+			overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
+		} else {
+			Waypoint currentTarget = getCurrentTarget();
+			targetName.setText(currentTarget.name.getLocalizedValue());
+			distanceText.setText("...");
+		}
+	}
 
+	private Waypoint getCurrentTarget() {
+		Waypoint target = getIntent().getParcelableExtra(DataConstants.WAYPOINT);
+		if (target == null) {
+			target = getDefaultTarget();
+		}
+		return target;
+	}
+
+	private Waypoint getDefaultTarget() {
+		for (Waypoint waypoint : getCurrentRoute().waypoints) {
+			if (!isWaypointCheckedIn(waypoint)) {
+				return waypoint;
+			}
+		}
+		return null;
 	}
 
 	private void setUpViewReferences() {
@@ -152,11 +168,9 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 			onBackPressed();
 			return true;
 		case R.id.menu_show_map:
-			Intent i = new Intent(getBaseContext(),
-					OrientationMapActivity.class);
+			Intent i = new Intent(getBaseContext(), OrientationMapActivity.class);
 			startActivity(i);
-			overridePendingTransition(R.anim.enter_from_right,
-					R.anim.leave_to_left);
+			overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -173,28 +187,27 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		sensorManager.registerListener(this, accelerometer,
-				SensorManager.SENSOR_DELAY_NORMAL);
-		sensorManager.registerListener(this, magnetometer,
-				SensorManager.SENSOR_DELAY_NORMAL);
-		List<String> providers = locationManager.getAllProviders();
-		for (String provider : providers) {
-			locationManager.requestLocationUpdates(provider, 500, 0, this);
-		}
-
+		sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+		sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
+		locationClient.connect();
+		loadData();
+		setupActionBar();
+		updateProgress();
+		// if (checkinInProgress) {
+		// showLocationDetail();
+		// // showTargetHintDialog();
+		// }
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
 		sensorManager.unregisterListener(this);
-		locationManager.removeUpdates(this);
+		if (locationClient.isConnected()) {
+			locationClient.removeLocationUpdates(this);
+		}
+		locationClient.disconnect();
 	}
-
-	float[] mGravity;
-	float[] mGeomagnetic;
-	long timestamp = 0;
-	float azimuth = 0;
 
 	public void onSensorChanged(SensorEvent event) {
 
@@ -207,8 +220,7 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 
 			float R[] = new float[9];
 			float I[] = new float[9];
-			boolean success = SensorManager.getRotationMatrix(R, I, mGravity,
-					mGeomagnetic);
+			boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
 
 			long difference = (event.timestamp - timestamp) / 1000000;
 
@@ -218,17 +230,8 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 				float orientation[] = new float[3];
 				SensorManager.getOrientation(R, orientation);
 				azimuth = -1 * (float) Math.toDegrees(orientation[0]);
-				//
-				// Log.d("Navigate", "Sensor:" + event.sensor.getType() +
-				// " TS: "
-				// + event.timestamp + " PREV: " + timestamp + " DIFF: "
-				// + difference + " ACCY: " + event.accuracy);
-				// Log.d("Navigate", "Azimuth: " + azimuth);
-				compassRose.animate().setDuration(ANIMATION_DURATION)
-						.rotation(360 + azimuth);
-
-				compassTarget.animate().setDuration(ANIMATION_DURATION)
-						.rotation(360 + azimuth + targetBearing);
+				compassRose.animate().setDuration(ANIMATION_DURATION).rotation(360 + azimuth);
+				compassTarget.animate().setDuration(ANIMATION_DURATION).rotation(360 + azimuth + targetBearing);
 
 			}
 		}
@@ -243,31 +246,28 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 
 	@Override
 	public void onLocationChanged(Location location) {
-		// if (!checkinInProgress && !gameStateService.isRouteFinished()) {
-		// Waypoint currentTarget = gameStateService.getCurrentTarget();
-		// final float[] results = new float[3];
-		// Location.distanceBetween(location.getLatitude(),
-		// location.getLongitude(), currentTarget.latitude,
-		// currentTarget.longitude, results);
-		// updateDistance(results[0]);
-		// targetBearing = results[2];
-		// if (results[0] < CHECKIN_DISTANCE) {
-		// Bundle dialogArgs = new Bundle();
-		// dialogArgs.putParcelable(ApiConstants.CURRENT_TARGET,
-		// currentTarget);
-		// checkinDialog.setArguments(dialogArgs);
-		// checkinDialog.show(getFragmentManager(), "checkin");
-		// checkinInProgress = true;
-		// }
-		// }
+		if (!checkinInProgress && !isRouteFinished()) {
+			Waypoint currentTarget = getCurrentTarget();
+			final float[] results = new float[3];
+			Location.distanceBetween(location.getLatitude(), location.getLongitude(), currentTarget.latitude,
+					currentTarget.longitude, results);
+			updateDistance(results[0]);
+			targetBearing = results[2];
+			if (results[0] < CHECKIN_DISTANCE) {
+				Bundle dialogArgs = new Bundle();
+				dialogArgs.putParcelable(ApiConstants.CURRENT_TARGET, currentTarget);
+				checkinDialog.setArguments(dialogArgs);
+				checkinDialog.show(getSupportFragmentManager(), "checkin");
+				checkinInProgress = true;
+			}
+		}
 
 	}
 
 	private void updateDistance(float rawDistance) {
 		String distance;
 		if (rawDistance > 1000) {
-			distance = getString(R.string.target_distance_km,
-					rawDistance / 1000);
+			distance = getString(R.string.target_distance_km, rawDistance / 1000);
 		} else {
 			distance = getString(R.string.target_distance_m, rawDistance);
 		}
@@ -287,45 +287,8 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 
 	}
 
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
-
-	}
-
-	// @Override
-	// protected void onGameStateServiceConnected() {
-	// loadData();
-	// setupActionBar();
-	// updateProgress();
-	// }
-
-	@Override
-	protected void onGameDataUpdated(Intent intent) {
-		loadData();
-		setupActionBar();
-		updateProgress();
-		if (checkinInProgress) {
-			showLocationDetail();
-			// showTargetHintDialog();
-		}
-	}
-
 	private void showLocationDetail() {
-		Intent intent = new Intent(getBaseContext(),
-				LocationDetailActivity.class);
+		Intent intent = new Intent(getBaseContext(), LocationDetailActivity.class);
 		// intent.putExtra(ApiConstants.CURRENT_WAYPOINT,
 		// gameStateService.getPreviousTarget());
 		intent.putExtra(ApiConstants.JUST_FOUND, true);
@@ -336,7 +299,6 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		if (requestCode == SHOW_LOCATION_DETAIL) {
 			showTargetHintDialog();
 		}
@@ -345,27 +307,26 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 
 	private void updateProgress() {
 
-		// ArrayList<Waypoint> waypoints =
-		// gameStateService.getCurrentRoute().waypoints;
-		// int numberOfWaypoints = waypoints.size();
-		// if (progressView.getChildCount() != numberOfWaypoints) {
-		// progressView.removeAllViews();
-		// }
-		// for (int i = 0; i < numberOfWaypoints; i++) {
-		// Waypoint waypoint = waypoints.get(i);
-		// ImageView progressImage = (ImageView) progressView.getChildAt(i);
-		// if (progressImage == null) {
-		// progressImage = new ImageView(getBaseContext());
-		// progressImage.setLayoutParams(PROGRESS_IMAGE_LAYOUT_PARAMS);
-		// progressView.addView(progressImage);
-		// }
-		// if (gameStateService.isWaypointCheckedIn(waypoint)) {
-		// progressImage.setImageResource(R.drawable.progress_check);
-		// } else {
-		// progressImage.setImageResource(R.drawable.progress_target);
-		// }
-		//
-		// }
+		ArrayList<Waypoint> waypoints = getCurrentRoute().waypoints;
+		int numberOfWaypoints = waypoints.size();
+		if (progressView.getChildCount() != numberOfWaypoints) {
+			progressView.removeAllViews();
+		}
+		for (int i = 0; i < numberOfWaypoints; i++) {
+			Waypoint waypoint = waypoints.get(i);
+			ImageView progressImage = (ImageView) progressView.getChildAt(i);
+			if (progressImage == null) {
+				progressImage = new ImageView(getBaseContext());
+				progressImage.setLayoutParams(PROGRESS_IMAGE_LAYOUT_PARAMS);
+				progressView.addView(progressImage);
+			}
+			if (isWaypointCheckedIn(waypoint)) {
+				progressImage.setImageResource(R.drawable.progress_check);
+			} else {
+				progressImage.setImageResource(R.drawable.progress_target);
+			}
+
+		}
 
 	}
 
@@ -376,5 +337,11 @@ public class NavigateRouteActivity extends AbstractGameActivity implements
 		// targetHintDialog.setArguments(dialogArgs);
 		// targetHintDialog.show(getFragmentManager(), "found");
 		// checkinInProgress = true;
+	}
+
+	@Override
+	public void onConnected(Bundle bundle) {
+		locationClient.requestLocationUpdates(locationRequest, this);
+
 	}
 }
