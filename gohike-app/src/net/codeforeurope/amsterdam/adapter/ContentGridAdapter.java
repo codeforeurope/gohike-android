@@ -20,8 +20,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class ContentGridAdapter extends BaseAdapter implements
-		View.OnClickListener {
+public class ContentGridAdapter extends BaseAdapter implements View.OnClickListener {
 
 	protected LayoutInflater inflater;
 
@@ -39,8 +38,7 @@ public class ContentGridAdapter extends BaseAdapter implements
 	public ContentGridAdapter(Context context) {
 		super();
 		this.context = context;
-		this.inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	public void setProfiles(ArrayList<Profile> profiles) {
@@ -66,7 +64,7 @@ public class ContentGridAdapter extends BaseAdapter implements
 
 	@Override
 	public long getItemId(int position) {
-		return profiles.get(position).id;
+		return profiles.get(position).getId();
 	}
 
 	@Override
@@ -75,37 +73,28 @@ public class ContentGridAdapter extends BaseAdapter implements
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.content_grid_group, null);
 		}
-		TextView headerLabel = (TextView) convertView
-				.findViewById(R.id.content_grid_header_label);
+		TextView headerLabel = (TextView) convertView.findViewById(R.id.content_grid_header_label);
 		headerLabel.setText(profile.name.getLocalizedValue());
-		ImageView headerIcon = (ImageView) convertView
-				.findViewById(R.id.content_grid_header_icon);
+		ImageView headerIcon = (ImageView) convertView.findViewById(R.id.content_grid_header_icon);
 
 		Bitmap icon = BitmapFactory.decodeFile(profile.image.localPath);
-		StreamDrawable iconDrawable = new StreamDrawable(
-				context.getResources(), icon, 24, 0);
+		StreamDrawable iconDrawable = new StreamDrawable(context.getResources(), icon, 24, 0);
 		headerIcon.setImageDrawable(iconDrawable);
 
-		GridLayout routeGridLayout = (GridLayout) convertView
-				.findViewById(R.id.content_grid_items);
+		GridLayout routeGridLayout = (GridLayout) convertView.findViewById(R.id.content_grid_items);
 		routeGridLayout.removeAllViews();
 
-		RelativeLayout.LayoutParams params = generateItemLayoutParams(parent,
-				routeGridLayout);
+		RelativeLayout.LayoutParams params = generateItemLayoutParams(parent, routeGridLayout);
 
 		for (Route route : profile.routes) {
 
-			ViewGroup gridItemLayout = (ViewGroup) inflater.inflate(
-					R.layout.content_grid_item, null);
-			ViewGroup gridItemWrapper = (ViewGroup) gridItemLayout
-					.findViewById(R.id.content_grid_item_wrapper);
+			ViewGroup gridItemLayout = (ViewGroup) inflater.inflate(R.layout.content_grid_item, null);
+			ViewGroup gridItemWrapper = (ViewGroup) gridItemLayout.findViewById(R.id.content_grid_item_wrapper);
 
-			TextView topText = (TextView) gridItemWrapper
-					.findViewById(R.id.content_grid_item_top);
+			TextView topText = (TextView) gridItemWrapper.findViewById(R.id.content_grid_item_top);
 			topText.setText(route.name.getLocalizedValue());
 
-			LayerDrawable background = getGridItemBackground(route,
-					gridItemLayout, params.width);
+			LayerDrawable background = getGridItemBackground(route, gridItemLayout, params.width);
 			gridItemWrapper.setBackgroundDrawable(background);
 
 			routeGridLayout.addView(gridItemLayout, params);
@@ -120,44 +109,33 @@ public class ContentGridAdapter extends BaseAdapter implements
 		return convertView;
 	}
 
-	private RelativeLayout.LayoutParams generateItemLayoutParams(
-			ViewGroup parent, GridLayout routeGridLayout) {
-		int columnWidth = (parent.getMeasuredWidth() - parent.getPaddingLeft() - parent
-				.getPaddingRight()) / routeGridLayout.getColumnCount();
+	private RelativeLayout.LayoutParams generateItemLayoutParams(ViewGroup parent, GridLayout routeGridLayout) {
+		int columnWidth = (parent.getMeasuredWidth() - parent.getPaddingLeft() - parent.getPaddingRight())
+				/ routeGridLayout.getColumnCount();
 
-		int width = columnWidth
-				- ((routeGridLayout.getPaddingLeft() + routeGridLayout
-						.getPaddingRight()) / 2);
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-				width, width);
-		params.setMargins(routeGridLayout.getPaddingLeft(), 0,
-				routeGridLayout.getPaddingRight(), 0);
+		int width = columnWidth - ((routeGridLayout.getPaddingLeft() + routeGridLayout.getPaddingRight()) / 2);
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, width);
+		params.setMargins(routeGridLayout.getPaddingLeft(), 0, routeGridLayout.getPaddingRight(), 0);
 
 		return params;
 	}
 
-	private LayerDrawable getGridItemBackground(final Route model, View v,
-			int columnWidth) {
+	private LayerDrawable getGridItemBackground(final Route model, View v, int columnWidth) {
 		Bitmap bitmap = BitmapFactory.decodeFile(model.icon.localPath);
 		if (v.getMeasuredWidth() > 0) {
 			columnWidth = v.getMeasuredWidth();
 
 		}
 		if (columnWidth > 0) {
-			float ratio = (float) bitmap.getWidth()
-					/ (float) bitmap.getHeight();
+			float ratio = (float) bitmap.getWidth() / (float) bitmap.getHeight();
 
-			bitmap = Bitmap.createScaledBitmap(bitmap,
-					(int) (columnWidth * ratio), columnWidth, false);
+			bitmap = Bitmap.createScaledBitmap(bitmap, (int) (columnWidth * ratio), columnWidth, false);
 		}
-		StreamDrawable drawable = new StreamDrawable(context.getResources(),
-				bitmap, 6, 2);
+		StreamDrawable drawable = new StreamDrawable(context.getResources(), bitmap, 6, 2);
 
-		Drawable drawable2 = context.getResources().getDrawable(
-				R.drawable.grid_item);
+		Drawable drawable2 = context.getResources().getDrawable(R.drawable.grid_item);
 
-		LayerDrawable layerDrawable = new LayerDrawable(new Drawable[] {
-				drawable, drawable2 });
+		LayerDrawable layerDrawable = new LayerDrawable(new Drawable[] { drawable, drawable2 });
 		return layerDrawable;
 	}
 

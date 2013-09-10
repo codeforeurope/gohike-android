@@ -2,7 +2,8 @@ package net.codeforeurope.amsterdam.model;
 
 public abstract class BaseModel {
 
-	public long id;
+	protected long id;
+
 	public TranslatedString name;
 
 	public Image image;
@@ -16,6 +17,10 @@ public abstract class BaseModel {
 			return 1;
 		}
 		return 0;
+	}
+
+	public long getId() {
+		return this.id;
 	}
 
 }

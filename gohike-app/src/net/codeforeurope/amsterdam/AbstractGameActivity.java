@@ -4,6 +4,8 @@ import net.codeforeurope.amsterdam.dialog.ErrorDialogFragment;
 import net.codeforeurope.amsterdam.model.City;
 import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.model.Waypoint;
+import net.codeforeurope.amsterdam.util.DataConstants;
+import android.app.ActionBar;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -23,8 +25,7 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationRequest;
 
 public abstract class AbstractGameActivity extends FragmentActivity implements
-		GooglePlayServicesClient.ConnectionCallbacks,
-		GooglePlayServicesClient.OnConnectionFailedListener {
+		GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
 
 	private final static int GOOGLE_PLAY_CONNECTION_FAILURE = 12345;
 
@@ -34,13 +35,14 @@ public abstract class AbstractGameActivity extends FragmentActivity implements
 
 	protected LocationRequest locationRequest;
 
+	protected ActionBar actionBar;
+
 	protected StatusCallback facebookStatusCallback = new StatusCallback() {
 
 		private boolean permissionsRequested = false;
 
 		@Override
-		public void call(Session session, SessionState state,
-				Exception exception) {
+		public void call(Session session, SessionState state, Exception exception) {
 			// if (shouldShareBadge && session.isOpened()) {
 			// if (facebookHasPublishPermissions(session)) {
 			// doShareReward();
@@ -71,6 +73,7 @@ public abstract class AbstractGameActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		actionBar = getActionBar();
 
 		locationClient = new LocationClient(this, this, this);
 		locationRequest = LocationRequest.create();
@@ -111,11 +114,21 @@ public abstract class AbstractGameActivity extends FragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		setupActionBar();
 		Session session = Session.getActiveSession();
 		if (session != null && (session.isOpened() || session.isClosed())) {
 			facebookStatusCallback.call(session, session.getState(), null);
 		}
 		facebookUiHelper.onResume();
+	}
+
+	/**
+	 * called on resume to set the title of the bar and any other things.
+	 */
+	protected void setupActionBar() {
+		if (actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
 	}
 
 	@Override
@@ -145,10 +158,8 @@ public abstract class AbstractGameActivity extends FragmentActivity implements
 	/*
 	 * Google Play setup crap
 	 */
-
 	private void showErrorDialog(int errorCode) {
-		Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(errorCode,
-				this, GOOGLE_PLAY_CONNECTION_FAILURE);
+		Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(errorCode, this, GOOGLE_PLAY_CONNECTION_FAILURE);
 
 		// If Google Play services can provide an error dialog
 		if (errorDialog != null) {
@@ -178,8 +189,7 @@ public abstract class AbstractGameActivity extends FragmentActivity implements
 		if (connectionResult.hasResolution()) {
 			try {
 				// Start an Activity that tries to resolve the error
-				connectionResult.startResolutionForResult(this,
-						GOOGLE_PLAY_CONNECTION_FAILURE);
+				connectionResult.startResolutionForResult(this, GOOGLE_PLAY_CONNECTION_FAILURE);
 				/*
 				 * Thrown if Google Play services canceled the original
 				 * PendingIntent
@@ -265,5 +275,22 @@ public abstract class AbstractGameActivity extends FragmentActivity implements
 	public void onBackPressed() {
 		super.onBackPressed();
 		overridePendingTransition(R.anim.enter_from_left, R.anim.leave_to_right);
+	}
+
+	protected Waypoint getCurrentTarget() {
+		Waypoint target = getIntent().getParcelableExtra(DataConstants.CURRENT_TARGET);
+		if (target == null) {
+			target = getDefaultTarget();
+		}
+		return target;
+	}
+
+	protected Waypoint getDefaultTarget() {
+		for (Waypoint waypoint : getCurrentRoute().waypoints) {
+			if (!isWaypointCheckedIn(waypoint)) {
+				return waypoint;
+			}
+		}
+		return null;
 	}
 }

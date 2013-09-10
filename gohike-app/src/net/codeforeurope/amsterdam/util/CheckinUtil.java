@@ -10,7 +10,7 @@ public class CheckinUtil {
 	public static Checkin fromWaypoint(Waypoint waypoint) {
 		Checkin checkin = new Checkin();
 		checkin.routeId = waypoint.routeId;
-		checkin.locationId = waypoint.id;
+		checkin.locationId = waypoint.getId();
 		checkin.timestamp = new Date();
 		return checkin;
 	}

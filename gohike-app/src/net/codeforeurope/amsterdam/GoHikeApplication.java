@@ -78,8 +78,8 @@ public class GoHikeApplication extends Application {
 	 * @param route
 	 */
 	public void setCurrentRoute(Route route) {
-		if (downloadedRoutes.containsKey(route.id)) {
-			this.currentRoute = downloadedRoutes.get(route.id);
+		if (downloadedRoutes.containsKey(route.getId())) {
+			this.currentRoute = downloadedRoutes.get(route.getId());
 		} else {
 			this.currentRoute = route;
 		}
@@ -118,14 +118,14 @@ public class GoHikeApplication extends Application {
 	}
 
 	public void storeDownloadedRoute(Route route) {
-		downloadedRoutes.put(route.id, route);
+		downloadedRoutes.put(route.getId(), route);
 		setCurrentRoute(route);
 	}
 
 	public void storeLocalRoutes(ArrayList<Route> routes) {
 		downloadedRoutes.clear();
 		for (Route route : routes) {
-			downloadedRoutes.put(route.id, route);
+			downloadedRoutes.put(route.getId(), route);
 		}
 
 	}
@@ -164,19 +164,31 @@ public class GoHikeApplication extends Application {
 	 * @return
 	 */
 	public boolean isRouteFinished(Route route) {
-		if (!completedRoutes.containsKey(route.id)) {
+		if (!completedRoutes.containsKey(route.getId())) {
 			int checkedIn = 0;
 			for (Waypoint waypoint : route.waypoints) {
 				if (isWaypointCheckedIn(waypoint)) {
 					checkedIn++;
 				}
 			}
-			if (checkedIn == route.waypoints.size()) {
-				completedRoutes.put(route.id, route);
+			if (checkedIn >= route.waypoints.size() && route.waypoints.size() > 0) {
+				completedRoutes.put(route.getId(), route);
 			} else {
 				return false;
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Add a checkin that was just created (stored in local DB)
+	 * 
+	 * @param localCheckin
+	 */
+	public void addLocalCheckin(Checkin localCheckin) {
+		if (!localCheckins.containsKey(localCheckin.uniqueKey())) {
+			localCheckins.put(localCheckin.uniqueKey(), localCheckin);
+		}
+
 	}
 }

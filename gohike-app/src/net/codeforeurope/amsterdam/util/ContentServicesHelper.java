@@ -29,7 +29,7 @@ import com.google.gson.stream.JsonReader;
 public class ContentServicesHelper {
 
 	public static File ensureRouteDirectory(Context context, Route route) {
-		File routeDirectory = ensureSubDirectory(route.id + "", ensureImagesDirectory(context, route.getClass()));
+		File routeDirectory = ensureSubDirectory(route.getId() + "", ensureImagesDirectory(context, route.getClass()));
 		return routeDirectory;
 	}
 

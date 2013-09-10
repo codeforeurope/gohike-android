@@ -41,7 +41,7 @@ public class RouteApiService extends AbstractApiService {
 	protected HttpRequestBase generateRequest(Intent intent) throws UnsupportedEncodingException, JSONException {
 
 		Route route = intent.getParcelableExtra(DataConstants.ROUTE);
-		final HttpGet request = new HttpGet(String.format(getEndpointUrl(), route.id));
+		final HttpGet request = new HttpGet(String.format(getEndpointUrl(), route.getId()));
 		request.addHeader("Content-Type", "application/json");
 		return request;
 	}

@@ -29,14 +29,12 @@ public class SplashActivity extends AbstractGameActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
 		receiverFilter.addAction(ActionConstants.ROUTES_LOAD_COMPLETE);
 		receiverFilter.addAction(ActionConstants.CHECKINS_LOAD_COMPLETE);
 		receiverFilter.addAction(ActionConstants.IMAGE_DOWNLOAD_COMPLETE);
 		receiverFilter.addAction(ActionConstants.IMAGE_DOWNLOAD_PROGRESS);
-
 	}
 
 	@Override
@@ -56,14 +54,12 @@ public class SplashActivity extends AbstractGameActivity {
 		Intent loadCheckinsIntent = new Intent(getBaseContext(), CheckinService.class);
 		loadCheckinsIntent.setAction(ActionConstants.LOAD_CHECKINS);
 		startService(loadCheckinsIntent);
-
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		registerReceiver(receiver, receiverFilter);
-
 	}
 
 	@Override

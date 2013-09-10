@@ -14,14 +14,10 @@ public class ApiConstants {
 
 	public static final String GOHIKE_SETTINGS = "gohike_settings";
 
-	public static final String ACTION_CONTENT_LOADED = "data_loaded";
-	public static final String GAME_DATA = "game_data";
-
-	public static final String LOCATE_DATA = "locate_data";
 	public static final String CURRENT_PROFILE = "current_profile";
 	public static final String CURRENT_ROUTE = "current_route";
 	public static final String CURRENT_WAYPOINT = "current_waypoint";
-	public static final String CURRENT_TARGET = "current_target";
+
 	public static final String CURRENT_VERSION = "version";
 	public static final String ACTION_REMOTE_CONTENT_LOADED = "remote_data_loaded";
 	public static final String ACTION_PING_COMPLETE = "ping_complete";
@@ -35,8 +31,7 @@ public class ApiConstants {
 	public static final String CHECKIN = "checkin";
 	public static final String ACTION_CHECKIN_SAVED = "checkin_saved";
 	public static final String ACTION_CHECKINS_UPLOADED = "checkins_uploaded";
-	public static final DateFormat DATE_FORMAT = new SimpleDateFormat(
-			"yyyy-MM-dd HH:mm:ss Z");
+	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 	public static final String ACTION_LOAD_CHECKINS = "load_checkins";
 	public static final String ACTION_CHECKINS_LOADED = "checkins_loaded";
 	public static final String LOCAL_CHECKINS = "local_checkins";

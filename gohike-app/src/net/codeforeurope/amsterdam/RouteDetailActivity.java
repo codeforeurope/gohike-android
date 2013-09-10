@@ -8,7 +8,6 @@ import net.codeforeurope.amsterdam.util.ActionConstants;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import net.codeforeurope.amsterdam.util.DataConstants;
 import net.codeforeurope.amsterdam.view.NotVisitedDialogFragment;
-import android.app.ActionBar;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -21,6 +20,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -62,6 +62,7 @@ public class RouteDetailActivity extends AbstractGameActivity implements OnClick
 
 		setupViewReferences();
 		setupBroadcastReceivers();
+		loadAndDisplayData();
 
 	}
 
@@ -164,15 +165,15 @@ public class RouteDetailActivity extends AbstractGameActivity implements OnClick
 
 	private void showNotFoundYetDialog(Waypoint waypoint) {
 		Bundle arguments = new Bundle();
-		arguments.putParcelable(DataConstants.WAYPOINT, waypoint);
+		arguments.putParcelable(DataConstants.CURRENT_TARGET, waypoint);
 		DialogFragment newFragment = new NotVisitedDialogFragment();
 		newFragment.setArguments(arguments);
 		newFragment.show(getFragmentManager(), "notvisited");
 	}
 
-	private void openLocationDetail(Waypoint wp) {
+	private void openLocationDetail(Waypoint waypoint) {
 		Intent intent = new Intent(this, LocationDetailActivity.class);
-		intent.putExtra(ApiConstants.CURRENT_WAYPOINT, wp);
+		intent.putExtra(DataConstants.CURRENT_TARGET, waypoint);
 		startActivity(intent);
 		overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
 	}
@@ -242,7 +243,7 @@ public class RouteDetailActivity extends AbstractGameActivity implements OnClick
 	public void startHike(Waypoint waypoint) {
 		Intent intent = new Intent(this, NavigateRouteActivity.class);
 		if (waypoint != null) {
-			intent.putExtra(DataConstants.WAYPOINT, waypoint);
+			intent.putExtra(DataConstants.CURRENT_TARGET, waypoint);
 		}
 		startActivity(intent);
 		overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
@@ -251,26 +252,23 @@ public class RouteDetailActivity extends AbstractGameActivity implements OnClick
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// MenuInflater inflater = getMenuInflater();
-		// if (gameStateService != null && gameStateService.isRouteFinished()) {
-		// inflater.inflate(R.menu.route_detail_finished, menu);
-		// } else {
-		// inflater.inflate(R.menu.route_detail, menu);
-		// }
+		MenuInflater inflater = getMenuInflater();
+		if (isRouteFinished()) {
+			inflater.inflate(R.menu.route_detail_finished, menu);
+		} else {
+			inflater.inflate(R.menu.route_detail, menu);
+		}
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	private void setupActionBar() {
-		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
+	protected void setupActionBar() {
+		super.setupActionBar();
 		actionBar.setTitle(getCurrentRoute().name.getLocalizedValue());
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		loadAndDisplayData();
-		setupActionBar();
 
 	}
 

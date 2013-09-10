@@ -5,7 +5,6 @@ import net.codeforeurope.amsterdam.model.City;
 import net.codeforeurope.amsterdam.model.LocateData;
 import net.codeforeurope.amsterdam.service.LocateApiService;
 import net.codeforeurope.amsterdam.util.ActionConstants;
-import net.codeforeurope.amsterdam.util.ApiConstants;
 import net.codeforeurope.amsterdam.util.DataConstants;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -49,7 +48,7 @@ public class CityListActivity extends AbstractGameActivity implements LocationLi
 			@Override
 			public void onReceive(Context context, Intent intent) {
 
-				locateData = intent.getParcelableExtra(ApiConstants.LOCATE_DATA);
+				locateData = intent.getParcelableExtra(DataConstants.LOCATE_RETURN_DATA);
 				progressDialog.dismiss();
 				listAdapter.setCities(locateData);
 

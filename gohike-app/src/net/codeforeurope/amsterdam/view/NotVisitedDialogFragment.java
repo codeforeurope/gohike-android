@@ -33,7 +33,7 @@ public class NotVisitedDialogFragment extends DialogFragment {
 
 					public void onClick(DialogInterface dialog, int id) {
 						// User clicked Yes
-						Waypoint waypoint = (Waypoint) getArguments().get(DataConstants.WAYPOINT);
+						Waypoint waypoint = (Waypoint) getArguments().get(DataConstants.CURRENT_TARGET);
 						((RouteDetailActivity) getActivity()).startHike(waypoint);
 					}
 

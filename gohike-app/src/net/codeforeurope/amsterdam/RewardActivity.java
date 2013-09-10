@@ -6,7 +6,6 @@ import net.codeforeurope.amsterdam.model.BaseModel;
 import net.codeforeurope.amsterdam.model.Reward;
 import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.util.ApiConstants;
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -47,17 +46,12 @@ public class RewardActivity extends AbstractGameActivity {
 
 		Bundle postParams = new Bundle();
 		postParams.putString("name", reward.name.getLocalizedValue());
-		postParams.putString("description",
-				reward.description.getLocalizedValue());
-		postParams.putString("link", String.format(ApiConstants.WEB_BASE_URL,
-				"rewards/" + reward.id));
-		postParams.putString(
-				"message",
-				getString(R.string.earned_reward,
-						reward.name.getLocalizedValue()));
+		postParams.putString("description", reward.description.getLocalizedValue());
+		postParams.putString("link", String.format(ApiConstants.WEB_BASE_URL, "rewards/" + reward.getId()));
+		postParams.putString("message", getString(R.string.earned_reward, reward.name.getLocalizedValue()));
 
-		Request request = new Request(Session.getActiveSession(), "me/feed",
-				postParams, HttpMethod.POST, new Request.Callback() {
+		Request request = new Request(Session.getActiveSession(), "me/feed", postParams, HttpMethod.POST,
+				new Request.Callback() {
 
 					@Override
 					public void onCompleted(Response response) {
@@ -90,8 +84,7 @@ public class RewardActivity extends AbstractGameActivity {
 
 	private void onClickPostPhoto() {
 		Session facebookSession = Session.getActiveSession();
-		if (facebookSession.isOpened()
-				&& facebookHasPublishPermissions(facebookSession)) {
+		if (facebookSession.isOpened() && facebookHasPublishPermissions(facebookSession)) {
 			doShareReward();
 		} else {
 			Session.openActiveSession(this, true, facebookStatusCallback);
@@ -100,10 +93,9 @@ public class RewardActivity extends AbstractGameActivity {
 		}
 	}
 
-	private void setupActionBar() {
-		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		// actionBar.setTitle(currentRoute.getLocalizedName());
+	protected void setupActionBar() {
+		super.setupActionBar();
+		actionBar.setTitle(getCurrentRoute().name.getLocalizedValue());
 	}
 
 	private void setupViewReferences() {
@@ -128,8 +120,7 @@ public class RewardActivity extends AbstractGameActivity {
 			alertMessage = response.getError().getErrorMessage();
 		}
 
-		new AlertDialog.Builder(this).setTitle(title).setMessage(alertMessage)
-				.setPositiveButton("OK", null).show();
+		new AlertDialog.Builder(this).setTitle(title).setMessage(alertMessage).setPositiveButton("OK", null).show();
 	}
 
 	@Override

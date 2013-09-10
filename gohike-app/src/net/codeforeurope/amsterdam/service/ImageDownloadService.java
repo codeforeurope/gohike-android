@@ -229,7 +229,7 @@ public class ImageDownloadService extends IntentService {
 	 */
 	private File ensureImagesDirectory(BaseModel model) {
 		String className = model.getClass().getSimpleName().toLowerCase();
-		File imagesDirectory = ContentServicesHelper.ensureSubDirectory(String.valueOf(model.id),
+		File imagesDirectory = ContentServicesHelper.ensureSubDirectory(String.valueOf(model.getId()),
 				directories.get(className));
 		return imagesDirectory;
 	}

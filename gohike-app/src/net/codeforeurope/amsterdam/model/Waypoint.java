@@ -7,8 +7,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class Waypoint extends BaseModel implements Parcelable {
 
+	@Override
+	public boolean equals(Object o) {
+		return this.uniqueKey().equals(((Waypoint) o).uniqueKey());
+	}
+
 	@SerializedName("location_id")
-	public long id;
+	protected long id;
 
 	@SerializedName("route_id")
 	public long routeId;
@@ -25,8 +30,7 @@ public class Waypoint extends BaseModel implements Parcelable {
 		this.id = in.readLong();
 		this.routeId = in.readLong();
 		this.name = in.readParcelable(TranslatedString.class.getClassLoader());
-		this.description = in.readParcelable(TranslatedString.class
-				.getClassLoader());
+		this.description = in.readParcelable(TranslatedString.class.getClassLoader());
 		this.image = in.readParcelable(Image.class.getClassLoader());
 		this.latitude = in.readDouble();
 		this.longitude = in.readDouble();
@@ -65,5 +69,9 @@ public class Waypoint extends BaseModel implements Parcelable {
 
 	public String uniqueKey() {
 		return id + "-" + routeId;
+	}
+
+	public long getId() {
+		return this.id;
 	}
 }

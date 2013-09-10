@@ -26,6 +26,7 @@ public class DataConstants {
 	public static final String LOCAL_ROUTES = "local_routes";
 
 	public static final String API_ERROR = "api_error";
-	public static final String WAYPOINT = "waypoint";
+
+	public static final String CURRENT_TARGET = "current_target";
 
 }

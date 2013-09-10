@@ -1,6 +1,6 @@
 package net.codeforeurope.amsterdam;
 
-import android.app.ActionBar;
+import net.codeforeurope.amsterdam.model.Waypoint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.location.Location;
@@ -11,12 +11,13 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-public class OrientationMapActivity extends AbstractGameActivity implements
-		OnMyLocationChangeListener {
+public class OrientationMapActivity extends AbstractGameActivity implements OnMyLocationChangeListener {
 
 	private GoogleMap map;
 
@@ -25,17 +26,14 @@ public class OrientationMapActivity extends AbstractGameActivity implements
 	private LatLng targetPosition;
 
 	@Override
-	protected void onCreate(Bundle arg0) {
-		// TODO Auto-generated method stub
-		super.onCreate(arg0);
+	protected void onCreate(Bundle savedInstance) {
+		super.onCreate(savedInstance);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.map);
 
-		map = ((MapFragment) getFragmentManager().findFragmentById(
-				R.id.orientation_map)).getMap();
+		map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.orientation_map)).getMap();
 		map.setMyLocationEnabled(true);
 		map.setOnMyLocationChangeListener(this);
-		setupActionBar();
 	}
 
 	@Override
@@ -44,11 +42,9 @@ public class OrientationMapActivity extends AbstractGameActivity implements
 		overridePendingTransition(R.anim.enter_from_left, R.anim.leave_to_right);
 	}
 
-	private void setupActionBar() {
-		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		// actionBar.setTitle(gameStateService.getCurrentRoute()
-		// .getLocalizedName());
+	protected void setupActionBar() {
+		super.setupActionBar();
+		actionBar.setTitle(getCurrentRoute().name.getLocalizedValue());
 	}
 
 	@Override
@@ -65,8 +61,7 @@ public class OrientationMapActivity extends AbstractGameActivity implements
 			onBackPressed();
 			return true;
 		case R.id.menu_show_map:
-			Intent i = new Intent(getBaseContext(),
-					OrientationMapActivity.class);
+			Intent i = new Intent(getBaseContext(), OrientationMapActivity.class);
 			startActivity(i);
 
 			return true;
@@ -75,21 +70,18 @@ public class OrientationMapActivity extends AbstractGameActivity implements
 		}
 	}
 
-	// @Override
-	// protected void onGameStateServiceConnected() {
-	// Waypoint currentTarget = gameStateService.getCurrentTarget();
-	// targetPosition = new LatLng(currentTarget.latitude,
-	// currentTarget.longitude);
-	//
-	// map.addMarker(new MarkerOptions()
-	// .position(targetPosition)
-	// .draggable(false)
-	// .title(currentTarget.getLocalizedName())
-	// .icon(BitmapDescriptorFactory
-	// .fromResource(R.drawable.blue_map_marker)));
-	//
-	// // zoomIn();
-	// }
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Waypoint currentTarget = getCurrentTarget();
+		targetPosition = new LatLng(currentTarget.latitude, currentTarget.longitude);
+
+		map.addMarker(new MarkerOptions().position(targetPosition).draggable(false)
+				.title(currentTarget.name.getLocalizedValue())
+				.icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_map_marker)));
+
+		// zoomIn();
+	}
 
 	private void zoomIn() {
 
@@ -118,8 +110,7 @@ public class OrientationMapActivity extends AbstractGameActivity implements
 
 	@Override
 	public void onMyLocationChange(Location myLocation) {
-		myPosition = new LatLng(myLocation.getLatitude(),
-				myLocation.getLongitude());
+		myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
 		zoomIn();
 	}
 
