@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     
    <item
-        android:id="@+id/menu_view_help"
-        android:icon="@drawable/icon_help"
+        android:id="@+id/menu_view_settings"
+        android:icon="@drawable/settings"
         android:showAsAction="always|withText"
-        android:title="@string/how_to_play"
-        android:titleCondensed="@string/how_to_play"/>
+        android:title="@string/settings"
+        android:titleCondensed="@string/settings"/>
    
 </menu>

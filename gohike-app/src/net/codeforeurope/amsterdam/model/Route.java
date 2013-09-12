@@ -21,17 +21,19 @@ public class Route extends BaseModel implements Parcelable {
 	public ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>();
 	public Reward reward = new Reward();
 
+	private boolean isUpdateAvailable = false;
+
 	public Route(Parcel in) {
 		this.id = in.readLong();
 		this.profileId = in.readLong();
 		this.name = in.readParcelable(TranslatedString.class.getClassLoader());
-		this.description = in.readParcelable(TranslatedString.class
-				.getClassLoader());
+		this.description = in.readParcelable(TranslatedString.class.getClassLoader());
 		this.publishedKey = in.readString();
 		this.image = in.readParcelable(Image.class.getClassLoader());
 		this.icon = in.readParcelable(Image.class.getClassLoader());
 		in.readTypedList(this.waypoints, Waypoint.CREATOR);
 		this.reward = in.readParcelable(Reward.class.getClassLoader());
+		this.isUpdateAvailable = in.readByte() == 1;
 
 	}
 
@@ -52,6 +54,7 @@ public class Route extends BaseModel implements Parcelable {
 		dest.writeParcelable(this.icon, 0);
 		dest.writeTypedList(this.waypoints);
 		dest.writeParcelable(this.reward, 0);
+		dest.writeByte((byte) (this.isUpdateAvailable ? 1 : 0));
 
 	}
 
@@ -82,6 +85,15 @@ public class Route extends BaseModel implements Parcelable {
 
 	public boolean isDownloaded() {
 		return !waypoints.isEmpty();
+	}
+
+	public void setUpdateAvailable(boolean updateAvailable) {
+		isUpdateAvailable = updateAvailable;
+
+	}
+
+	public boolean isUpdateAvailable() {
+		return isUpdateAvailable;
 	}
 
 }

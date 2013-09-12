@@ -10,7 +10,6 @@ import net.codeforeurope.amsterdam.service.CatalogApiService;
 import net.codeforeurope.amsterdam.service.ImageDownloadService;
 import net.codeforeurope.amsterdam.util.ActionConstants;
 import net.codeforeurope.amsterdam.util.DataConstants;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -55,23 +54,6 @@ public class ContentGridActivity extends AbstractGameActivity implements OnGridI
 	}
 
 	@Override
-	protected void onStart() {
-		super.onStart();
-
-	}
-
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		super.onStop();
-	}
-
-	@Override
-	protected void onRestart() {
-		super.onRestart();
-	}
-
-	@Override
 	protected void onResume() {
 		super.onResume();
 		registerReceiver(receiver, receiverFilter);
@@ -107,10 +89,10 @@ public class ContentGridActivity extends AbstractGameActivity implements OnGridI
 			gotoCityList(false);
 			overridePendingTransition(R.anim.enter_from_left, R.anim.leave_to_right);
 			return true;
-		case R.id.menu_view_help:
-			// show help here
-
-			return true;
+		case R.id.menu_view_settings:
+			Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
+			startActivity(intent);
+			overridePendingTransition(R.anim.enter_from_right, R.anim.leave_to_left);
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -122,12 +104,6 @@ public class ContentGridActivity extends AbstractGameActivity implements OnGridI
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			if (ActionConstants.CATALOG_DOWNLOAD_COMPLETE.equals(action)) {
-				progressDialog.dismiss();
-				progressDialog.setIndeterminate(false);
-				progressDialog.setMax(100);
-				progressDialog.setMessage(getString(R.string.content_grid_downloading_images));
-				progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-				progressDialog.show();
 				Intent downloadIntent = new Intent(getApplicationContext(), ImageDownloadService.class);
 				downloadIntent.setAction(ActionConstants.CATALOG_DOWNLOAD_COMPLETE);
 				downloadIntent.putExtra(DataConstants.CATALOG_PROFILES,
@@ -135,15 +111,12 @@ public class ContentGridActivity extends AbstractGameActivity implements OnGridI
 				startService(downloadIntent);
 
 			} else if (ActionConstants.IMAGE_DOWNLOAD_PROGRESS.equals(action)) {
-				progressDialog.setProgress(intent.getIntExtra(DataConstants.IMAGE_DOWNLOAD_PROGRESS, 0));
-				progressDialog.setMax(intent.getIntExtra(DataConstants.IMAGE_DOWNLOAD_TARGET, 0));
 
 			} else if (ActionConstants.IMAGE_DOWNLOAD_COMPLETE.equals(action)) {
 				ArrayList<Profile> profiles = intent.getParcelableArrayListExtra(DataConstants.CATALOG_PROFILES);
-				progressDialog.setIndeterminate(true);
-				progressDialog.dismiss();
 				getApp().storeCatalog(profiles);
 				adapter.setProfiles(profiles);
+				progressDialog.dismiss();
 			}
 
 		}

@@ -20,21 +20,21 @@
             android:layout_alignParentTop="true"
             android:background="@drawable/grid_item_top"
             android:gravity="center"
-            android:text="test"
+            android:text=""
             android:textColor="@color/white"
             android:textIsSelectable="false" />
 
         <!-- </RelativeLayout> -->
 
         <TextView
-            android:id="@+id/content_item_bottom"
+            android:id="@+id/content_grid_item_bottom"
             android:layout_width="fill_parent"
             android:layout_height="30dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:background="@drawable/grid_item_bottom"
             android:gravity="center"
-            android:text="test2"
+            android:text=""
             android:textColor="@color/white"
             android:textIsSelectable="false" />
     </RelativeLayout>

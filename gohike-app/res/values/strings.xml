@@ -20,13 +20,7 @@
     <string name="route_continue">Continue!</string>
     <string name="checkin_look_around">Look around! Have you found it?</string>
     <string name="checkin_close">You are close!</string>
-    <string name="how_to_play">How to play</string>
     <string name="orientation_map">Map</string>
-    <string name="help1">Choose a Profile</string>
-    <string name="help2">Follow the arrow</string>
-    <string name="help3">Find locations</string>
-    <string name="help4">Get reward!</string>
-    <string name="lets_play">Let\'s play!</string>
     <string name="target_icon">Target Icon</string>
     <string name="target_distance_m">%.0fm</string>
     <string name="target_distance_km">%.1fkm</string>
@@ -42,6 +36,7 @@
     <string name="share_reward_error">Sorry, there was an error sharing your badge</string>
 
     <!-- Translated -->
+
     <string name="first_launch_title">Welcome!</string>
     <string name="first_launch_message">Thanks for downloading Take a Hike! Since this is the first time you used the app let us take you through some setup.\n
           First, let\'s find out where you are so that we can serve you relevant content. On the next screen, you will select one city.\n
@@ -55,10 +50,17 @@
     <string name="content_grid_actionbar_title">Profiles</string>
     <string name="content_grid_loading_catalog">Loading Catalog</string>
     <string name="content_grid_downloading_images">Offlining Images</string>
+    <string name="content_grid_update_available">Update Available</string>
     <string name="route_detail_go_hike">Go Hike!</string>
-    <string name="route_detail_download">Download and Hike!</string>
+    <string name="route_detail_download">Download Route</string>
+    <string name="route_detail_update">Update Route</string>
     <string name="route_detail_facebook">Connect to Facebook to Download</string>
     <string name="route_detail_downloading_route">Downloading Route</string>
+    <string name="route_detail_updating_route">Updating Route</string>
     <string name="route_detail_downloading_images">Offlining Images</string>
+    <string name="settings">Settings</string>
+    <string name="settings_facebook_text">In order to enhance your experience with Take a Hike!, please consider connecting to Facebook. Once connected, you will be able to keep your progress and rewards across multiple devices.</string>
+    <string name="settings_privacy_policy">Privacy Policy</string>
+    <string name="settings_terms_of_service">Terms of Service</string>
 
 </resources>

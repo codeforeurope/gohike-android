@@ -114,12 +114,31 @@ public class GoHikeApplication extends Application {
 
 	public void storeCatalog(ArrayList<Profile> profiles) {
 		catalogs.put(getSelectedCityId(), profiles);
+		analyzeRoutesForUpdates(profiles);
 		catalogUpdatedAt = new Date();
+	}
+
+	private void analyzeRoutesForUpdates(ArrayList<Profile> profiles) {
+		for (Profile profile : profiles) {
+			for (Route catalogRoute : profile.routes) {
+				if (downloadedRoutes.containsKey(catalogRoute.getId())) {
+					Route downloadedRoute = downloadedRoutes.get(catalogRoute.getId());
+					if (!downloadedRoute.publishedKey.equals(catalogRoute.publishedKey)) {
+						downloadedRoute.setUpdateAvailable(true);
+						catalogRoute.setUpdateAvailable(true);
+					} else {
+						downloadedRoute.setUpdateAvailable(false);
+						catalogRoute.setUpdateAvailable(false);
+					}
+				}
+			}
+		}
 	}
 
 	public void storeDownloadedRoute(Route route) {
 		downloadedRoutes.put(route.getId(), route);
 		setCurrentRoute(route);
+		analyzeRoutesForUpdates(getCurrentCatalog());
 	}
 
 	public void storeLocalRoutes(ArrayList<Route> routes) {

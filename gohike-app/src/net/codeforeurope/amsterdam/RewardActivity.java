@@ -1,10 +1,9 @@
 package net.codeforeurope.amsterdam;
 
+import java.util.Arrays;
 import java.util.List;
 
-import net.codeforeurope.amsterdam.model.BaseModel;
 import net.codeforeurope.amsterdam.model.Reward;
-import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import android.app.AlertDialog;
 import android.content.pm.ActivityInfo;
@@ -22,16 +21,11 @@ import com.facebook.Request;
 import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
+import com.facebook.SessionState;
 
 public class RewardActivity extends AbstractGameActivity {
 
 	private static final String PUBLISH_ACTIONS = "publish_actions";
-
-	BaseModel currentProfile;
-
-	Route currentRoute;
-
-	Reward reward;
 
 	TextView rewardDescription;
 
@@ -41,23 +35,43 @@ public class RewardActivity extends AbstractGameActivity {
 
 	boolean shouldShareBadge = false;
 
+	boolean permissionsRequested = false;
+
+	@Override
+	protected void onFacebookStatusChange(Session session, SessionState state, Exception exception) {
+		super.onFacebookStatusChange(session, state, exception);
+		if (shouldShareBadge && session.isOpened()) {
+			if (facebookHasPublishPermissions(session)) {
+				doShareReward();
+			} else {
+				if (!permissionsRequested) {
+					Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(
+							RewardActivity.this, Arrays.asList(PUBLISH_ACTIONS));
+					session.requestNewPublishPermissions(newPermissionsRequest);
+					permissionsRequested = true;
+				}
+			}
+
+		}
+	}
+
 	private void doShareReward() {
-		// Bitmap image = BitmapFactory.decodeFile(reward.image.localPath);
 
 		Bundle postParams = new Bundle();
+		final Reward reward = getCurrentRoute().reward;
+
 		postParams.putString("name", reward.name.getLocalizedValue());
 		postParams.putString("description", reward.description.getLocalizedValue());
 		postParams.putString("link", String.format(ApiConstants.WEB_BASE_URL, "rewards/" + reward.getId()));
 		postParams.putString("message", getString(R.string.earned_reward, reward.name.getLocalizedValue()));
+		postParams.putString("picture", reward.image.url);
 
 		Request request = new Request(Session.getActiveSession(), "me/feed", postParams, HttpMethod.POST,
 				new Request.Callback() {
 
 					@Override
 					public void onCompleted(Response response) {
-						// TODO Auto-generated method stub
-						// showPublishResult(reward.getLocalizedName(),
-						// response);
+						showPublishResult(reward.name.getLocalizedValue(), response);
 					}
 				});
 
@@ -75,10 +89,10 @@ public class RewardActivity extends AbstractGameActivity {
 	}
 
 	private void loadAndDisplayData() {
-		Bitmap photo = BitmapFactory.decodeFile(reward.image.localPath);
+		Bitmap photo = BitmapFactory.decodeFile(getCurrentRoute().reward.image.localPath);
 		rewardImage.setImageBitmap(photo);
-		// rewardTitle.setText(reward.getLocalizedName());
-		// rewardDescription.setText(reward.getLocalizedDescription());
+		rewardTitle.setText(getCurrentRoute().reward.name.getLocalizedValue());
+		rewardDescription.setText(getCurrentRoute().reward.description.getLocalizedValue());
 
 	}
 
@@ -111,9 +125,6 @@ public class RewardActivity extends AbstractGameActivity {
 		String alertMessage = null;
 		if (response.getError() == null) {
 			title = getString(R.string.share_reward_success);
-			// String id =
-			// response.getGraphObject().cast(GraphObjectWithId.class)
-			// .getId();
 			alertMessage = getString(R.string.share_reward_success_message);
 		} else {
 			title = getString(R.string.share_reward_error);
@@ -129,6 +140,7 @@ public class RewardActivity extends AbstractGameActivity {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setupViewReferences();
+		loadAndDisplayData();
 
 	}
 
@@ -151,15 +163,6 @@ public class RewardActivity extends AbstractGameActivity {
 
 			onClickPostPhoto();
 
-			// Following code is to share using ACTION_SEND
-			// Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-			// Uri screenshotUri = Uri.parse(reward.image.localPath);
-			// // Bitmap photo =
-			// BitmapFactory.decodeFile(reward.image.localPath);
-			// sharingIntent.setType("image/png");
-			// sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-			// startActivity(Intent.createChooser(sharingIntent,
-			// getString(R.string.share_reward_using)));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

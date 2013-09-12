@@ -39,25 +39,9 @@ public abstract class AbstractGameActivity extends FragmentActivity implements
 
 	protected StatusCallback facebookStatusCallback = new StatusCallback() {
 
-		private boolean permissionsRequested = false;
-
 		@Override
 		public void call(Session session, SessionState state, Exception exception) {
-			// if (shouldShareBadge && session.isOpened()) {
-			// if (facebookHasPublishPermissions(session)) {
-			// doShareReward();
-			// } else {
-			// if (!permissionsRequested) {
-			// Session.NewPermissionsRequest newPermissionsRequest = new
-			// Session.NewPermissionsRequest(
-			// RewardActivity.this,
-			// Arrays.asList(PUBLISH_ACTIONS));
-			// session.requestNewPublishPermissions(newPermissionsRequest);
-			// permissionsRequested = true;
-			// }
-			// }
-			//
-			// }
+			onFacebookStatusChange(session, state, exception);
 		}
 	};
 
@@ -67,6 +51,15 @@ public abstract class AbstractGameActivity extends FragmentActivity implements
 	protected void onStart() {
 		super.onStart();
 
+	}
+
+	protected void onFacebookStatusChange(Session session, SessionState state, Exception exception) {
+		// start connect service
+		if (session.isOpened()) {
+			Bundle arguments = new Bundle();
+			// arguments.putString("user_name",
+			// session.getAuthorizationBundle().getString("name"));
+		}
 	}
 
 	@Override
@@ -135,10 +128,6 @@ public abstract class AbstractGameActivity extends FragmentActivity implements
 	protected void onDestroy() {
 		super.onDestroy();
 		facebookUiHelper.onDestroy();
-	}
-
-	protected void onGameDataUpdated(Intent intent) {
-
 	}
 
 	protected void gotoContentGrid() {

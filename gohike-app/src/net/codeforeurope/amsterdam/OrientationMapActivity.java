@@ -103,12 +103,6 @@ public class OrientationMapActivity extends AbstractGameActivity implements OnMy
 	}
 
 	@Override
-	protected void onGameDataUpdated(Intent intent) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void onMyLocationChange(Location myLocation) {
 		myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
 		zoomIn();

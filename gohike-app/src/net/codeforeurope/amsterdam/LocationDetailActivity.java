@@ -3,7 +3,6 @@ package net.codeforeurope.amsterdam;
 import net.codeforeurope.amsterdam.model.Waypoint;
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import net.codeforeurope.amsterdam.util.DataConstants;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -103,14 +102,7 @@ public class LocationDetailActivity extends AbstractGameActivity implements OnCl
 	}
 
 	@Override
-	protected void onGameDataUpdated(Intent intent) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		continueHike();
 	}
 

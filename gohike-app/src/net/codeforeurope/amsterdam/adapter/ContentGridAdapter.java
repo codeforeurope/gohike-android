@@ -94,6 +94,11 @@ public class ContentGridAdapter extends BaseAdapter implements View.OnClickListe
 			TextView topText = (TextView) gridItemWrapper.findViewById(R.id.content_grid_item_top);
 			topText.setText(route.name.getLocalizedValue());
 
+			if (route.isUpdateAvailable()) {
+				TextView bottomText = (TextView) gridItemWrapper.findViewById(R.id.content_grid_item_bottom);
+				bottomText.setText(R.string.content_grid_update_available);
+			}
+
 			LayerDrawable background = getGridItemBackground(route, gridItemLayout, params.width);
 			gridItemWrapper.setBackgroundDrawable(background);
 

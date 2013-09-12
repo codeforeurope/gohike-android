@@ -306,8 +306,8 @@ public class NavigateRouteActivity extends AbstractGameActivity implements Locat
 		float targetBearing = 0;
 		Sensor accelerometer;
 		Sensor magnetometer;
-		float[] mGravity;
-		float[] mGeomagnetic;
+		float[] gravityMatrix;
+		float[] geomagneticMatrix;
 		long timestamp = 0;
 		float azimuth = 0;
 
@@ -336,16 +336,17 @@ public class NavigateRouteActivity extends AbstractGameActivity implements Locat
 		@Override
 		public void onSensorChanged(SensorEvent event) {
 
-			if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-				mGravity = event.values;
-			if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-				mGeomagnetic = event.values;
-
-			if (mGravity != null && mGeomagnetic != null) {
+			if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+				gravityMatrix = event.values;
+			}
+			if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+				geomagneticMatrix = event.values;
+			}
+			if (gravityMatrix != null && geomagneticMatrix != null) {
 
 				float R[] = new float[9];
 				float I[] = new float[9];
-				boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+				boolean success = SensorManager.getRotationMatrix(R, I, gravityMatrix, geomagneticMatrix);
 
 				long difference = (event.timestamp - timestamp) / 1000000;
 

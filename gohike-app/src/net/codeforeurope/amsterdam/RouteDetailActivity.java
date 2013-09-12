@@ -5,11 +5,9 @@ import net.codeforeurope.amsterdam.model.Waypoint;
 import net.codeforeurope.amsterdam.service.ImageDownloadService;
 import net.codeforeurope.amsterdam.service.RouteApiService;
 import net.codeforeurope.amsterdam.util.ActionConstants;
-import net.codeforeurope.amsterdam.util.ApiConstants;
 import net.codeforeurope.amsterdam.util.DataConstants;
 import net.codeforeurope.amsterdam.view.NotVisitedDialogFragment;
 import android.app.DialogFragment;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,8 +27,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.facebook.Session;
 
 public class RouteDetailActivity extends AbstractGameActivity implements OnClickListener {
 
@@ -52,8 +48,6 @@ public class RouteDetailActivity extends AbstractGameActivity implements OnClick
 
 	private Button downloadButton;
 
-	private Button facebookButton;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -67,8 +61,6 @@ public class RouteDetailActivity extends AbstractGameActivity implements OnClick
 	}
 
 	private void setupBroadcastReceivers() {
-		receiverFilter.addAction(ApiConstants.ACTION_CHECKINS_LOADED);
-		receiverFilter.addAction(ApiConstants.ACTION_CHECKIN_SAVED);
 		receiverFilter.addAction(ActionConstants.ROUTE_DOWNLOAD_COMPLETE);
 		receiverFilter.addAction(ActionConstants.IMAGE_DOWNLOAD_COMPLETE);
 		receiverFilter.addAction(ActionConstants.IMAGE_DOWNLOAD_PROGRESS);
@@ -106,26 +98,25 @@ public class RouteDetailActivity extends AbstractGameActivity implements OnClick
 			// Facebook must have been connected. We will not prevent someone
 			// from enjoying a hike if the session is not valid
 			downloadButton.setVisibility(android.view.View.GONE);
-			facebookButton.setVisibility(android.view.View.GONE);
 			if (isRouteFinished()) {
 				goHikeButton.setVisibility(android.view.View.GONE);
+
 			} else {
+
 				goHikeButton.setVisibility(android.view.View.VISIBLE);
 				goHikeButton.setOnClickListener(this);
 			}
-		} else {
-			Session session = Session.getActiveSession();
-			if (session != null && (session.isOpened() || session.isClosed())) {
-				downloadButton.setVisibility(android.view.View.GONE);
-				goHikeButton.setVisibility(android.view.View.GONE);
-				facebookButton.setVisibility(android.view.View.VISIBLE);
-				facebookButton.setOnClickListener(this);
-			} else {
-				goHikeButton.setVisibility(android.view.View.GONE);
-				facebookButton.setVisibility(android.view.View.GONE);
+			if (getCurrentRoute().isUpdateAvailable()) {
 				downloadButton.setVisibility(android.view.View.VISIBLE);
+				downloadButton.setText(R.string.route_detail_update);
 				downloadButton.setOnClickListener(this);
 			}
+		} else {
+
+			goHikeButton.setVisibility(android.view.View.GONE);
+			downloadButton.setVisibility(android.view.View.VISIBLE);
+			downloadButton.setOnClickListener(this);
+
 		}
 	}
 
@@ -184,7 +175,7 @@ public class RouteDetailActivity extends AbstractGameActivity implements OnClick
 		routeImage.setImageBitmap(photo);
 		routeTitle.setText(currentRoute.name.getLocalizedValue());
 		routeDescription.setText(currentRoute.description.getLocalizedValue());
-
+		waypointList.removeAllViews();
 		int length = currentRoute.waypoints.size();
 		for (int i = 0; i < length; i++) {
 			Waypoint waypoint = currentRoute.waypoints.get(i);
@@ -209,7 +200,6 @@ public class RouteDetailActivity extends AbstractGameActivity implements OnClick
 		routeDescription = (TextView) findViewById(R.id.route_detail_description);
 		goHikeButton = (Button) findViewById(R.id.route_gohike_button);
 		downloadButton = (Button) findViewById(R.id.route_download_button);
-		facebookButton = (Button) findViewById(R.id.route_facebook_button);
 		waypointList = (LinearLayout) findViewById(R.id.route_detail_waypoints);
 		inflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
@@ -284,10 +274,12 @@ public class RouteDetailActivity extends AbstractGameActivity implements OnClick
 			intent.putExtra(DataConstants.ROUTE, getCurrentRoute());
 			startService(intent);
 			progressDialog.setCancelable(false);
-			progressDialog.setMessage(getString(R.string.route_detail_downloading_route));
+			if (getCurrentRoute().isUpdateAvailable()) {
+				progressDialog.setMessage(getString(R.string.route_detail_updating_route));
+			} else {
+				progressDialog.setMessage(getString(R.string.route_detail_downloading_route));
+			}
 			progressDialog.show();
-			break;
-		case R.id.route_facebook_button:
 			break;
 
 		}
@@ -300,12 +292,7 @@ public class RouteDetailActivity extends AbstractGameActivity implements OnClick
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			if (ActionConstants.ROUTE_DOWNLOAD_COMPLETE.equals(action)) {
-				progressDialog.dismiss();
-				progressDialog.setIndeterminate(false);
-				progressDialog.setMax(100);
-				progressDialog.setMessage(getString(R.string.content_grid_downloading_images));
-				progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-				progressDialog.show();
+
 				Intent downloadIntent = new Intent(getApplicationContext(), ImageDownloadService.class);
 				downloadIntent.setAction(ActionConstants.ROUTE_DOWNLOAD_COMPLETE);
 				downloadIntent.putExtra(DataConstants.DOWNLOADED_ROUTE,
@@ -313,13 +300,9 @@ public class RouteDetailActivity extends AbstractGameActivity implements OnClick
 				startService(downloadIntent);
 
 			} else if (ActionConstants.IMAGE_DOWNLOAD_PROGRESS.equals(action)) {
-				progressDialog.setProgress(intent.getIntExtra(DataConstants.IMAGE_DOWNLOAD_PROGRESS, 0));
-				progressDialog.setMax(intent.getIntExtra(DataConstants.IMAGE_DOWNLOAD_TARGET, 0));
 
 			} else if (ActionConstants.IMAGE_DOWNLOAD_COMPLETE.equals(action)) {
 				Route route = intent.getParcelableExtra(DataConstants.DOWNLOADED_ROUTE);
-				progressDialog.setIndeterminate(true);
-
 				progressDialog.dismiss();
 				getApp().storeDownloadedRoute(route);
 				loadAndDisplayData();
