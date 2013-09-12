@@ -28,5 +28,7 @@ public class DataConstants {
 	public static final String API_ERROR = "api_error";
 
 	public static final String CURRENT_TARGET = "current_target";
+	public static final String DISCLAIMER_URL = "disclaimer_url";
+	public static final String DISCLAIMER_TITLE = "disclaimer_title";
 
 }
