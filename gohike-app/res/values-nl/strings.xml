@@ -39,5 +39,33 @@
     <string name="share_reward_success">Geslaagd!</string>
     <string name="share_reward_success_message">Bedankt voor het delen van uw badge met je vrienden</string>
     <string name="share_reward_error">Sorry, there was an error sharing your badge</string>
+    <string name="first_launch_title">Welkom!</string>
+    <string name="first_launch_message">Bedankt voor het downloaded van de Stadexpeditie App. Omdat deze app gloednieuw is loodsen we je graag door de setup heen.\n
+
+          We gaan uitzoeken waar je op dit moment bent, zodat we relevante content in je buurt te kunnen aanraden. Op het volgende scherm kies je en stad.\n
+
+          Zorg ervoor dat je locatievoorzieningen in je telefoon zijn ingeschakeld.\n
+
+          Het kan even duren voordat je telefoon uitgevonden heeft wat je locatie is, momentje geduld svp. Druk op OK om door te gaan.</string>
+    <string name="city_list_locating">Jouw locatie wordt geladen</string>
+    <string name="city_list_loading_cities">Steden worden geladen</string>
+    <string name="city_list_section_within">Dichtbij</string>
+    <string name="city_list_section_other">Alle steden</string>
+    <string name="city_list_actionbar_title">Kies een stad</string>
+    <string name="content_grid_actionbar_title">Profielen</string>
+    <string name="content_grid_loading_catalog">Catalogus laden</string>
+    <string name="content_grid_downloading_images">Afbeeldingen laden</string>
+    <string name="content_grid_update_available">Update beschikbaar</string>
+    <string name="route_detail_go_hike">Go Hike!</string>
+    <string name="route_detail_download">Download route</string>
+    <string name="route_detail_update">Update route</string>
+    <string name="route_detail_facebook">Koppel aan facebook</string>
+    <string name="route_detail_downloading_route">Route wordt gedownload</string>
+    <string name="route_detail_updating_route">Route wordt geupdate</string>
+    <string name="route_detail_downloading_images">Afbeeldingen downloaden</string>
+    <string name="settings">Instellingen</string>
+    <string name="settings_facebook_text">Om je Stadexpeditie beleving compleet te maken raden we je aan om de App te koppelen aan je facebookprofiel. Zodra je een route hebt afgerond ontvang je een award die je dan kan delen op facebook.</string>
+    <string name="settings_privacy_policy">Privacy beleid</string>
+    <string name="settings_terms_of_service">Service instellingen</string>
 
 </resources>
