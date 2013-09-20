@@ -4,8 +4,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.codeforeurope.amsterdam.model.Reward;
+import net.codeforeurope.amsterdam.service.ConnectApiService;
+import net.codeforeurope.amsterdam.util.ActionConstants;
 import net.codeforeurope.amsterdam.util.ApiConstants;
+import net.codeforeurope.amsterdam.util.DataConstants;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,7 +28,9 @@ import com.facebook.Request;
 import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
+import com.facebook.Session.OpenRequest;
 import com.facebook.SessionState;
+import com.facebook.model.GraphUser;
 
 public class RewardActivity extends AbstractGameActivity {
 
@@ -37,12 +46,16 @@ public class RewardActivity extends AbstractGameActivity {
 
 	boolean permissionsRequested = false;
 
+	BroadcastReceiver receiver = new Receiver();
+
+	IntentFilter receiverFilter = new IntentFilter();
+
 	@Override
 	protected void onFacebookStatusChange(Session session, SessionState state, Exception exception) {
 		super.onFacebookStatusChange(session, state, exception);
 		if (shouldShareBadge && session.isOpened()) {
 			if (facebookHasPublishPermissions(session)) {
-				doShareReward();
+				ensureUserAccountExistsAndShareReward();
 			} else {
 				if (!permissionsRequested) {
 					Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(
@@ -55,7 +68,35 @@ public class RewardActivity extends AbstractGameActivity {
 		}
 	}
 
-	private void doShareReward() {
+	private void ensureUserAccountExistsAndShareReward() {
+		if (getApp().getPlayerId() > 0) {
+			performShareReward();
+		} else {
+			Request request = Request.newMeRequest(Session.getActiveSession(), new Request.GraphUserCallback() {
+
+				@Override
+				public void onCompleted(GraphUser user, Response response) {
+					Bundle connectParams = new Bundle();
+					connectParams.putString(DataConstants.FACEBOOK_USER_NAME, user.getFirstName());
+					connectParams.putString(DataConstants.FACEBOOK_USER_ID, user.getId());
+					connectParams.putString(DataConstants.FACEBOOK_USER_EMAIL, (String) user.getProperty("email"));
+					connectParams.putString(DataConstants.FACEBOOK_ACCESS_TOKEN, Session.getActiveSession()
+							.getAccessToken());
+					connectParams.putLong(DataConstants.FACEBOOK_ACCESS_TOKEN_EXPIRATION, Session.getActiveSession()
+							.getExpirationDate().getTime() / 1000);
+
+					Intent intent = new Intent(getBaseContext(), ConnectApiService.class);
+					intent.putExtra(DataConstants.CONNECT_PARAMS, connectParams);
+					startService(intent);
+
+				}
+			});
+			request.executeAsync();
+		}
+
+	}
+
+	private void performShareReward() {
 
 		Bundle postParams = new Bundle();
 		final Reward reward = getCurrentRoute().reward;
@@ -98,9 +139,15 @@ public class RewardActivity extends AbstractGameActivity {
 
 	private void onClickPostPhoto() {
 		Session facebookSession = Session.getActiveSession();
-		if (facebookSession.isOpened() && facebookHasPublishPermissions(facebookSession)) {
-			doShareReward();
+		if (facebookSession.isOpened()) {
+			if (facebookHasPublishPermissions(facebookSession)) {
+				ensureUserAccountExistsAndShareReward();
+			}
 		} else {
+			OpenRequest openRequest = new OpenRequest(this).setCallback(facebookStatusCallback).setPermissions(
+					ApiConstants.FACEBOOK_READ_PERMISSIONS);
+			Session.setActiveSession(facebookSession);
+			facebookSession.openForRead(openRequest);
 			Session.openActiveSession(this, true, facebookStatusCallback);
 			shouldShareBadge = true;
 
@@ -141,7 +188,7 @@ public class RewardActivity extends AbstractGameActivity {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setupViewReferences();
 		loadAndDisplayData();
-
+		receiverFilter.addAction(ActionConstants.CONNECT_COMPLETE);
 	}
 
 	@Override
@@ -175,4 +222,29 @@ public class RewardActivity extends AbstractGameActivity {
 		facebookUiHelper.onSaveInstanceState(outState);
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		registerReceiver(receiver, receiverFilter);
+
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		unregisterReceiver(receiver);
+	}
+
+	class Receiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (ActionConstants.CONNECT_COMPLETE.equals(action)) {
+				getApp().setPlayerId(intent.getLongExtra(DataConstants.PLAYER_ID, 0));
+				performShareReward();
+			}
+
+		}
+	}
 }

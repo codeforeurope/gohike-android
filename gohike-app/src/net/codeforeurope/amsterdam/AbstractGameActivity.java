@@ -54,12 +54,7 @@ public abstract class AbstractGameActivity extends FragmentActivity implements
 	}
 
 	protected void onFacebookStatusChange(Session session, SessionState state, Exception exception) {
-		// start connect service
-		if (session.isOpened()) {
-			Bundle arguments = new Bundle();
-			// arguments.putString("user_name",
-			// session.getAuthorizationBundle().getString("name"));
-		}
+
 	}
 
 	@Override

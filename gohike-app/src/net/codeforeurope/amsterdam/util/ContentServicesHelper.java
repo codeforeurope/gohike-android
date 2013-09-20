@@ -13,6 +13,7 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 
+import net.codeforeurope.amsterdam.model.ConnectResponse;
 import net.codeforeurope.amsterdam.model.Image;
 import net.codeforeurope.amsterdam.model.LocateData;
 import net.codeforeurope.amsterdam.model.Profile;
@@ -124,6 +125,13 @@ public class ContentServicesHelper {
 		Gson gson = new Gson();
 		LocateData locateData = gson.fromJson(reader, LocateData.class);
 		return locateData;
+	}
+
+	public static ConnectResponse parseConnectResponse(InputStream responseStream) throws UnsupportedEncodingException {
+		Reader reader = new InputStreamReader(responseStream, "UTF-8");
+		Gson gson = new Gson();
+		ConnectResponse connectData = gson.fromJson(reader, ConnectResponse.class);
+		return connectData;
 	}
 
 	public static ArrayList<Profile> parseCatalogResponse(InputStream responseStream)

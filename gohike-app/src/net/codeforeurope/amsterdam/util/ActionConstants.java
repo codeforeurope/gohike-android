@@ -27,4 +27,6 @@ public class ActionConstants {
 	public static final String UPLOAD_CHECKINS = "upload_checkins";
 	public static final String DOWNLOAD_CHECKINS = "load_checkins";
 
+	public static final String CONNECT_COMPLETE = "connect_complete";
+
 }

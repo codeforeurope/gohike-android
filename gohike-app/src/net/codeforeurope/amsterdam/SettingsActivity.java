@@ -1,5 +1,6 @@
 package net.codeforeurope.amsterdam;
 
+
 import net.codeforeurope.amsterdam.util.ApiConstants;
 import net.codeforeurope.amsterdam.util.DataConstants;
 import android.content.Intent;
@@ -11,11 +12,14 @@ import android.widget.Button;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
+import com.facebook.widget.LoginButton;
 
 public class SettingsActivity extends AbstractGameActivity implements OnClickListener {
 
 	private Button privacyButton;
 	private Button termsButton;
+
+	private LoginButton facebookButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +29,10 @@ public class SettingsActivity extends AbstractGameActivity implements OnClickLis
 
 		privacyButton = (Button) findViewById(R.id.settings_privacy_button);
 		termsButton = (Button) findViewById(R.id.settings_tos_button);
+		facebookButton = (LoginButton) findViewById(R.id.settings_login_button);
 		privacyButton.setOnClickListener(this);
 		termsButton.setOnClickListener(this);
-
+		facebookButton.setReadPermissions(ApiConstants.FACEBOOK_READ_PERMISSIONS);
 	}
 
 	@Override

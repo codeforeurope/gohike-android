@@ -30,5 +30,13 @@ public class DataConstants {
 	public static final String CURRENT_TARGET = "current_target";
 	public static final String DISCLAIMER_URL = "disclaimer_url";
 	public static final String DISCLAIMER_TITLE = "disclaimer_title";
+	public static final String PLAYER_ID = "player_id";
+
+	public static final String FACEBOOK_USER_NAME = "user_name";
+	public static final String FACEBOOK_USER_ID = "fb_id";
+	public static final String FACEBOOK_USER_EMAIL = "user_email";
+	public static final String FACEBOOK_ACCESS_TOKEN = "fb_token";
+	public static final String FACEBOOK_ACCESS_TOKEN_EXPIRATION = "fb_expires_at";
+	public static final String CONNECT_PARAMS = "connect_params";
 
 }

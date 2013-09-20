@@ -10,6 +10,7 @@ import net.codeforeurope.amsterdam.model.Profile;
 import net.codeforeurope.amsterdam.model.Route;
 import net.codeforeurope.amsterdam.model.Waypoint;
 import net.codeforeurope.amsterdam.util.ApiConstants;
+import net.codeforeurope.amsterdam.util.DataConstants;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -210,4 +211,19 @@ public class GoHikeApplication extends Application {
 		}
 
 	}
+
+	public long getPlayerId() {
+
+		SharedPreferences settings = getSharedPreferences(ApiConstants.GOHIKE_SETTINGS, 0);
+		return settings.getLong(DataConstants.PLAYER_ID, 0);
+
+	}
+
+	public void setPlayerId(long playerId) {
+		SharedPreferences settings = getSharedPreferences(ApiConstants.GOHIKE_SETTINGS, 0);
+		Editor editor = settings.edit();
+		editor.putLong(DataConstants.PLAYER_ID, playerId);
+		editor.commit();
+	}
+
 }

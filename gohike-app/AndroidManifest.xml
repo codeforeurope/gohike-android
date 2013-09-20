@@ -44,14 +44,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-         <activity
+        <activity
             android:name="net.codeforeurope.amsterdam.CityListActivity"
             android:label="@string/city_list_actionbar_title"
             android:theme="@style/TakeAHikeTheme" >
         </activity>
         <activity
             android:name="net.codeforeurope.amsterdam.ContentGridActivity"
-            
             android:theme="@style/TakeAHikeTheme" >
         </activity>
         <activity
@@ -99,7 +98,9 @@
         <service
             android:name=".service.CatalogApiService"
             android:exported="false" />
-        
+        <service
+            android:name=".service.ConnectApiService"
+            android:exported="false" />
         <service
             android:name=".service.ImageDownloadService"
             android:exported="false" />
@@ -118,7 +119,6 @@
         <service
             android:name=".service.LocateApiService"
             android:exported="false" />
-       
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

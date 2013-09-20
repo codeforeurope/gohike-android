@@ -2,6 +2,8 @@ package net.codeforeurope.amsterdam.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 public class ApiConstants {
@@ -50,5 +52,6 @@ public class ApiConstants {
 	public static final String CURRENT_CITY_NAME = "current_city_name";
 
 	public static final String ROUTE_FILE_NAME = "route.json";
+	public static final List<String> FACEBOOK_READ_PERMISSIONS = Arrays.asList("basic_info", "email");
 
 }
